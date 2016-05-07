@@ -3,9 +3,9 @@ title: Cristina Negrean
 email: negrean.cristina@gmail.com
 description: Software Engineer
 metadata:
-  keywords: Cristina,Tech,Blog,Java,Javascript,Scala,DevOps
+  keywords: Cristina,Tech,Blog,Java,Spring,Microservices,Scala,DevOps
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://cristina.tech" # the base hostname & protocol for your site
+url: "http://cristinanegrean.github.io" # the base hostname & protocol for your site
 twitter_username: cristinanegrean
 github_username:  cristinanegrean
 gems: [jekyll-paginate]
