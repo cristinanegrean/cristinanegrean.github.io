@@ -18,6 +18,8 @@ html, body{
 	font: inherit;
 }
 
+.noWrap {  white-space:nowrap; }
+
 /* @backgrounds :: modify or add yours below 
 ------------------------------------------------------------------- */
 .darkbg{ background:#6C82A2 url(../images/dark.png) repeat fixed; }
