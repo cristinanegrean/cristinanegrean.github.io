@@ -136,7 +136,7 @@ $(document).ready(function(){
       });
 	};
 
-	$(".navy").menumaker({
+	$(".navi").menumaker({
 		title: "Menu",
 		format: "multitoggle"
 	});

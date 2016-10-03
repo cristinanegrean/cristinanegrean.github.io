@@ -391,21 +391,21 @@ blockquote.blockquote-reverse {
   background: #d08166;
   border-bottom: 3px solid #ca7152;
 }
-.header-1 .navi .navy ul > li.has-sub > a:after {
+.header-1 .navi .navi ul > li.has-sub > a:after {
   color: #c4613f;
 }
-.header-1 .navi .navy > ul > li > ul {
+.header-1 .navi .navi > ul > li > ul {
   border-top: 2px solid #d08166;
   border-bottom: 2px solid #d08166;
 }
-.header-1 .navi .navy ul ul ul {
+.header-1 .navi .navi ul ul ul {
   border-top: 2px solid #d08166;
   border-bottom: 2px solid #d08166;
 }
-.header-1 .navi .navy #menu-button {
+.header-1 .navi .navi #menu-button {
   background: #d08166;
 }
-.header-1 .navi .navy ul .submenu-button:after {
+.header-1 .navi .navi ul .submenu-button:after {
   color: #d08166;
 }
 /*************************/
@@ -415,21 +415,21 @@ blockquote.blockquote-reverse {
 .header-2 .logo h1 a i {
   color: #d08166;
 }
-.header-2 .navy ul > li.has-sub > a:after {
+.header-2 .navi ul > li.has-sub > a:after {
   color: #d08166;
 }
-.header-2 .navy > ul > li > ul {
+.header-2 .navi > ul > li > ul {
   border-top: 2px solid #d08166;
   border-bottom: 2px solid #d08166;
 }
-.header-2 .navy ul ul ul {
+.header-2 .navi ul ul ul {
   border-top: 2px solid #d08166;
   border-bottom: 2px solid #d08166;
 }
-.header-2 .navy #menu-button {
+.header-2 .navi #menu-button {
   background: #d08166;
 }
-.header-2 .navy ul .submenu-button:after {
+.header-2 .navi ul .submenu-button:after {
   color: #d08166;
 }
 /* Block heading */
@@ -438,11 +438,6 @@ blockquote.blockquote-reverse {
 }
 .block-heading-three h3 {
   border-color: #d08166;
-}
-/* Team Four */
-.team-four .team-member:hover .team-details {
-  background: #d08166;
-  border: 1px solid #c4613f;
 }
 /* Image style #1 */
 .image-style-one .image-caption a {
@@ -470,46 +465,9 @@ blockquote.blockquote-reverse {
 .image-style-seven .image-caption a i:hover {
   background: #c4613f;
 }
-/* Facts */
-.facts .fact-value span {
-  color: #d08166;
-}
-.facts .fact-content p span {
-  color: #c4613f;
-}
-/* Pricing table #1 */
-.pricing-one .pricing-item {
-  border-top: 3px solid #d08166;
-}
-/* Pricing table #2 */
-.pricing-two i {
-  color: #d08166;
-}
-/* Pricing table #3 */
-.pricing-three h4 span {
-  color: #d08166;
-}
 /* Image Box #8 */
 .img-box-8 .img-box-8-item:hover .img-box-8-cap {
   background: #d08166;
-}
-/* V Card */
-.v-card header ul li.active a {
-  background: #d08166;
-  border-color: #c4613f;
-}
-.v-card header ul li.active a:hover {
-  background: #d08166;
-}
-.v-card header ul li a:hover {
-  background: #d08166;
-  border-color: #c4613f;
-  color: #ffffff;
-}
-/* Letter Head */
-.letter-head {
-  border-top: 3px solid #d08166;
-  border-bottom: 3px solid #d08166;
 }
 /* Box shadow block */
 .box-shadow-block {
@@ -517,10 +475,6 @@ blockquote.blockquote-reverse {
 }
 /* Block quote #2 */
 .quote-two .quote-two-content span {
-  background: #d08166;
-}
-/* Client block #1 */
-.client-one .c1-item .img-hover {
   background: #d08166;
 }
 /* Accordion */
@@ -548,11 +502,6 @@ blockquote.blockquote-reverse {
 /* Bootstrap carousel*/
 .carousel .carousel-indicators .active {
   background-color: #d08166;
-}
-/* Resume */
-.resume .main-block {
-  background: #d08166 url(../../img/overlay.png) repeat;
-  background-size: 252px 230px;
 }
 /* Smart forms */
 /* Rating */
@@ -584,34 +533,6 @@ blockquote.blockquote-reverse {
 }
 .smart-forms .ui-slider .ui-slider-handle:before {
   background: #d08166;
-}
-/* Index slim */
-.slim-feature .feature-content ul li:before {
-  color: #d08166;
-}
-/* Ecommerce ui #4 */
-.ecom-ui-four:hover {
-  border: 2px solid #d08166;
-}
-/* Ecommerce ui #5 */
-.ecom-ui-five {
-  border: 2px solid #d08166;
-}
-.ecom-ui-five .p-media a {
-  border-right: 2px solid #d08166;
-}
-/* Ecommerce ui #6 */
-.ecom-ui-six:hover {
-  border-color: #d08166;
-}
-/* Wedding */
-.wedding-header {
-  background: #d08166 url("../../img/wedding/overlay.png") repeat;
-  background-size: 252px 230px;
-}
-/* Restaurant */
-.restaurant .rest-item:hover {
-  border-color: #d08166;
 }
 /* Icon box 9 */
 .icon-box-9 .icon-box-9-item:hover {

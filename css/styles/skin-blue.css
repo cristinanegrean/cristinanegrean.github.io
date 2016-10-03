@@ -391,45 +391,48 @@ blockquote.blockquote-reverse {
   background: #609cec;
   border-bottom: 3px solid #498ee9;
 }
-.header-1 .navi .navy ul > li.has-sub > a:after {
+.header-1 .navi .navi ul > li.has-sub > a:after {
   color: #3280e7;
 }
-.header-1 .navi .navy > ul > li > ul {
+.header-1 .navi .navi > ul > li > ul {
   border-top: 2px solid #609cec;
   border-bottom: 2px solid #609cec;
 }
-.header-1 .navi .navy ul ul ul {
+.header-1 .navi .navi ul ul ul {
   border-top: 2px solid #609cec;
   border-bottom: 2px solid #609cec;
 }
-.header-1 .navi .navy #menu-button {
+.header-1 .navi .navi #menu-button {
   background: #609cec;
 }
-.header-1 .navi .navy ul .submenu-button:after {
+.header-1 .navi .navi ul .submenu-button:after {
   color: #609cec;
 }
 /*************************/
 /* Header two            */
 /* Logo & Navigation bar */
 /*************************/
-.header-2 .logo h1 a i {
+.header-2 .logo h1 a i, .header-2 .navi ul li a {
   color: #609cec;
 }
-.header-2 .navy ul > li.has-sub > a:after {
+.header-2 .navi ul li a:hover {
+  color: #297ae5;
+}
+.header-2 .navi ul > li.has-sub > a:after {
   color: #609cec;
 }
-.header-2 .navy > ul > li > ul {
+.header-2 .navi > ul > li > ul {
   border-top: 2px solid #609cec;
   border-bottom: 2px solid #609cec;
 }
-.header-2 .navy ul ul ul {
+.header-2 .navi ul ul ul {
   border-top: 2px solid #609cec;
   border-bottom: 2px solid #609cec;
 }
-.header-2 .navy #menu-button {
+.header-2 .navi #menu-button {
   background: #609cec;
 }
-.header-2 .navy ul .submenu-button:after {
+.header-2 .navi ul .submenu-button:after {
   color: #609cec;
 }
 /* Block heading */
@@ -438,11 +441,6 @@ blockquote.blockquote-reverse {
 }
 .block-heading-three h3 {
   border-color: #609cec;
-}
-/* Team Four */
-.team-four .team-member:hover .team-details {
-  background: #609cec;
-  border: 1px solid #3280e7;
 }
 /* Image style #1 */
 .image-style-one .image-caption a {
@@ -470,46 +468,9 @@ blockquote.blockquote-reverse {
 .image-style-seven .image-caption a i:hover {
   background: #3280e7;
 }
-/* Facts */
-.facts .fact-value span {
-  color: #609cec;
-}
-.facts .fact-content p span {
-  color: #3280e7;
-}
-/* Pricing table #1 */
-.pricing-one .pricing-item {
-  border-top: 3px solid #609cec;
-}
-/* Pricing table #2 */
-.pricing-two i {
-  color: #609cec;
-}
-/* Pricing table #3 */
-.pricing-three h4 span {
-  color: #609cec;
-}
 /* Image Box #8 */
 .img-box-8 .img-box-8-item:hover .img-box-8-cap {
   background: #609cec;
-}
-/* V Card */
-.v-card header ul li.active a {
-  background: #609cec;
-  border-color: #3280e7;
-}
-.v-card header ul li.active a:hover {
-  background: #609cec;
-}
-.v-card header ul li a:hover {
-  background: #609cec;
-  border-color: #3280e7;
-  color: #ffffff;
-}
-/* Letter Head */
-.letter-head {
-  border-top: 3px solid #609cec;
-  border-bottom: 3px solid #609cec;
 }
 /* Box shadow block */
 .box-shadow-block {
@@ -517,10 +478,6 @@ blockquote.blockquote-reverse {
 }
 /* Block quote #2 */
 .quote-two .quote-two-content span {
-  background: #609cec;
-}
-/* Client block #1 */
-.client-one .c1-item .img-hover {
   background: #609cec;
 }
 /* Accordion */
@@ -548,11 +505,6 @@ blockquote.blockquote-reverse {
 /* Bootstrap carousel*/
 .carousel .carousel-indicators .active {
   background-color: #609cec;
-}
-/* Resume */
-.resume .main-block {
-  background: #609cec url(../../img/overlay.png) repeat;
-  background-size: 252px 230px;
 }
 /* Smart forms */
 /* Rating */
@@ -584,34 +536,6 @@ blockquote.blockquote-reverse {
 }
 .smart-forms .ui-slider .ui-slider-handle:before {
   background: #609cec;
-}
-/* Index slim */
-.slim-feature .feature-content ul li:before {
-  color: #609cec;
-}
-/* Ecommerce ui #4 */
-.ecom-ui-four:hover {
-  border: 2px solid #609cec;
-}
-/* Ecommerce ui #5 */
-.ecom-ui-five {
-  border: 2px solid #609cec;
-}
-.ecom-ui-five .p-media a {
-  border-right: 2px solid #609cec;
-}
-/* Ecommerce ui #6 */
-.ecom-ui-six:hover {
-  border-color: #609cec;
-}
-/* Wedding */
-.wedding-header {
-  background: #609cec url("../../img/wedding/overlay.png") repeat;
-  background-size: 252px 230px;
-}
-/* Restaurant */
-.restaurant .rest-item:hover {
-  border-color: #609cec;
 }
 /* Icon box 9 */
 .icon-box-9 .icon-box-9-item:hover {

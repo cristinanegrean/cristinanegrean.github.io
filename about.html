@@ -18,43 +18,52 @@ permalink: /about/
     {% if modulo == '0' or forloop.first %}
     <div class="col-md-3 col-sm-12">
     {% endif %}
-        <div class="team-six">
-            <div class="team-member">
-                <!-- Image -->
-                <a href="{{ author.permalink | prepend: site.baseurl }}"><img class="img-responsive p-image" src="{{ '/img/author/' | append: author.avatar | prepend: site.baseurl }}" alt="{{ author.first_name }}" /></a>
-                <!-- Name -->
-                <h4><a href="{{ author.permalink | prepend: site.baseurl }}">{{ author.first_name }} {{ author.last_name }}</a></h4>
-                <span class="deg">{{ author.title }}</span>
-                {% if author.title2 %}
-                <div class="clearfix"></div>
-                <span class="deg">{{ author.title2 }}</span>
-                {% endif %}
-                <!-- Team Links -->
-                <div class="team-links">
-                    {% if author.email %}
-                    <a href="mailto:{{ author.email }}"><i class="fa fa-envelope"></i></a>
-                    {% endif %}
-                    {% if author.twitter %}
-                    <a href="https://www.twitter.com/{{ author.twitter }}" target="_blank"><i class="fa fa-twitter"></i></a>
-                    {% endif %}
-                    {% if author.github %}
-                    <a href="https://www.github.com/{{ author.github }}" target="_blank"><i class="fa fa-github"></i></a>
-                    {% endif %}
-                    {% if author.linkedin %}
-                    <a href="https://nl.linkedin.com/in/{{ author.linkedin }}" target="_blank"><i class="fa fa-linkedin"></i></a>
-                    {% endif %}
-                    {% if author.phone %}
-                    <a href="tel:{{ author.phone }}"><i class="fa fa-phone"></i></a>
-                    {% endif %}
-                </div>
-            </div>
+
+    <div class="blog-author" style="text-align: center">
+        <!-- Image -->
+        <a href="{{ author.permalink | prepend: site.baseurl }}"><img class="img-responsive p-image" src="{{ '/img/author/' | append: author.avatar | prepend: site.baseurl }}" alt="{{ author.first_name }}" /></a>
+        <!-- Name -->
+        <h4><a href="{{ author.permalink | prepend: site.baseurl }}">{{ author.first_name }} {{ author.last_name }}</a></h4>
+        <span class="deg">{{ author.title }}</span>
+        {% if author.title2 %}
+        <div class="clearfix"></div>
+        <span class="deg">{{ author.title2 }}</span>
+        {% endif %}
+
+        <div class="align-center-text">
+            {% if author.email %}
+            <a href="mailto:{{ author.email }}"><i class="fa fa-envelope circle-2"></i></a>
+            {% endif %}
+            {% if author.twitter %}
+            <a href="https://www.twitter.com/{{ author.twitter }}" target="_blank"><i class="fa fa-twitter circle-2"></i></a>
+            {% endif %}
+            {% if author.github %}
+            <a href="https://www.github.com/{{ author.github }}" target="_blank"><i class="fa fa-github circle-2"></i></a>
+            {% endif %}
+            {% if author.linkedin %}
+            <a href="https://nl.linkedin.com/in/{{ author.linkedin }}" target="_blank"><i class="fa fa-linkedin circle-2"></i></a>
+            {% endif %}
+            {% if author.phone %}
+            <a href="tel:{{ author.phone }}"><i class="fa fa-phone circle-2"></i></a>
+            {% endif %}
         </div>
+    </div>
+
     {% if modulo == '3' or forloop.last %}
     </div>
-    <div class="col-md-9 col-sm-12">
-        <h1>More information about {{ author.first_name }}</h1>
-        {% if author.bio %}
-            {{ author.bio | markdownify }}
+    <div class="col-md-9 col-sm-12 justify-text" >
+        {% if author.bio1 %}
+            {{ author.bio1 | markdownify }}
+        {% endif %}
+        {% if author.bio2 %}
+            {{ author.bio2 | markdownify }}
+        {% endif %}
+        <a href="#" target="_blank"><img class="img-responsive" src="{{ '/img/author/projects_SCEE.png' | prepend: site.baseurl }}" alt="Cycleon SCEE RMA Portal and Repair Centers Integration" /></a>
+        {% if author.bio3 %}
+        {{ author.bio3 | markdownify }}
+        {% endif %}
+        {% if author.bio4 %}
+        {{ author.bio4 | markdownify }}
         {% endif %}
     </div>
     {% endif %}

@@ -4,8 +4,11 @@ cristina_negrean:
   github: cristinanegrean
   twitter: cristinanegrean
   linkedin: cristinanegrean
-  permalink: /author/cristina-negrean/
+  permalink: /about
   avatar: cristina-negrean.png
   title: Software Engineer
   email: negrean.cristina@gmail.com
-  bio: Cristina is a software engineer passionate about Java, the Spring ecosystem, Microservices, DevOps and modern Web development technologies. In her spare time, Cristina likes to hike, climb or trail run through beautiful nature and travels to get inspired.
+  bio1: Cristina is a full-stack software engineer passionate about all things Java, the <a href="https://spring.io/projects">Spring ecosystem</a>, microservices, data warehousing and analytics, as well as modern web development technologies. She has been engineering computer software in corporate settings for the past 12 years, gaining extensive domain knownledge in the areas of&#58; reverse logistics and supply chain, ecommerce and content management portals.
+  bio2: Cristina has worked for highly innovative, international companies, such as&#58; <a href="http://www.isdc.eu/">ISDC</a>, where she was involved in rebuilding and redesigning a huge codebase of a Dutch Information Services provider to achieve higher performance, scalability and reduce operational costs by moving to open source, and <a href="http://www.cycleon-revlog.com/about-us">Cycleon</a>, <a href="http://www.cycleon-revlog.com/news/172/cycleon-wins-again-award-best-european-reverse-logistics-supplier">an awarded</a> international Supply Chain and Service Integrator, where she has been entrusted most of the Enterprise Integration challenges, achieved a higher degree of modularity and technological up-to-date status of old codebase, contributed to moving software platform from on-premise to Amazon EC2 and pioneered software solutions for a range of clients in hi-tech and electronics.
+  bio3: Her passion for software engineering dates way back before her corporate journey, she started programming at the age of 13. She holds a <a href="https://www.dropbox.com/s/k0x8nvk7opfeirh/Diplomawaardering.png?dl=0">Bachelor degree in Computer Science from Technical University of Cluj-Napoca</a> and various certifications.
+  bio4: She is born and bred in <i class="blue">Transylvania</i>, a central region of Romania named as <a href="http://www.lonelyplanet.com/best-in-travel/regions/1">#1 region to visit in 2016 by LonelyPlanet</a>, and is a multiculti by definition&#58; Hungarian, Romanian and Dutch.

@@ -7,7 +7,7 @@ html {
 
 body {
     /* Margin bottom by footer height */
-    margin-bottom: 600px;
+    margin-bottom: 300px;
 }
 
 .outer {
@@ -19,7 +19,7 @@ body {
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    min-height: 600px;
+    min-height: 300px;
 }
 
 @media (max-width: 785px) {
@@ -30,7 +30,7 @@ body {
 
     .footer {
         /* Set the fixed height of the footer here */
-        min-height: 1121px;
+        min-height: 521px;
     }
 
     img {
@@ -94,10 +94,10 @@ img.float-image {
     blockquote p {
         font-size: 100%;
     }
-    .header-2 .navy {
-        margin-top: 40px;
+    .header-2 .navi {
+        margin-top: 0 !important;
     }
-    .header-2 .navy > ul > li > a {
+    .header-2 .navi > ul > li > a {
         font-size: 120%;
     }
 }
@@ -106,24 +106,22 @@ img.float-image {
     .tk-acumin-pro {
         font-size: 130%;
     }
+    .tk-droid-serif {
+        font-size: 130%;
+    }
     blockquote p {
         font-size: 110%;
     }
-    .header-2 .navy > ul > li > a {
+    .header-2 .navi > ul > li > a {
         font-size: 150%;
     }
 }
-
-.team-six .team-member {
-    min-height: 400px;
-}
-
 @media screen and (min-width: 768px) {
     .header-2 .col-md-6 {
         width: 50%;
         float: left;
     }
-    .header-2 .navy {
+    .header-2 .navi {
         float: right;
     }
 }
@@ -138,4 +136,11 @@ img.float-image {
     margin-left: 0 !important;
     font-weight: normal;    
     display: block;
+}
+
+.justify-text {
+    text-align: justify; text-justify: inter-word;"
+}
+.align-center-text {
+    text-align: center;
 }

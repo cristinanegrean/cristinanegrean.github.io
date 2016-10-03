@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{ site.title }}</title>
+    <title>{{ site.title }} - Code, Create, Share</title>
     <!-- Description, Keywords and Author -->
     <meta name="description" content="{{ site.description }}">
     <meta name="keywords" content="{{ site.metadata.keywords }}">
@@ -32,7 +31,6 @@
     <link href="{{ site.baseurl }}/css/owl.carousel.css" rel="stylesheet">
 
     <!-- CSS for this page -->
-
     <!-- Base style -->
     <link href="{{ site.baseurl }}/css/styles/style.css" rel="stylesheet">
     <!-- Skin CSS -->
@@ -45,20 +43,13 @@
     <link href="{{ site.baseurl }}/css/custom.css" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="#">
+    <link rel="icon" href="{{ site.baseurl }}/img/site/favicon.png" sizes="any" type="image/png">
 
-    <script src="https://use.typekit.net/gzh0mbm.js"></script>
-    <script>
-        try {
-            Typekit.load({async: true});
-        } catch (e) {
-        }
-    </script>
+    <!-- Adobe Typekit Fonts: https://typekit.com/fonts
+    <script src="https://use.typekit.net/rdv7tfq.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>-->
 </head>
 
-<!-- Add class "boxed" along with body for boxed layout. -->
-<!-- Add "pattern-x" (1 to 5) for background patterns. -->
-<!-- Add "img-x" (1 to 5) for background images. -->
 <body>
 
 <!-- Outer Starts -->
@@ -69,17 +60,26 @@
         <!-- Container -->
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-9">
                     <div class="logo">
-                        <h1><a href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/img/site/logo.png" width="354" height="280"/></a></h1>
+                        {% if page.image and page.category %}
+                            <!-- Blog post image -->
+                            <img class="img-responsive" src="{{ page.image | prepend: site.baseurl }}"/>
+                        {% else %}
+                            <!-- Main image image -->
+                            <img class="img-responsive" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page_photo.png" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
+                            <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="navy">
+                <div class="col-md-3">
+                    <div class="navi">
                         <ul>
                             <li><a href="{{ site.baseurl }}/">Blog</a></li>
                             <li><a href="{{ site.baseurl }}/about/">About</a></li>
                         </ul>
+                        <a href="{{ site.baseurl }}"><img class="img-responsive" src="{{ site.baseurl }}/img/site/QRCode.png"/></a>
+                        <img src="{{ site.baseurl }}/img/site/favicon.svg" width="200" height="200"/>
                     </div>
                 </div>
             </div>
@@ -93,6 +93,19 @@
 
         <div class="container tk-acumin-pro">
             {{content}}
+
+            <!-- Disqus -->
+            {% if page.comments %}
+            <div id="disqus_thread">{{ page.url | prepend: site.url }}</div>
+            <script type="text/javascript">
+                var disqus_config = function () {
+                    this.page.url = "{{ page.url | prepend: site.url }}";
+                    this.page.identifier = "{{ page.url }}";
+                    this.page.title = "{{ page.title }}";
+                };
+            </script>
+            <script src="//cristina-tech.disqus.com/embed.js" async></script>
+            {% endif %}
         </div>
     </div>
     <!-- Main content ends -->
@@ -111,7 +124,14 @@
                         <div class="foot-item">
                             <!-- Heading -->
                             <h5 class="bold"><i class="fa fa-coffee"></i>&nbsp;&nbsp;Gamification</h5>
-                            <p>Powered by <a href="https://pages.github.com/" class="blue">GitHub Pages</a> and <a href="https://jekyllrb.com/" class="blue">Jekyll</a></p>
+                            <p>Powered by <a href="https://pages.github.com/" class="blue">GitHub Pages</a>, <a href="https://jekyllrb.com/" class="blue">Jekyll</a> and massive amounts of coffee <svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 32 42" enable-background="new 0 0 32 42"> <path fill="#E92D2F" stroke="#E92D2F" stroke-width=".094" stroke-miterlimit=10 d="M20.2 0c.9 1.1 1.3 2.7 1 4-.3 1.6-1.2 3-2.2 4.2-.8 1-1.8 1.8-2.8 2.7-1.2.9-2.3 1.9-3 3.3-.6 1.1-.8 2.4-.3 3.5.7 2 2.3 3.4 3.2 5.3-.9-.8-1.9-1.8-2.8-2.7-.9-1-1.8-2-2.4-3.3-.4-.8-.6-1.8-.3-2.8.3-.9.9-1.7 1.6-2.4 1.8-1.8 4.1-3.2 6-5.1 1-1 1.8-2.3 2.1-3.7.2-.9.1-2-.1-3zm-1.5 11.7c2-1.4 4.3-2.4 6.6-3.1-1.8 1.2-3.8 2.3-5.4 3.8-.6.6-1.2 1.2-1.4 2-.2.6-.1 1.3.1 1.8.4 1 1.2 1.8 1.7 2.7.5.8.6 1.8.2 2.6-.5 1.2-1.6 2.1-2.7 2.8-.2.1-.3.3-.4.3.8-.7 1.3-1.6 1.3-2.6 0-.8-.4-1.4-.9-1.9-1-1.2-1.8-2.8-1.7-4.4.1-1.8 1.3-3.1 2.6-4z"/> <path fill="#0774BA" stroke="#0774BA" stroke-width=".094" stroke-miterlimit=10 d="M25.7 23.5c.4-.5 1.1-.7 1.8-.8 1.1-.2 2.3.2 3 .8.7.6 1.1 1.5.9 2.4-.2 1.1-.8 1.9-1.7 2.6-1.4 1.2-3.2 1.8-5 2.3l.3-.3c1.3-.8 2.7-1.6 3.7-2.8.6-.8 1.1-1.7.8-2.7-.2-1.1-1.3-1.9-2.4-2-.4.2-.9.3-1.4.5zm-20.6.9c1.8-.8 3.9-1.3 6-1.3-1.2.3-2.4.7-3.5 1.2-.3.2-.6.3-.8.6 0 .1.2.3.3.3.7.3 1.4.3 2.2.4 2.6.2 5.2.1 7.9-.1 2.6-.2 5.1-.5 7.6-.9-.6.3-1.2.5-1.7.8-.3.2-.6.3-.9.3-3.1.7-6.4.9-9.6.9-1.3 0-2.4 0-3.7-.1-1.3-.1-2.8-.2-4.1-.6-.2.1-.5 0-.8-.3-.2-.1-.2-.3 0-.5.3-.3.7-.5 1.1-.7zm2.5 4.4c.5-.4 1.2-.7 1.8-.8-.2.3-.5.5-.5.8 0 .3.2.4.3.5.3.2.8.3 1.1.3 1.9.2 3.9.3 6 .2 1.8-.1 3.6-.4 5.4-.7.5.4 1.1.8 1.7 1.1-2.2.7-4.4 1-6.6 1.2-2.1.2-4.3.2-6.4-.2-.8-.2-1.7-.3-2.4-.8-.3-.2-.7-.4-.8-.8 0-.4.1-.6.4-.8zm1.1 4.4c.5-.4 1.1-.6 1.6-.8-.2.2-.5.4-.3.7.3.3.8.4 1.2.5 1.8.3 3.4.3 5.2.3 1.3-.1 2.6-.3 3.9-.5.8.4 1.5.8 2.3 1.1-1.2.5-2.5.9-3.8 1.2-2.2.4-4.4.4-6.6.1-1-.2-1.9-.4-2.9-.8-.3-.2-.7-.4-.8-.8-.2-.4 0-.8.2-1zm-5.6 2.9c.9-.3 1.9-.6 2.9-.6.4 0 .8 0 1.2.3-1.2.1-2.4.3-3.4.9-.3.2-.5.3-.6.6 0 .3.3.4.6.5 1.5.6 3.1.8 4.6.9 4.6.4 9.3.3 13.9-.2 1.8-.2 3.5-.4 5.2-.8.5-.2 1.2-.3 1.5-.8.3-.3.1-.7-.2-.9.3.2.8.4.8.9-.2.5-.7.8-1 1-1.3.7-2.8 1-4.2 1.3-4.2.8-8.4 1-12.7.8-3.2-.1-6.4-.4-9.6-.9-.6-.2-1.2-.3-1.6-.7-.3-.3 0-.8.3-.9.6-.7 1.5-1.1 2.3-1.4zm25.5 3.5c1-.3 2.1-.8 2.9-1.6-.2.9-.9 1.5-1.7 1.9-1.4.8-3.1 1.1-4.7 1.4-3.4.5-6.9.7-10.3.6-2.4-.1-4.8-.2-7.1-.7-.6-.2-1.2-.3-1.7-.6 2.1.3 4.2.5 6.3.6 3.4.1 6.9 0 10.3-.4 2-.2 4-.6 6-1.2z"/></svg>
+                            </p>
+                        </div>
+                        <!-- Disclaimer -->
+                        <div class="foot-item">
+                            <!-- Heading -->
+                            <h5 class="bold"><i class="fa fa-legal"></i>&nbsp;&nbsp;Disclaimer</h5>
+                            <p>Opinions expressed on this blog reflect the writer’s point of view only. Code samples showcase writer's personal projects.</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6">
@@ -122,7 +142,7 @@
                             <!-- Foot Item Content -->
                             <div class="foot-item-content">
                                 <ul class="list-unstyled">
-                                    {% for post in site.posts limit:7 %}
+                                    {% for post in site.posts limit:3 %}
                                     <li>
                                         <span>{{ post.date | date_to_string }}</span> &raquo;
                                         <a href="{{ post.url }}">
@@ -180,19 +200,7 @@
 <!-- Custom JS. Type your JS code in custom.js file -->
 <script src="{{ site.baseurl }}/js/custom.js"></script>
 
-<!-- Disqus -->
-{% if page.comments %}
-    <script type="text/javascript">
-        var disqus_config = function () {
-            this.page.url = "{{ page.url | prepend: site.url }}";
-            this.page.identifier = "{{ page.url }}";
-            this.page.title = "{{ page.title }}";
-        };
-    </script>
-    <script src="{{ site.baseurl }}/js/embed.js" async></script>
-{% endif %}
-
-<!-- Google Analytics -->
+<!-- Google Analytics
 <script>
     (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
@@ -207,7 +215,7 @@
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
     ga('create', 'UA-15533478-1', 'auto');
     ga('send', 'pageview');
-</script>
+</script> -->
 
 </body>
 </html>
