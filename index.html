@@ -5,8 +5,8 @@ layout: default
 <!-- blog One -->
 <div class="row">
     <!-- Mainbar column -->
-    <div class="col-md-9">
-        <div class="row blog-masonry">
+    <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+        <div class="blog-masonry">
             {% for post in paginator.posts %}
             <!-- Post Item -->
             <div class="col-xs-6 col-md-4 item">
@@ -31,7 +31,7 @@ layout: default
         <div class="row">
             <!-- Pagination -->
             {% if paginator.total_pages > 1 %}
-            <nav class="col-md-9">
+            <nav class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
                 <ul class="pagination center-block">
                     {% if paginator.previous_page %}
                         <li>

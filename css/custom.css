@@ -24,12 +24,12 @@ body {
 
 @media (max-width: 785px) {
     body {
-        /* Margin bottom by footer height */
-        margin-bottom: 1121px;
+        /* Margin bottom by footer height 1121 */
+        margin-bottom: 521px;
     }
 
     .footer {
-        /* Set the fixed height of the footer here */
+        /* Set the fixed height of the footer here 521*/
         min-height: 521px;
     }
 
@@ -58,6 +58,11 @@ p {
 img.p-image {
     border: 0.3em solid rgba(77, 148, 255, 0.8);
     border-radius: 999em;
+}
+
+img.p-image-horiz {
+    border: 0.3em solid white;
+    border-radius: 5em;
 }
 
 img.float-image {

@@ -60,26 +60,26 @@
         <!-- Container -->
         <div class="container">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                     <div class="logo">
                         {% if page.image and page.category %}
                             <!-- Blog post image -->
                             <img class="img-responsive" src="{{ page.image | prepend: site.baseurl }}"/>
                         {% else %}
                             <!-- Main image image -->
-                            <img class="img-responsive" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page_photo.png" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
+                            <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
                             <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
                         {% endif %}
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                     <div class="navi">
                         <ul>
                             <li><a href="{{ site.baseurl }}/">Blog</a></li>
                             <li><a href="{{ site.baseurl }}/about/">About</a></li>
                         </ul>
                         <a href="{{ site.baseurl }}"><img class="img-responsive" src="{{ site.baseurl }}/img/site/QRCode.png"/></a>
-                        <img src="{{ site.baseurl }}/img/site/favicon.svg" width="200" height="200"/>
+                        <img class="img-responsive" src="{{ site.baseurl }}/img/site/favicon.svg"/>
                     </div>
                 </div>
             </div>
@@ -89,9 +89,9 @@
 
     <!-- Main content starts -->
 
-    <div class="main-block">
+    <div class="main-block container">
 
-        <div class="container tk-acumin-pro">
+        <div class="row tk-acumin-pro">
             {{content}}
 
             <!-- Disqus -->
@@ -119,7 +119,7 @@
             <!-- Container -->
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <!-- Foot Item -->
                         <div class="foot-item">
                             <!-- Heading -->
@@ -134,7 +134,7 @@
                             <p>Opinions expressed on this blog reflect the writer’s point of view only. Code samples showcase writer's personal projects.</p>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-6">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <!-- Foot Item -->
                         <div class="foot-item">
                             <!-- Heading -->
