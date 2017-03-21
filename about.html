@@ -5,24 +5,18 @@ permalink: /about/
 ---
 
 <div class="container">
-<!-- Heading -->
-<div class="block-heading-six align-center-text row col-lg-9 col-md-9 col-sm-9 col-xs-9">
-    <h4 class="bg-color">Author</h4>
-</div>
-<br />
-
+  {% assign index = 0 %}
+  {% for authorEntry in site.data.authors %}
+  {% capture modulo %}{{ forloop.index0 | mod:4 }}{% endcapture %}
+  {% assign author = authorEntry[1] %}
 <div class="row">
-    {% assign index = 0 %}
-    {% for authorEntry in site.data.authors %}
-    {% capture modulo %}{{ forloop.index0 | mod:4 }}{% endcapture %}
-    {% assign author = authorEntry[1] %}
-
-  <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 justify-text" >
+  <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 justify-text" >
+    <div class="block-heading-six align-center-text"><h4 class="bg-color">Author</h4><br/></div>
           {% if author.bio1 %}
               {{ author.bio1 | markdownify }}
           {% endif %}
           {% if author.bio2 %}
-              {{ author.bio2 | markdownify }}
+          {{ author.bio2 | markdownify }}
           {% endif %}
           <a href="#" target="_blank"><img class="img-responsive" src="{{ '/img/author/projects_SCEE.png' | prepend: site.baseurl }}" alt="Cycleon SCEE RMA Portal and Repair Centers Integration" /></a>
           {% if author.bio3 %}
@@ -32,7 +26,7 @@ permalink: /about/
           {{ author.bio4 | markdownify }}
           {% endif %}
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-0">
     <div class="blog-author align-center-text">
         <!-- Image -->
         <a href="{{ author.permalink | prepend: site.baseurl }}"><img class="img-responsive p-image" src="{{ '/img/author/' | append: author.avatar | prepend: site.baseurl }}" alt="{{ author.first_name }}" /></a>
@@ -63,6 +57,6 @@ permalink: /about/
         </div>
     </div>
   </div>
- {% endfor %}
 </div>
+{% endfor %}
 </div>

@@ -1,19 +1,15 @@
 /* Your CSS codes here */
-
 html {
     position: relative;
     min-height: 100%;
 }
-
 body {
     /* Margin bottom by footer height */
     margin-bottom: 300px;
 }
-
 .outer {
     padding-bottom: 100px;
 }
-
 .footer {
     position: absolute;
     bottom: 0;
@@ -21,77 +17,62 @@ body {
     /* Set the fixed height of the footer here */
     min-height: 300px;
 }
-
 @media (max-width: 785px) {
     body {
-        /* Margin bottom by footer height 1121 */
-        margin-bottom: 521px;
+        /* Margin bottom by footer height*/
+        margin-bottom: 721px;
     }
-
     .footer {
-        /* Set the fixed height of the footer here 521*/
+        /* Set the fixed height of the footer here*/
         min-height: 521px;
     }
-
     img {
         max-width: 100%;
     }
-
     .blog-masonry img {
         max-width: 90%;
     }
 }
-
 h1, h2, h3, h4, h5, h6 {
     margin: 30px 0 5px;
 }
-
 h1 {
     font-size: 38px;
     line-height: 50px;
 }
-
 p {
     margin: 0 0 10px;
 }
-
 img.p-image {
     border: 0.3em solid rgba(77, 148, 255, 0.8);
     border-radius: 999em;
 }
-
 img.p-image-horiz {
     border: 0.3em solid white;
     border-radius: 5em;
 }
-
 img.float-image {
     float: left;
     margin: 10px 10px 10px 0;
 }
-
 .image-block {
     margin: 20px;
 }
-
 .image-style-five .image-caption {
     top: 0;
 }
-
 .image-style-five .image-caption h4 {
     font-size: 15px;
 }
-
 .image-block h4 a {
     color: #FFDFA4;
 }
-
 @media screen and (min-width: 480px) {
     .tk-acumin-pro {
         font-size: 110%;
     }
 }
-    
+
 @media screen and (min-width: 764px) {
     .tk-acumin-pro {
         font-size: 120%;
@@ -106,7 +87,6 @@ img.float-image {
         font-size: 120%;
     }
 }
-    
 @media screen and (min-width: 940px) {
     .tk-acumin-pro {
         font-size: 130%;
@@ -130,19 +110,16 @@ img.float-image {
         float: right;
     }
 }
-
 .page-heading-two h2 {
     margin: 0;
     font-weight: bold;
     line-height: 30px;
 }
-
 .page-heading-two h2 span {
     margin-left: 0 !important;
-    font-weight: normal;    
+    font-weight: normal;
     display: block;
 }
-
 .justify-text {
     text-align: justify; text-justify: inter-word;"
 }
