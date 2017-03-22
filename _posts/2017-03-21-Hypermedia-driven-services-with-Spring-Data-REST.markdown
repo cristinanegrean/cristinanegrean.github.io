@@ -56,8 +56,6 @@ The most straightforward way to use the Spring Initializr is to point your web b
 
  <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/SpringInitializr.png" alt="Spring Initializr"/>
 
- Once you have downloaded the project template, you can $ ./gradlew cleanIdea idea // remove and generates all IDEA configuration files
-
 ## "REST-Assured": Building Continuous Delivery confidence with Test Driven Development
 
  Before even starting to write a line of code, is a good practice to think about the approach to take to automate code quality checks so that you can code and refactor with confidence. And at the same time strive to minimize the number of defects!
@@ -178,7 +176,7 @@ Cristinas-iMac:wanderlust-open-travel-api cristina$ ./gradlew idea
 
 ## Creating and Initializing PostgreSQL Relational Data Store with Flyway and SQL
 
-One of the design principles of microservices architecture is to have a separate data store for each microservice. If you got so far, you should have already - see Technology Stack / Prerequisites - a [PostgreSQL](https://www.postgresql.org/) data store instance running on your machine with a created database named <i class="blue">wanderlust</i>, as well as USERNAME_POSTGRES and PWD_POSTGRES environment variables configured and resolvable according to the project's [README](https://raw.githubusercontent.com/cristinanegrean/wanderlust-open-travel-api/master/README.md)
+One of the design principles of microservices architecture is to have a separate data store for each microservice. If you got so far, you should already have a [PostgreSQL](https://www.postgresql.org/) data store instance running on your machine with a created database named <i class="blue">wanderlust</i>, as well as USERNAME_POSTGRES and PWD_POSTGRES environment variables configured and resolvable according to the project's [README](https://raw.githubusercontent.com/cristinanegrean/wanderlust-open-travel-api/master/README.md)
 
 To check whether your connection to the database is working properly, you can open a command line tool and type in:
 ```
@@ -328,22 +326,16 @@ version_rank | installed_rank | version |  description   | type |         script
 The key abstraction of information in REST is a resource. Any information that can be named can be a resource: a travel destination, a holiday package, a tour operator/agent.
 <i class="blue">"In other words, any concept that might be the target of an author's hypertext reference must fit within the definition of a resource. A resource is a conceptual mapping to a set of entities, not the entity that corresponds to the mapping at any particular point in time.”</i> - Roy Fielding’s dissertation
 
-In this blog post I will exemplify `Destination` class which is a simple model of a travel destination resource, with four basic attributes: the name, country, an optional description, and 0 or more funny facts. Geodata (GIS) and photos anyone? ;) It also has one constructor that will be used to create an instance of a Destination object and a bunch of getters and setters existing for the sake of the unit and integration tests. It is annotated with `@Entity`, indicating that it is a [JPA](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html) entity, mapping to persistent storage: `wanderlust.destinations` and `wanderlust.destination_facts` schema tables.
+In this blog post I will exemplify `Destination` class which is a simple model of a travel destination resource, with four basic attributes: the name, country, description and off course some funny facts about the destination. Geodata (GIS) and photos anyone? ;) It is annotated with `@Entity`, indicating that it is a [JPA](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html) entity, mapping to persistent storage: `wanderlust.destinations` and `wanderlust.destination_facts` schema tables.
 
 The `Destination` class encapsulates validation constraints with the use of [Hibernate Validator](http://hibernate.org/validator/) `@NotEmpty` and
-[JSR 303/349 Bean Validation](http://beanvalidation.org/) `@Size`,`@Pattern` annotations. I have used the message attribute of the bean validation annotations to provide API clients with descriptive validation error messages.
-
-Additionally it inherits common attributes as: id (unique resource identifier), createdAt, modifiedAt from `AbstractEntity`. The last two are used in the context of database auditing: tracking and logging events related to all persistent entities.
-
-<i class="blue">"REST components communicate by transferring a representation of the data in a format matching one of the evolving set of standard data types.”</i> - Fielding and Taylor.
-
-In the definition above, the standard data types are referencing to media types known by the [Web](https://www.w3.org/), typically something you would specify in an `Accept` HTTP header. And a Java class isn't one, thus there is some magic glue needed to translate a `Destination` domain object to a representation as [json](http://www.json.org/) (JavaScript Object Notation) for example. Spring Data REST does that automatically for you by using <i class="blue">Spring Data REST’s ObjectMapper</i>, which has been specially configured to use intelligent serializers that can turn domain objects into links and back again.
-For JSON representation there are 2 such intelligent serializers supported in Spring Data REST: [Jackson JSON](https://github.com/FasterXML/jackson) and [GSON](https://github.com/google/gson). Jackson is being auto configured as default by Spring Boot. <i class="blue">Spring Data REST’s ObjectMapper</i> will try and serialize unmanaged beans as normal POJOs and it will try and create links to managed beans where that’s necessary. But if your domain model doesn’t easily lend itself to reading or writing plain JSON, you may want to configure Jackson’s ObjectMapper with your own custom type mappings and (de)serializers. In my case, <i class="blue">Spring Data REST’s ObjectMapper</i> did the trick. I however have chosen to instruct [Jackson JSON](https://github.com/FasterXML/jackson) to simplify the view of my resources to not include `null` or empty attributes by using annotation `@JsonInclude(JsonInclude.Include.NON_EMPTY)` on `AbstractEntity`. The other excerpt (deviation from default view) I did was not including the auditing attributes (created and modified date) in the JSON representation as when creating a `Destination` these date auditing fields are tracked automatically. See `@JsonIgnoreProperties({"createdAt", "modifiedAt"})` on `AbstractEntity` in code listing below.
+[JSR 303/349 Bean Validation](http://beanvalidation.org/) `@Size`,`@Pattern` annotations. As you can see the name and the country of the destination are mandatory fields.
+I have used the message attribute of the bean validation annotations to provide API clients with descriptive validation error messages.
 
 Listing of `src/main/java/cristina/tech/blog/travel/domain/Destination.java`
+
 ```java
 package cristina.tech.blog.travel.domain;
-
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -357,7 +349,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
-
 
 @Entity
 @Table(name = "destinations")
@@ -380,6 +371,7 @@ public class Destination extends AbstractEntity {
     @Column(name = "fact")
     private List<String> facts;
 
+    /** Getters and setters used by unit and integration tests. */
     public String getName() {
         return this.name;
     }
@@ -412,6 +404,7 @@ public class Destination extends AbstractEntity {
         this.description = description;
     }
 
+    /** Default C-tor needed by Jackson JSON. */
     public Destination() {
     }
 
@@ -428,11 +421,12 @@ public class Destination extends AbstractEntity {
 }
 ```
 
+Additionally it inherits common attributes as: id (unique resource identifier), createdAt, modifiedAt from `AbstractEntity`. The last two are used in the context of database auditing: tracking and logging events related to all persistent entities.
+
 Listing of `src/main/java/cristina/tech/blog/travel/domain/AbstractEntity.java`
 
 ```java
 package cristina.tech.blog.travel.domain;
-
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -450,7 +444,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
 
 @MappedSuperclass
 @JsonIgnoreProperties({"createdAt", "modifiedAt"})
@@ -493,15 +486,25 @@ public abstract class AbstractEntity implements Serializable {
 }
 ```
 
+<i class="blue">"REST components communicate by transferring a representation of the data in a format matching one of the evolving set of standard data types.”</i> - Fielding and Taylor. In the definition above, `standard data types` is a reference to media types known by the [Web](https://www.w3.org/), typically something you would specify in an `Accept` HTTP header. And a Java class isn't one! Thus there is some magic glue needed to translate a `Destination` domain object to a [json](http://www.json.org/) (JavaScript Object Notation) representation for example.
+
+Spring Data REST does that automatically for you by using <i class="blue">Spring Data REST’s ObjectMapper</i>, which has been specially configured to use intelligent serializers that can turn domain objects into links and back again.For JSON representation there are 2 such intelligent serializers supported in Spring Data REST: [Jackson JSON](https://github.com/FasterXML/jackson) and [GSON](https://github.com/google/gson). Jackson is being auto configured as default by Spring Boot. <i class="blue">Spring Data REST’s ObjectMapper</i> will try and serialize unmanaged beans as normal POJOs and it will try and create links to managed beans where that’s necessary. But if your domain model doesn’t easily lend itself to reading or writing plain JSON, you may want to configure Jackson’s ObjectMapper with your own custom type mappings and (de)serializers.
+
+In my case, <i class="blue">Spring Data REST’s ObjectMapper</i> did the trick. I however have chosen to instruct [Jackson JSON](https://github.com/FasterXML/jackson) to simplify the view of my resources to not include `null` or empty attributes by using annotation `@JsonInclude(JsonInclude.Include.NON_EMPTY)` on `AbstractEntity`. The other excerpt, deviation from default view that I did, was not including the auditing attributes, created and modified date, in the JSON representation: see `@JsonIgnoreProperties({"createdAt", "modifiedAt"})` on `AbstractEntity`. The two date fields are initialized by application events that occur inside the persistence mechanism. As such the `@PrePersist` and `@PreUpdate` callback annotations will initialize the creation and modified timestamps of the API domain objects.
+
+## Coding the Repositories
+
+The general idea of Spring Data REST is that builds on top of Spring Data repositories and automatically exports those as REST resources. I created several repositories, one for each entity: `DestinationRepository`, `HolidayRepository` and `AgentRepository`. All repositories are Java interfaces extending from [PagingAndSortingRepository](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html) to leverage Spring's pagination and sorting support!
+
 For this repository, Spring Data REST exposes a collection resource at <i class="blue">/destinations</i>. It also exposes an item resource for each of the items managed by the repository under the URI template <i class="blue">/destinations/{id}</i>.
 
-<img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman Status Codes"/>
+## Running the API
 
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman"/>
 
-## Resource discoverability
+## HAL and Resource discoverability
 
 A core principle of [HATEOAS](https://spring.io/understanding/HATEOAS) (Hypermedia as the Engine of Application State) is that resources should be discoverable through the publication of links that point to the available resources. There are a few competing de-facto standards of how to represent links in JSON. By default, Spring Data REST uses HAL to render responses. HAL defines links to be contained in a property of the returned document.
-
 
 ## RESTing in the APLS
 

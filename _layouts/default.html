@@ -60,6 +60,16 @@
         <!-- Container -->
         <div class="container">
             <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <div class="navi">
+                      <ul>
+                          <li><a href="{{ site.baseurl }}/">Blog</a></li>
+                          <li><a href="{{ site.baseurl }}/about/">About</a></li>
+                      </ul>
+                      <img class="img-responsive" src="{{ site.baseurl }}/img/site/QRCode.png"/>
+                      <img class="img-responsive" src="{{ site.baseurl }}/img/site/favicon.svg"/>
+                  </div>
+                </div>
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-0">
                     <div class="logo">
                         {% if page.image and page.category %}
@@ -70,16 +80,6 @@
                             <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
                             <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
                         {% endif %}
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <div class="navi">
-                        <ul>
-                            <li><a href="{{ site.baseurl }}/">Blog</a></li>
-                            <li><a href="{{ site.baseurl }}/about/">About</a></li>
-                        </ul>
-                        <img class="img-responsive" src="{{ site.baseurl }}/img/site/QRCode.png"/>
-                        <img class="img-responsive" src="{{ site.baseurl }}/img/site/favicon.svg"/>
                     </div>
                 </div>
             </div>
