@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cristina Negrean - Code, Create, Share</title>
+    <!-- Description, Keywords and Author -->
+    <meta name="description" content="Software Engineer">
+    <meta name="keywords" content="Cristina,Tech,Blog,Java,Spring,Microservices,Scala,DevOps">
+    <meta name="author" content="Cristina Negrean">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    
+    <!-- Facebook Open Graph -->
+    <meta property="og:url" content="http://cristinanegrean.github.io/spring%20data%20rest,%20back-end%20api,%20wanderlust/2017/03/21/Hypermedia-driven-services-with-Spring-Data-REST.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Expose a discoverable REST API of your domain model using HAL JSON as media type -  " />
+    <meta property="og:description" content="Cristina Negrean" />
+    <meta property="og:image" content="http://cristinanegrean.github.io/img/open-travel-rest-api.gif" />
+    
+
+    <!-- Styles -->
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font awesome CSS -->
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Magnific Popup -->
+    <link href="/css/magnific-popup.css" rel="stylesheet">
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet">
+
+    <!-- CSS for this page -->
+    <!-- Base style -->
+    <link href="/css/styles/style.css" rel="stylesheet">
+    <!-- Skin CSS -->
+    <link href="/css/styles/skin-blue.css" rel="stylesheet" id="color_theme">
+
+    <!-- Syntax highlighting -->
+    <link href="/css/syntax.css" rel="stylesheet">
+
+    <!-- Custom CSS. Type your CSS code in custom.css file -->
+    <link href="/css/custom.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/img/site/favicon.png" sizes="any" type="image/png">
+
+    <!-- Adobe Typekit Fonts: https://typekit.com/fonts
+    <script src="https://use.typekit.net/rdv7tfq.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>-->
+</head>
+
+<body>
+
+<!-- Outer Starts -->
+<div class="outer">
+    <!-- Header two Starts -->
+    <div class="header-2">
+
+        <!-- Container -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                  <div class="navi">
+                      <ul>
+                          <li><a href="/">Blog</a></li>
+                          <li><a href="/about/">About</a></li>
+                      </ul>
+                      <img class="img-responsive" src="/img/site/QRCode.png"/>
+                      <img class="img-responsive" src="/img/site/favicon.svg"/>
+                  </div>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-0">
+                    <div class="logo">
+                        
+                            <!-- Blog post image -->
+                            <img class="img-responsive" src="/img/open-travel-rest-api.gif"/>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header two ends -->
+
+    <!-- Main content starts -->
+
+    <div class="main-block container">
+
+        <div class="row tk-acumin-pro">
+            <article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Expose a discoverable REST API of your domain model using HAL JSON as media type</h1>
+    <p class="post-meta"><time datetime="2017-03-21T00:00:00+01:00" itemprop="datePublished">Mar 21, 2017</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Cristina Negrean</span></span></p>
+  </header>
+  <div class="post-content justify-text" itemprop="articleBody">
+    <h2 id="background">Background</h2>
+
+<p><a href="https://martinfowler.com/articles/richardsonMaturityModel.html">REpresentational State Transfer (REST)</a> is an architectural style inspired by the Web and nowadays Hypermedia-driven CRUD REST services are at the backbone of a <a href="https://martinfowler.com/articles/microservices.html">microservice</a> internal architecture.
+Benefits as scalability, ease of testing and deployment, as well as the chance to eliminate long-term commitment to a single technology stack, have convinced some big enterprise players
+– like <a href="https://www.infoq.com/news/2015/12/microservices-amazon">Amazon</a>, <a href="https://www.nginx.com/blog/microservices-at-netflix-architectural-best-practices/">Netflix</a>,
+<a href="http://highscalability.com/blog/2015/12/1/deep-lessons-from-google-and-ebay-on-building-ecosystems-of.html">eBay</a>,
+<a href="https://www.infoq.com/news/2015/12/microservices-spotify">Spotify</a>
+– to begin transitioning their monolithic applications to <a href="https://martinfowler.com/articles/microservices.html">microservices</a>.</p>
+
+<h2 id="purpose">Purpose</h2>
+<p>If we want to accelerate microservices adoption rather than code at monolithic applications, it’s essential that we can create a basic service with a minimum of effort.
+Writing a REST-based microservice that accesses a data model typically involves writing the Data Access Objects (DAO) to access the data repository and writing the REST methods independently.
+This often means that you are responsible for writing all of the SQL queries or JPQL(Java Persistence Query Language).
+The <a href="http://projects.spring.io/spring-data-rest/">Spring Data REST</a> framework provides you with the ability to create data repository implementations automatically at runtime,
+from a data repository interface, and expose these data repositories over HTTP as a REST service.
+It takes the features of <a href="http://projects.spring.io/spring-hateoas/">Spring HATEOAS</a> and <a href="http://projects.spring.io/spring-data-jpa/">Spring Data JPA</a> and combines them automatically.</p>
+
+<p>This guide will give you a high-level walk through of my process of creating a microservice - called <a href="https://github.com/cristinanegrean/wanderlust-open-travel-api">Wanderlust</a> - that exposes a discoverable REST API of a simple open-travel domain model using <a href="https://tools.ietf.org/html/draft-kelly-json-hal-08">JSON HAL</a> as media type.</p>
+
+<h2 id="minimum-viable-product-mvp">Minimum Viable Product (MVP)</h2>
+<ul>
+  <li>list, search by country or name travel destinations</li>
+  <li>create, validate, update and delete a travel destination</li>
+  <li>list, search travel agents by name</li>
+  <li>create, validate, update and delete a travel agent</li>
+  <li>list, search holiday packages by destination country</li>
+  <li>create, validate a holiday package for a travel destination</li>
+  <li>pagination and sorting for list and search operations</li>
+</ul>
+
+<h2 id="technology-stack--prerequisites">Technology Stack / Prerequisites</h2>
+
+<ul>
+  <li><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java 8 SDK</a></li>
+  <li><a href="https://www.postgresql.org/">Postgresql 9</a></li>
+  <li><a href="https://gradle.org/">Gradle</a></li>
+  <li><a href="https://git-scm.com/downloads">Git</a></li>
+  <li><a href="https://curl.haxx.se/download.html">cURL 7.0+</a> (cURL is installed by default on most UNIX and Linux distributions. To install cURL on a Windows 64-bit machine,
+click <a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/cloud/objectstorage/creating_containers_REST_API/files/installing_curl_command_line_tool_on_windows.html">here</a>) or <a href="https://www.getpostman.com/">Postman</a></li>
+  <li>Your favorite Java code editor. At the moment my favorite one is <a href="https://www.jetbrains.com/idea/">IntelliJ IDEA</a></li>
+</ul>
+
+<p>When running on OS X, installion steps can be found in the project’s <a href="https://raw.githubusercontent.com/cristinanegrean/wanderlust-open-travel-api/master/README.md">README</a>.</p>
+
+<h2 id="bootiful-wanderlust-with-spring-boot-and-spring-initializr">“Bootiful Wanderlust” with Spring Boot and Spring Initializr</h2>
+
+<p>Sometimes the hardest part of any project is getting started. You have to setup a directory structure for various project artifacts, create a build file and populate it with all library dependencies. This is where <a href="https://start.spring.io/">Spring Initializr</a> comes into handy. <a href="https://start.spring.io/">Spring Initializr</a> is ultimately a web application that can generate a <a href="http://projects.spring.io/spring-boot/">Spring Boot</a> project structure for you. It doesn’t generate any application code, but it will give you a basic project structure and either a <a href="https://maven.apache.org/">Maven</a> or a <a href="https://gradle.org/">Gradle</a> build specification to build your code with. All you need to do is write the application code.
+<a href="http://projects.spring.io/spring-boot/">Spring Boot</a>, on the other hand, helps package the autonomous data microservice application as an uber-self-runnable-JAR (Java Application Archive) with an embedded application container.</p>
+
+<p>The most straightforward way to use the Spring Initializr is to point your web browser to (http://start.spring.io)[http://start.spring.io]. Fill in basic project information on the left side of the form, search and add dependencies listed in the figure below on the right side of the form and you should be all set to download the project template.</p>
+
+<p><img class="img-responsive" src="/img/posts/wanderlust-api/SpringInitializr.png" alt="Spring Initializr" /></p>
+
+<h2 id="rest-assured-building-continuous-delivery-confidence-with-test-driven-development">“REST-Assured”: Building Continuous Delivery confidence with Test Driven Development</h2>
+
+<p>Before even starting to write a line of code, is a good practice to think about the approach to take to automate code quality checks so that you can code and refactor with confidence. And at the same time strive to minimize the number of defects!
+ While I will show you how to unit and integration test the back-end API in a later post, I’ll start by adding the <a href="https://github.com/jacoco/jacoco">tooling</a> that calculates the percentage of code accessed by tests to the project build specification file (build.gradle).
+ The goal is to have each time when building the project, JaCoCo (Java Code Coverage) produce an XML report in the build directory:  <code class="highlighter-rouge">wanderlust-open-travel-api/build/reports/jacoco/test/jacocoTestReport.xml</code> to be used with the Continuous Integration (CI) server of your choice - for me that is <a href="https://travis-ci.org/">Travis</a> - to visually quantify test coverage and its <a href="https://coveralls.io/github/cristinanegrean/wanderlust-open-travel-api">evolution</a> between chronological software increments.</p>
+
+<p><img class="img-responsive" src="/img/posts/wanderlust-api/TravisCIBadges.png" alt="Test Coverage Badge with JaCoCo Report XML, GitHub, Travis CI and Coveralls" /></p>
+
+<p><code class="highlighter-rouge">wanderlust-open-travel-api/build/reports/jacoco/test/html/index.html</code></p>
+
+<p><img class="img-responsive" src="/img/posts/wanderlust-api/Jacoco.png" alt="Drill-down on test coverage per code package" /></p>
+
+<p>So just go ahead and open the project template structure generated with Spring Initializr and add the <i class="blue">jacoco</i> and <i class="blue">coveralls</i> dependencies. The result should look similar to the listing below.</p>
+
+<p><code class="highlighter-rouge">build.gradle</code></p>
+
+<figure class="highlight"><pre><code class="language-gradle" data-lang="gradle">  
+<span class="n">group</span> <span class="s1">'cristina.tech'</span>
+<span class="n">version</span> <span class="s1">'1.0.0-SNAPSHOT'</span>
+
+<span class="k">repositories</span> <span class="o">{</span>
+    <span class="n">mavenCentral</span><span class="o">()</span>
+<span class="o">}</span>
+
+<span class="k">buildscript</span> <span class="o">{</span>
+    <span class="n">ext</span> <span class="o">{</span>
+        <span class="n">springBootVersion</span> <span class="o">=</span> <span class="s1">'1.5.2.RELEASE'</span>
+    <span class="o">}</span>
+    <span class="k">repositories</span> <span class="o">{</span>
+        <span class="n">mavenCentral</span><span class="o">()</span>
+        <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://repo.spring.io/snapshot"</span> <span class="o">}</span>
+        <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://repo.spring.io/milestone"</span> <span class="o">}</span>
+        <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://plugins.gradle.org/m2/"</span> <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">dependencies</span> <span class="o">{</span>
+        <span class="n">classpath</span><span class="o">(</span><span class="s2">"org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"</span><span class="o">)</span>
+        <span class="n">classpath</span><span class="o">(</span><span class="s2">"org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1"</span><span class="o">)</span> <span class="c1">//Send coverage data to coveralls.io</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'java'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'idea'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'org.springframework.boot'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'jacoco'</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'com.github.kt3k.coveralls'</span>
+
+
+<span class="n">jar</span> <span class="o">{</span>
+    <span class="n">baseName</span> <span class="o">=</span> <span class="s1">'wanderlust'</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="s1">'1.0.0-SNAPSHOT'</span>
+<span class="o">}</span>
+
+<span class="n">sourceCompatibility</span> <span class="o">=</span> <span class="mf">1.8</span>
+<span class="n">targetCompatibility</span> <span class="o">=</span> <span class="mf">1.8</span>
+
+<span class="k">repositories</span> <span class="o">{</span>
+    <span class="n">mavenCentral</span><span class="o">()</span>
+    <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://repo.spring.io/snapshot"</span> <span class="o">}</span>
+    <span class="n">maven</span> <span class="o">{</span> <span class="n">url</span> <span class="s2">"https://repo.spring.io/milestone"</span> <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">dependencies</span> <span class="o">{</span>
+    <span class="n">compile</span><span class="o">(</span><span class="s1">'org.springframework.boot:spring-boot-starter-actuator'</span><span class="o">)</span>
+    <span class="n">compile</span><span class="o">(</span><span class="s1">'org.springframework.boot:spring-boot-starter-data-jpa'</span><span class="o">)</span>
+    <span class="n">compile</span><span class="o">(</span><span class="s1">'org.springframework.boot:spring-boot-starter-data-rest'</span><span class="o">)</span>
+    <span class="n">compile</span><span class="o">(</span><span class="s1">'org.springframework.data:spring-data-rest-hal-browser'</span><span class="o">)</span>
+    <span class="n">compile</span><span class="o">(</span><span class="s1">'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'</span><span class="o">)</span>
+
+    <span class="n">testCompile</span><span class="o">(</span><span class="s1">'org.springframework.boot:spring-boot-starter-test'</span><span class="o">)</span>
+
+    <span class="n">runtime</span><span class="o">(</span><span class="s1">'org.flywaydb:flyway-core'</span><span class="o">)</span>
+    <span class="n">runtime</span><span class="o">(</span><span class="s1">'org.postgresql:postgresql'</span><span class="o">)</span>
+    <span class="n">runtime</span><span class="o">(</span><span class="s1">'com.zaxxer:HikariCP'</span><span class="o">)</span>
+
+    <span class="n">testRuntime</span><span class="o">(</span><span class="s1">'com.h2database:h2'</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="n">jacoco</span> <span class="o">{</span>
+    <span class="n">toolVersion</span> <span class="o">=</span> <span class="s2">"0.7.9"</span>
+<span class="o">}</span>
+
+<span class="n">test</span> <span class="o">{</span>
+    <span class="n">jacoco</span> <span class="o">{</span>
+        <span class="n">append</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="n">destinationFile</span> <span class="o">=</span> <span class="n">file</span><span class="o">(</span><span class="s2">"$buildDir/jacoco.exec"</span><span class="o">)</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">jacocoTestReport</span> <span class="o">{</span>
+    <span class="n">reports</span> <span class="o">{</span>
+        <span class="n">xml</span><span class="o">.</span><span class="na">enabled</span> <span class="kc">true</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="n">build</span><span class="o">.</span><span class="na">dependsOn</span> <span class="n">jacocoTestReport</span>
+
+<span class="n">coveralls</span> <span class="o">{</span>
+    <span class="n">jacocoReportPath</span> <span class="o">=</span> <span class="s2">"${buildDir}/reports/jacoco/test/jacocoTestReport.xml"</span>
+<span class="o">}</span>
+
+<span class="n">task</span> <span class="nf">wrapper</span><span class="o">(</span><span class="nl">type:</span> <span class="n">Wrapper</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">gradleVersion</span> <span class="o">=</span> <span class="s1">'3.4.1'</span>
+<span class="o">}</span>
+
+<span class="n">tasks</span><span class="o">.</span><span class="na">coveralls</span> <span class="o">{</span>
+    <span class="n">onlyIf</span> <span class="o">{</span> <span class="n">System</span><span class="o">.</span><span class="na">env</span><span class="o">.</span><span class="s1">'CI'</span> <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>The Gradle IDEA plugin - <code class="highlighter-rouge">apply plugin: 'idea'</code> - generates files that are used by IntelliJ IDEA, thus making it possible to open the project from IDEA. To generate the project files, simply open a terminal window, navigate to the project root directory and run the <code class="highlighter-rouge">idea</code> task.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Cristinas-iMac:wanderlust-open-travel-api cristina$ ./gradlew idea
+:ideaModule
+:ideaProject
+:ideaWorkspace
+:idea
+</code></pre>
+</div>
+
+<h2 id="creating-and-initializing-postgresql-relational-data-store-with-flyway-and-sql">Creating and Initializing PostgreSQL Relational Data Store with Flyway and SQL</h2>
+
+<p>One of the design principles of microservices architecture is to have a separate data store for each microservice. If you got so far, you should already have a <a href="https://www.postgresql.org/">PostgreSQL</a> data store instance running on your machine with a created database named <i class="blue">wanderlust</i>, as well as USERNAME_POSTGRES and PWD_POSTGRES environment variables configured and resolvable according to the project’s <a href="https://raw.githubusercontent.com/cristinanegrean/wanderlust-open-travel-api/master/README.md">README</a></p>
+
+<p>To check whether your connection to the database is working properly, you can open a command line tool and type in:
+<code class="highlighter-rouge">
+psql -h localhost wanderlust
+</code></p>
+
+<p>You should see an output similar with to below:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>psql (9.5.3)
+Type "help" for help.
+
+wanderlust=# help
+You are using psql, the command-line interface to PostgreSQL.
+</code></pre>
+</div>
+<p>Once that is working, we need to instruct <a href="http://projects.spring.io/spring-boot/">Spring Boot</a> to use <a href="https://www.postgresql.org/">PostgreSQL</a> for storing the microservice data. As you might already know, Spring Boot is using by default <a href="http://www.h2database.com/html/main.html">H2</a> in-memory database. In-memory databases are useful in the early development stages in local environments, but they have lots of restrictions. As the development progresses, you would most probably require a persistent data store to develop and test your application before deploying it to use a production database server. Spring Boot integrates with all major RDBMS and NoSQL databases as: <a href="https://www.mysql.com/">MySQL</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, Oracle, <a href="https://www.mongodb.com/">MongoDB</a>, <a href="http://cassandra.apache.org/">Cassandra</a>, even Microsoft SQL Server. Isn’t Microsoft taking major steps towards open source? :)</p>
+
+<p>To use PostgreSQL, you will need the proper database drivers. The required JARs should already be provisioned due to the fact that we have included it as a dependency with Spring Initializr. Furthermore we would like to use PostgreSQL with a lightweight, high-performance JDBC connection pool technology like <a href="https://brettwooldridge.github.io/HikariCP/">HikariCP</a> to prepare the service for production-grade environment concurrency.</p>
+
+<p>This last one can be added to <i class="blue">build.gradle</i> file:</p>
+
+<figure class="highlight"><pre><code class="language-gradle" data-lang="gradle">  <span class="n">runtime</span><span class="o">(</span><span class="s1">'com.zaxxer:HikariCP'</span><span class="o">)</span></code></pre></figure>
+
+<p>Additionally we will check that Spring Boot’s AutoConfiguration feature has yielded the proper connection properties and tweak them accordingly.</p>
+
+<p><img class="img-responsive" src="/img/posts/wanderlust-api/datasource_config.png" alt="Spring Boot Properties for postgres Profile " /></p>
+
+<div class="language-properties highlighter-rouge"><pre class="highlight"><code><span class="c"># Datasource configuration
+</span><span class="py">spring.datasource.url</span><span class="p">=</span><span class="s">jdbc:postgresql://localhost:5432/wanderlust</span>
+<span class="py">spring.datasource.driverClassName</span><span class="p">=</span><span class="s">org.postgresql.Driver</span>
+<span class="py">spring.datasource.username</span><span class="p">=</span><span class="s">${USERNAME_POSTGRES}</span>
+<span class="py">spring.datasource.password</span><span class="p">=</span><span class="s">${PWD_POSTGRES}</span>
+<span class="c"># This property controls the maximum size that the pool is allowed to reach, including both idle and in-use connections. Basically this value will determine the maximum number of actual connections to the database backend. A reasonable value for this is best determined by your execution environment. When the pool reaches this size, and no idle connections are available, calls to getConnection() will block for up to connectionTimeout milliseconds before timing out. Default: 10
+</span><span class="py">spring.datasource.hikari.maximumPoolSize</span><span class="p">=</span><span class="s">10</span>
+<span class="c"># This property controls the maximum number of milliseconds that a client (that's you) will wait for a connection from the pool. If this time is exceeded without a connection becoming available, a SQLException will be thrown. Lowest acceptable connection timeout is 250 ms. Default: 30000 (30 seconds)
+</span><span class="py">spring.datasource.hikari.connectionTimeout</span><span class="p">=</span><span class="s">1500</span>
+</code></pre>
+</div>
+<p>Finally we have come to the point where we can model the <i class="blue">wanderlust</i> database.</p>
+
+<p><img class="img-responsive" src="/img/posts/wanderlust-api/schema.png" alt="Spring Boot Properties for postgres Profile " /></p>
+
+<p><code class="highlighter-rouge">src/main/resources/db/migration/V0__DDL_wanderlust.sql</code></p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">schema_version</span><span class="p">;</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">travel_agent_holiday_packages</span><span class="p">;</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">travel_agents</span><span class="p">;</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">holiday_packages</span><span class="p">;</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">destination_facts</span><span class="p">;</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">destinations</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">destinations</span> <span class="p">(</span>
+  <span class="n">id</span>          <span class="n">SERIAL</span>    <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">name</span>        <span class="n">TEXT</span>      <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">country</span>     <span class="n">TEXT</span>      <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">description</span> <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">created_at</span>  <span class="k">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">(),</span>
+  <span class="n">modified_at</span> <span class="k">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">destination_facts</span> <span class="p">(</span>
+  <span class="n">destination</span> <span class="n">SERIAL</span> <span class="k">REFERENCES</span> <span class="n">destinations</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">fact</span>        <span class="n">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">travel_agents</span> <span class="p">(</span>
+  <span class="n">id</span>             <span class="n">SERIAL</span>    <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">name</span>           <span class="n">TEXT</span>      <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">country</span>        <span class="n">TEXT</span>      <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">street_address</span> <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">postal_code</span>    <span class="n">TEXT</span>      <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+  <span class="n">city</span>           <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">email</span>          <span class="n">TEXT</span>      <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span><span class="p">,</span>
+  <span class="n">phone</span>          <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">fax</span>            <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">website</span>        <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">created_at</span>     <span class="k">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">(),</span>
+  <span class="n">modified_at</span>    <span class="k">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">holiday_packages</span> <span class="p">(</span>
+  <span class="n">id</span>                    <span class="n">SERIAL</span>    <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">destination</span>           <span class="n">SERIAL</span>    <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">destinations</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">start_on</span>              <span class="n">DATE</span><span class="p">,</span>
+  <span class="n">days_count</span>            <span class="n">SMALLINT</span><span class="p">,</span>
+  <span class="n">depart_from</span>           <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">price</span>                 <span class="n">NUMERIC</span><span class="p">,</span>
+  <span class="n">flight_included</span>       <span class="n">BOOLEAN</span>   <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">,</span>
+  <span class="n">accomodation_included</span> <span class="n">BOOLEAN</span>   <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="k">FALSE</span><span class="p">,</span>
+  <span class="n">package_info</span>          <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">created_at</span>            <span class="k">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">(),</span>
+  <span class="n">modified_at</span>           <span class="k">TIMESTAMP</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="n">now</span><span class="p">(),</span>
+  <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">start_on</span><span class="p">,</span> <span class="n">days_count</span><span class="p">,</span> <span class="n">depart_from</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">flight_included</span><span class="p">,</span> <span class="n">accomodation_included</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">travel_agent_holiday_packages</span> <span class="p">(</span>
+  <span class="n">travel_agent</span>    <span class="n">SERIAL</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">travel_agents</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="n">holiday_package</span> <span class="n">SERIAL</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">holiday_packages</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">travel_agent</span><span class="p">,</span> <span class="n">holiday_package</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">src/main/resources/db/migration/V1__DML_wanderlust.sql</code></p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">destinations</span>
+<span class="k">VALUES</span> <span class="p">((</span><span class="k">SELECT</span> <span class="n">nextval</span><span class="p">(</span><span class="s1">'destinations_id_seq'</span><span class="p">)),</span> <span class="s1">'Quintessential Japan'</span><span class="p">,</span> <span class="s1">'Japan'</span><span class="p">,</span> <span class="s1">'Life-changing-experience'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">destination_facts</span> <span class="k">VALUES</span>
+  <span class="p">((</span><span class="k">SELECT</span> <span class="n">currval</span><span class="p">(</span><span class="s1">'destinations_id_seq'</span><span class="p">)),</span>
+   <span class="s1">'There are over 5.5 million vending machines in Japan selling everything from umbrellas and cigarettes to canned bread and hot noodles.'</span><span class="p">),</span>
+  <span class="p">((</span><span class="k">SELECT</span> <span class="n">currval</span><span class="p">(</span><span class="s1">'destinations_id_seq'</span><span class="p">)),</span>
+   <span class="s1">'Japan</span><span class="se">''</span><span class="s1">s birth rate has plummeted so significantly that adult nappies (diapers) outsell babies</span><span class="se">''</span><span class="s1"> nappies, which are also sold in vending machines.'</span><span class="p">),</span>
+  <span class="p">((</span><span class="k">SELECT</span> <span class="n">currval</span><span class="p">(</span><span class="s1">'destinations_id_seq'</span><span class="p">)),</span>
+   <span class="s1">'It is estimated that more paper is used for manga comics than for toilet paper in Japan. (Surprise: both are sold in vending machines as well.)'</span><span class="p">),</span>
+  <span class="p">((</span><span class="k">SELECT</span> <span class="n">currval</span><span class="p">(</span><span class="s1">'destinations_id_seq'</span><span class="p">)),</span>
+   <span class="s1">'One of the world</span><span class="se">''</span><span class="s1">s most famous pilgrimage routes after the Camino de Santiago is Japan</span><span class="se">''</span><span class="s1">s Kumano Kodo near Osaka.'</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">travel_agents</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">postal_code</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">website</span><span class="p">)</span> <span class="k">VALUES</span>
+  <span class="p">((</span><span class="k">SELECT</span> <span class="n">nextval</span><span class="p">(</span><span class="s1">'travel_agents_id_seq'</span><span class="p">)),</span> <span class="s1">'Shoestring'</span><span class="p">,</span> <span class="s1">'NL'</span><span class="p">,</span> <span class="s1">'1114 AA'</span><span class="p">,</span> <span class="s1">'info@shoestring.nl'</span><span class="p">,</span>
+   <span class="s1">'https://shoestring.nl'</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">holiday_packages</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">depart_from</span><span class="p">,</span> <span class="n">package_info</span><span class="p">)</span> <span class="k">VALUES</span>
+  <span class="p">((</span><span class="k">SELECT</span> <span class="n">nextval</span><span class="p">(</span><span class="s1">'holiday_packages_id_seq'</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'Amsterdam Schipol'</span><span class="p">,</span> <span class="s1">'New horizons in the land of the rising sun'</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">travel_agent_holiday_packages</span>
+<span class="k">VALUES</span> <span class="p">((</span><span class="k">SELECT</span> <span class="n">currval</span><span class="p">(</span><span class="s1">'travel_agents_id_seq'</span><span class="p">)),</span> <span class="p">(</span><span class="k">SELECT</span> <span class="n">currval</span><span class="p">(</span><span class="s1">'holiday_packages_id_seq'</span><span class="p">)));</span>
+</code></pre>
+</div>
+
+<p>Database scripts will be run automatically by <a href="https://flywaydb.org">Flywaydb</a> upon service start. You can check the schema version and installation details via <a href="http://localhost:9000/flyway">Spring Actuator endpoint</a> or command line:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="n">wanderlust</span><span class="o">=#</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">schema_version</span><span class="p">;</span>
+<span class="n">version_rank</span> <span class="o">|</span> <span class="n">installed_rank</span> <span class="o">|</span> <span class="k">version</span> <span class="o">|</span>  <span class="n">description</span>   <span class="o">|</span> <span class="k">type</span> <span class="o">|</span>         <span class="n">script</span>        <span class="o">|</span>  <span class="n">checksum</span>   <span class="o">|</span> <span class="n">installed_by</span> <span class="o">|</span>        <span class="n">installed_on</span>        <span class="o">|</span> <span class="n">execution_time</span> <span class="o">|</span> <span class="n">success</span>
+<span class="c1">------------+----------------+---------+----------------+------+------------------------+-------------+--------------+----------------------------+----------------+---------</span>
+          <span class="mi">1</span> <span class="o">|</span>              <span class="mi">1</span> <span class="o">|</span> <span class="mi">0</span>       <span class="o">|</span> <span class="n">DDL</span> <span class="n">wanderlust</span> <span class="o">|</span> <span class="k">SQL</span>  <span class="o">|</span> <span class="n">V0__DDL_wanderlust</span><span class="p">.</span><span class="k">sql</span> <span class="o">|</span> <span class="o">-</span><span class="mi">1654223572</span> <span class="o">|</span> <span class="n">cristina</span>     <span class="o">|</span> <span class="mi">2016</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">03</span> <span class="mi">12</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">50</span><span class="p">.</span><span class="mi">914628</span> <span class="o">|</span>             <span class="mi">47</span> <span class="o">|</span> <span class="n">t</span>
+          <span class="mi">2</span> <span class="o">|</span>              <span class="mi">2</span> <span class="o">|</span> <span class="mi">1</span>       <span class="o">|</span> <span class="n">DML</span> <span class="n">wanderlust</span> <span class="o">|</span> <span class="k">SQL</span>  <span class="o">|</span> <span class="n">V1__DML_wanderlust</span><span class="p">.</span><span class="k">sql</span> <span class="o">|</span>  <span class="o">-</span><span class="mi">674519781</span> <span class="o">|</span> <span class="n">cristina</span>     <span class="o">|</span> <span class="mi">2016</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">03</span> <span class="mi">12</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mi">51</span><span class="p">.</span><span class="mi">035453</span> <span class="o">|</span>             <span class="mi">12</span> <span class="o">|</span> <span class="n">t</span>
+<span class="p">(</span><span class="mi">2</span> <span class="k">rows</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="https://flywaydb.org">Flywaydb</a> is a great tool that makes database migrations automation easy. It deserves in itself a separate blog post. I particularly like <a href="http://zoltanaltfatter.com/2016/03/14/database-migration-with-flyway/">this one</a>!</p>
+
+<h2 id="coding-the-domain-model">Coding the Domain Model</h2>
+
+<p>The key abstraction of information in REST is a resource. Any information that can be named can be a resource: a travel destination, a holiday package, a tour operator/agent.
+<i class="blue">“In other words, any concept that might be the target of an author’s hypertext reference must fit within the definition of a resource. A resource is a conceptual mapping to a set of entities, not the entity that corresponds to the mapping at any particular point in time.”</i> - Roy Fielding’s dissertation</p>
+
+<p>In this blog post I will exemplify <code class="highlighter-rouge">Destination</code> class which is a simple model of a travel destination resource, with four basic attributes: the name, country, description and off course some funny facts about the destination. Geodata (GIS) and photos anyone? ;) It is annotated with <code class="highlighter-rouge">@Entity</code>, indicating that it is a <a href="http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html">JPA</a> entity, mapping to persistent storage: <code class="highlighter-rouge">wanderlust.destinations</code> and <code class="highlighter-rouge">wanderlust.destination_facts</code> schema tables.</p>
+
+<p>The <code class="highlighter-rouge">Destination</code> class encapsulates validation constraints with the use of <a href="http://hibernate.org/validator/">Hibernate Validator</a> <code class="highlighter-rouge">@NotEmpty</code> and
+<a href="http://beanvalidation.org/">JSR 303/349 Bean Validation</a> <code class="highlighter-rouge">@Size</code>,<code class="highlighter-rouge">@Pattern</code> annotations. As you can see the name and the country of the destination are mandatory fields.
+I have used the message attribute of the bean validation annotations to provide API clients with descriptive validation error messages.</p>
+
+<p>Listing of <code class="highlighter-rouge">src/main/java/cristina/tech/blog/travel/domain/Destination.java</code></p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">package</span> <span class="n">cristina</span><span class="o">.</span><span class="na">tech</span><span class="o">.</span><span class="na">blog</span><span class="o">.</span><span class="na">travel</span><span class="o">.</span><span class="na">domain</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.hibernate.validator.constraints.NotEmpty</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.CollectionTable</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.Column</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.ElementCollection</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.Entity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.FetchType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.JoinColumn</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.Table</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.validation.constraints.Pattern</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.validation.constraints.Size</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@Entity</span>
+<span class="nd">@Table</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"destinations"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Destination</span> <span class="kd">extends</span> <span class="n">AbstractEntity</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1126074635410771215L</span><span class="o">;</span>
+
+    <span class="nd">@NotEmpty</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"Destination name cannot be empty"</span><span class="o">)</span>
+    <span class="nd">@Size</span><span class="o">(</span><span class="n">min</span> <span class="o">=</span> <span class="mi">2</span><span class="o">,</span> <span class="n">max</span> <span class="o">=</span> <span class="mi">100</span><span class="o">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"Destination name must not be longer than 100 characters and shorter than 2 characters"</span><span class="o">)</span>
+    <span class="nd">@Pattern</span><span class="o">(</span><span class="n">regexp</span> <span class="o">=</span> <span class="s">"[a-z-A-Z- ']*"</span><span class="o">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"Destination name has invalid characters"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="nd">@NotEmpty</span><span class="o">(</span><span class="n">message</span> <span class="o">=</span> <span class="s">"How to prepare when destination country is a total surprise?"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">country</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">description</span><span class="o">;</span>
+
+    <span class="nd">@ElementCollection</span><span class="o">(</span><span class="n">fetch</span> <span class="o">=</span> <span class="n">FetchType</span><span class="o">.</span><span class="na">EAGER</span><span class="o">)</span>
+    <span class="nd">@CollectionTable</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"destination_facts"</span><span class="o">,</span> <span class="n">joinColumns</span> <span class="o">=</span> <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"destination"</span><span class="o">,</span> <span class="n">referencedColumnName</span> <span class="o">=</span> <span class="s">"id"</span><span class="o">))</span>
+    <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"fact"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">facts</span><span class="o">;</span>
+
+    <span class="cm">/** Getters and setters used by unit and integration tests. */</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getName</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getCountry</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">country</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDescription</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">description</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">getFacts</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">facts</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCountry</span><span class="o">(</span><span class="n">String</span> <span class="n">country</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">country</span> <span class="o">=</span> <span class="n">country</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFacts</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">facts</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">facts</span> <span class="o">=</span> <span class="n">facts</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDescription</span><span class="o">(</span><span class="n">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Default C-tor needed by Jackson JSON. */</span>
+    <span class="kd">public</span> <span class="nf">Destination</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Destination</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">country</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">country</span> <span class="o">=</span> <span class="n">country</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Destination</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">country</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">facts</span><span class="o">,</span> <span class="n">String</span> <span class="n">description</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">country</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">facts</span> <span class="o">=</span> <span class="n">facts</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">description</span> <span class="o">=</span> <span class="n">description</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>Additionally it inherits common attributes as: id (unique resource identifier), createdAt, modifiedAt from <code class="highlighter-rouge">AbstractEntity</code>. The last two are used in the context of database auditing: tracking and logging events related to all persistent entities.</p>
+
+<p>Listing of <code class="highlighter-rouge">src/main/java/cristina/tech/blog/travel/domain/AbstractEntity.java</code></p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kn">package</span> <span class="n">cristina</span><span class="o">.</span><span class="na">tech</span><span class="o">.</span><span class="na">blog</span><span class="o">.</span><span class="na">travel</span><span class="o">.</span><span class="na">domain</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.annotation.JsonAutoDetect</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.annotation.JsonIgnoreProperties</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.annotation.JsonInclude</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.fasterxml.jackson.annotation.JsonTypeId</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.data.annotation.CreatedDate</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.springframework.data.annotation.LastModifiedDate</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">javax.persistence.Column</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.GeneratedValue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.GenerationType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.Id</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.MappedSuperclass</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.PrePersist</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.PreUpdate</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.time.LocalDateTime</span><span class="o">;</span>
+
+<span class="nd">@MappedSuperclass</span>
+<span class="nd">@JsonIgnoreProperties</span><span class="o">({</span><span class="s">"createdAt"</span><span class="o">,</span> <span class="s">"modifiedAt"</span><span class="o">})</span>
+<span class="nd">@JsonInclude</span><span class="o">(</span><span class="n">JsonInclude</span><span class="o">.</span><span class="na">Include</span><span class="o">.</span><span class="na">NON_EMPTY</span><span class="o">)</span>
+<span class="nd">@JsonAutoDetect</span><span class="o">(</span><span class="n">fieldVisibility</span> <span class="o">=</span> <span class="n">JsonAutoDetect</span><span class="o">.</span><span class="na">Visibility</span><span class="o">.</span><span class="na">ANY</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractEntity</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="mi">1126074635410771212L</span><span class="o">;</span>
+
+    <span class="nd">@Id</span>
+    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">GenerationType</span><span class="o">.</span><span class="na">IDENTITY</span><span class="o">)</span>
+    <span class="nd">@JsonTypeId</span>
+    <span class="kd">protected</span> <span class="n">Integer</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"created_at"</span><span class="o">)</span>
+    <span class="nd">@CreatedDate</span>
+    <span class="kd">protected</span> <span class="n">LocalDateTime</span> <span class="n">createdAt</span><span class="o">;</span>
+
+    <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">"modified_at"</span><span class="o">)</span>
+    <span class="nd">@LastModifiedDate</span>
+    <span class="kd">protected</span> <span class="n">LocalDateTime</span> <span class="n">modifiedAt</span><span class="o">;</span>
+
+    <span class="nd">@PrePersist</span>
+    <span class="nd">@PreUpdate</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">prePersist</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">LocalDateTime</span> <span class="n">now</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">();</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">createdAt</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">createdAt</span> <span class="o">=</span> <span class="n">now</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">modifiedAt</span> <span class="o">=</span> <span class="n">now</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="nf">AbstractEntity</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p><i class="blue">“REST components communicate by transferring a representation of the data in a format matching one of the evolving set of standard data types.”</i> - Fielding and Taylor. In the definition above, <code class="highlighter-rouge">standard data types</code> is a reference to media types known by the <a href="https://www.w3.org/">Web</a>, typically something you would specify in an <code class="highlighter-rouge">Accept</code> HTTP header. And a Java class isn’t one! Thus there is some magic glue needed to translate a <code class="highlighter-rouge">Destination</code> domain object to a <a href="http://www.json.org/">json</a> (JavaScript Object Notation) representation for example.</p>
+
+<p>Spring Data REST does that automatically for you by using <i class="blue">Spring Data REST’s ObjectMapper</i>, which has been specially configured to use intelligent serializers that can turn domain objects into links and back again.For JSON representation there are 2 such intelligent serializers supported in Spring Data REST: <a href="https://github.com/FasterXML/jackson">Jackson JSON</a> and <a href="https://github.com/google/gson">GSON</a>. Jackson is being auto configured as default by Spring Boot. <i class="blue">Spring Data REST’s ObjectMapper</i> will try and serialize unmanaged beans as normal POJOs and it will try and create links to managed beans where that’s necessary. But if your domain model doesn’t easily lend itself to reading or writing plain JSON, you may want to configure Jackson’s ObjectMapper with your own custom type mappings and (de)serializers.</p>
+
+<p>In my case, <i class="blue">Spring Data REST’s ObjectMapper</i> did the trick. I however have chosen to instruct <a href="https://github.com/FasterXML/jackson">Jackson JSON</a> to simplify the view of my resources to not include <code class="highlighter-rouge">null</code> or empty attributes by using annotation <code class="highlighter-rouge">@JsonInclude(JsonInclude.Include.NON_EMPTY)</code> on <code class="highlighter-rouge">AbstractEntity</code>. The other excerpt, deviation from default view that I did, was not including the auditing attributes, created and modified date, in the JSON representation: see <code class="highlighter-rouge">@JsonIgnoreProperties({"createdAt", "modifiedAt"})</code> on <code class="highlighter-rouge">AbstractEntity</code>. The two date fields are initialized by application events that occur inside the persistence mechanism. As such the <code class="highlighter-rouge">@PrePersist</code> and <code class="highlighter-rouge">@PreUpdate</code> callback annotations will initialize the creation and modified timestamps of the API domain objects.</p>
+
+<h2 id="coding-the-repositories">Coding the Repositories</h2>
+
+<p>The general idea of Spring Data REST is that builds on top of Spring Data repositories and automatically exports those as REST resources. I created several repositories, one for each entity: <code class="highlighter-rouge">DestinationRepository</code>, <code class="highlighter-rouge">HolidayRepository</code> and <code class="highlighter-rouge">AgentRepository</code>. All repositories are Java interfaces extending from <a href="https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html">PagingAndSortingRepository</a> to leverage Spring’s pagination and sorting support!</p>
+
+<p>For this repository, Spring Data REST exposes a collection resource at <i class="blue">/destinations</i>. It also exposes an item resource for each of the items managed by the repository under the URI template <i class="blue">/destinations/{id}</i>.</p>
+
+<h2 id="running-the-api">Running the API</h2>
+
+<p><img class="img-responsive" src="/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman" /></p>
+
+<h2 id="hal-and-resource-discoverability">HAL and Resource discoverability</h2>
+
+<p>A core principle of <a href="https://spring.io/understanding/HATEOAS">HATEOAS</a> (Hypermedia as the Engine of Application State) is that resources should be discoverable through the publication of links that point to the available resources. There are a few competing de-facto standards of how to represent links in JSON. By default, Spring Data REST uses HAL to render responses. HAL defines links to be contained in a property of the returned document.</p>
+
+<h2 id="resting-in-the-apls">RESTing in the APLS</h2>
+
+<p><i class="blue">“ALPS is a data format for defining simple descriptions of application-level semantics, similar in complexity to HTML microformats. An ALPS document can be used as a profile to explain the application semantics of a document with an application-agnostic media type (such as HTML, HAL, Collection+JSON, Siren, etc.). This increases the reusability of profile documents across media types.”</i> - M. Admundsen / L. Richardson / M. Foster</p>
+
+<h2 id="source-code">Source Code</h2>
+<p>You can find the full code base of my Incubator Wanderlust OpenTravel API at my public <a href="https://github.com/cristinanegrean/wanderlust-open-travel-api">GitHub repo</a>.
+Feel free to clone the project and give wanderlust-api a spin!</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$ git clone https://github.com/cristinanegrean/wanderlust-open-travel-api
+$ cd wanderlust-open-travel-api
+$ ./gradlew clean build
+$ java -jar build/libs/wanderlust-1.0.0-SNAPSHOT.jar --spring.profiles.active=postgres
+</code></pre>
+</div>
+
+  </div>
+</article>
+
+
+            <!-- Disqus -->
+            
+            <div id="disqus_thread">http://localhost:4000/spring%20data%20rest,%20back-end%20api,%20wanderlust/2017/03/21/Hypermedia-driven-services-with-Spring-Data-REST.html</div>
+            <script type="text/javascript">
+                var disqus_config = function () {
+                    this.page.url = "http://localhost:4000/spring%20data%20rest,%20back-end%20api,%20wanderlust/2017/03/21/Hypermedia-driven-services-with-Spring-Data-REST.html";
+                    this.page.identifier = "/spring%20data%20rest,%20back-end%20api,%20wanderlust/2017/03/21/Hypermedia-driven-services-with-Spring-Data-REST.html";
+                    this.page.title = "Expose a discoverable REST API of your domain model using HAL JSON as media type";
+                };
+            </script>
+            <script src="//cristina-tech.disqus.com/embed.js" async></script>
+            
+        </div>
+    </div>
+    <!-- Main content ends -->
+</div>
+<!-- Footer Starts -->
+<footer class="footer">
+    <!-- Container -->
+    <div class="container">
+        <!-- Foot Starts -->
+        <div class="foot">
+            <!-- Container -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <!-- Foot Item -->
+                        <div class="foot-item">
+                            <!-- Heading -->
+                            <h5 class="bold"><i class="fa fa-coffee"></i>&nbsp;&nbsp;Gamification</h5>
+                            <p>Powered by <a href="https://pages.github.com/" class="blue">GitHub Pages</a>, <a href="https://jekyllrb.com/" class="blue">Jekyll</a> and massive amounts of coffee <svg xmlns="http://www.w3.org/2000/svg" width=24 height=24 viewBox="0 0 32 42" enable-background="new 0 0 32 42"> <path fill="#E92D2F" stroke="#E92D2F" stroke-width=".094" stroke-miterlimit=10 d="M20.2 0c.9 1.1 1.3 2.7 1 4-.3 1.6-1.2 3-2.2 4.2-.8 1-1.8 1.8-2.8 2.7-1.2.9-2.3 1.9-3 3.3-.6 1.1-.8 2.4-.3 3.5.7 2 2.3 3.4 3.2 5.3-.9-.8-1.9-1.8-2.8-2.7-.9-1-1.8-2-2.4-3.3-.4-.8-.6-1.8-.3-2.8.3-.9.9-1.7 1.6-2.4 1.8-1.8 4.1-3.2 6-5.1 1-1 1.8-2.3 2.1-3.7.2-.9.1-2-.1-3zm-1.5 11.7c2-1.4 4.3-2.4 6.6-3.1-1.8 1.2-3.8 2.3-5.4 3.8-.6.6-1.2 1.2-1.4 2-.2.6-.1 1.3.1 1.8.4 1 1.2 1.8 1.7 2.7.5.8.6 1.8.2 2.6-.5 1.2-1.6 2.1-2.7 2.8-.2.1-.3.3-.4.3.8-.7 1.3-1.6 1.3-2.6 0-.8-.4-1.4-.9-1.9-1-1.2-1.8-2.8-1.7-4.4.1-1.8 1.3-3.1 2.6-4z"/> <path fill="#0774BA" stroke="#0774BA" stroke-width=".094" stroke-miterlimit=10 d="M25.7 23.5c.4-.5 1.1-.7 1.8-.8 1.1-.2 2.3.2 3 .8.7.6 1.1 1.5.9 2.4-.2 1.1-.8 1.9-1.7 2.6-1.4 1.2-3.2 1.8-5 2.3l.3-.3c1.3-.8 2.7-1.6 3.7-2.8.6-.8 1.1-1.7.8-2.7-.2-1.1-1.3-1.9-2.4-2-.4.2-.9.3-1.4.5zm-20.6.9c1.8-.8 3.9-1.3 6-1.3-1.2.3-2.4.7-3.5 1.2-.3.2-.6.3-.8.6 0 .1.2.3.3.3.7.3 1.4.3 2.2.4 2.6.2 5.2.1 7.9-.1 2.6-.2 5.1-.5 7.6-.9-.6.3-1.2.5-1.7.8-.3.2-.6.3-.9.3-3.1.7-6.4.9-9.6.9-1.3 0-2.4 0-3.7-.1-1.3-.1-2.8-.2-4.1-.6-.2.1-.5 0-.8-.3-.2-.1-.2-.3 0-.5.3-.3.7-.5 1.1-.7zm2.5 4.4c.5-.4 1.2-.7 1.8-.8-.2.3-.5.5-.5.8 0 .3.2.4.3.5.3.2.8.3 1.1.3 1.9.2 3.9.3 6 .2 1.8-.1 3.6-.4 5.4-.7.5.4 1.1.8 1.7 1.1-2.2.7-4.4 1-6.6 1.2-2.1.2-4.3.2-6.4-.2-.8-.2-1.7-.3-2.4-.8-.3-.2-.7-.4-.8-.8 0-.4.1-.6.4-.8zm1.1 4.4c.5-.4 1.1-.6 1.6-.8-.2.2-.5.4-.3.7.3.3.8.4 1.2.5 1.8.3 3.4.3 5.2.3 1.3-.1 2.6-.3 3.9-.5.8.4 1.5.8 2.3 1.1-1.2.5-2.5.9-3.8 1.2-2.2.4-4.4.4-6.6.1-1-.2-1.9-.4-2.9-.8-.3-.2-.7-.4-.8-.8-.2-.4 0-.8.2-1zm-5.6 2.9c.9-.3 1.9-.6 2.9-.6.4 0 .8 0 1.2.3-1.2.1-2.4.3-3.4.9-.3.2-.5.3-.6.6 0 .3.3.4.6.5 1.5.6 3.1.8 4.6.9 4.6.4 9.3.3 13.9-.2 1.8-.2 3.5-.4 5.2-.8.5-.2 1.2-.3 1.5-.8.3-.3.1-.7-.2-.9.3.2.8.4.8.9-.2.5-.7.8-1 1-1.3.7-2.8 1-4.2 1.3-4.2.8-8.4 1-12.7.8-3.2-.1-6.4-.4-9.6-.9-.6-.2-1.2-.3-1.6-.7-.3-.3 0-.8.3-.9.6-.7 1.5-1.1 2.3-1.4zm25.5 3.5c1-.3 2.1-.8 2.9-1.6-.2.9-.9 1.5-1.7 1.9-1.4.8-3.1 1.1-4.7 1.4-3.4.5-6.9.7-10.3.6-2.4-.1-4.8-.2-7.1-.7-.6-.2-1.2-.3-1.7-.6 2.1.3 4.2.5 6.3.6 3.4.1 6.9 0 10.3-.4 2-.2 4-.6 6-1.2z"/></svg>
+                            </p>
+                        </div>
+                        <!-- Disclaimer -->
+                        <div class="foot-item">
+                            <!-- Heading -->
+                            <h5 class="bold"><i class="fa fa-legal"></i>&nbsp;&nbsp;Disclaimer</h5>
+                            <p>Opinions expressed on this blog reflect the writer’s point of view only. Code samples showcase writer's personal projects.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <!-- Foot Item -->
+                        <div class="foot-item">
+                            <!-- Heading -->
+                            <h5 class="bold"><i class="fa fa-comments"></i>&nbsp;&nbsp;Recent Posts</h5>
+                            <!-- Foot Item Content -->
+                            <div class="foot-item-content">
+                                <ul class="list-unstyled">
+                                    
+                                    <li>
+                                        <span>21 Mar 2017</span> &raquo;
+                                        <a href="/spring%20data%20rest,%20back-end%20api,%20wanderlust/2017/03/21/Hypermedia-driven-services-with-Spring-Data-REST.html">
+                                            Expose a discoverable REST API of your domain model using HAL JSON as media type</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <span>01 Aug 2016</span> &raquo;
+                                        <a href="/2016/08/01/welcome-to-cristina-tech.html">
+                                            Welcome to cristina.tech!</a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Foot Ends -->
+        <!-- Footer Content -->
+        <p class="pull-left">The contents of this website are &copy; 2017 under the terms of the <a href="https://opensource.org/licenses/MIT" class="blue">MIT</a> license</p>
+        <ul class="list-inline pull-right">
+            <!-- List -->
+            <li><a href="/">Blog</a>
+            <li><a href="/about/">About</a></li>
+        </ul>
+        <!-- Clearfix -->
+        <div class="clearfix"></div>
+    </div>
+</footer>
+<!-- Footer Ends -->
+
+<!-- Outer Ends -->
+
+<!-- Scroll to top -->
+<span class="totop"><a href="#"><i class="fa fa-angle-up bg-color"></i></a></span>
+
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/placeholders.js"></script>
+<script src="/js/jquery.magnific-popup.min.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/respond.min.js"></script>
+<script src="/js/html5shiv.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/imagesloaded.min.js"></script>
+<script src="/js/masonry.js"></script>
+
+<!-- Javascript for this page -->
+<script>
+    // Initialize Masonry
+    var $box = $('.blog-masonry').masonry();
+    // Layout Masonry again after all images have loaded
+    $box.imagesLoaded(function () {
+        $box.masonry();
+    });
+</script>
+
+<!-- Custom JS. Type your JS code in custom.js file -->
+<script src="/js/custom.js"></script>
+
+<!-- Google Analytics
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o);
+        m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-15533478-1', 'auto');
+    ga('send', 'pageview');
+</script> -->
+
+<!-- Bootstrap Viewports detect -->
+<div id="detect-breakpoints">
+    <div class="breakpoint device-xs visible-xs"></div>
+    <div class="breakpoint device-sm visible-sm"></div>
+    <div class="breakpoint device-md visible-md"></div>
+    <div class="breakpoint device-lg visible-lg"></div>
+</div>
+</body>
+</html>

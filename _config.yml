@@ -8,12 +8,21 @@ baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://cristinanegrean.github.io" # the base hostname & protocol for your site
 twitter_username: cristinanegrean
 github_username:  cristinanegrean
-gems: [jekyll-paginate]
+
 # Build settings
 markdown: kramdown
 
+# Use the following plug-ins
+gems:
+  - jekyll
+  - jekyll-paginate  # break the main listing of posts up into smaller lists and display them over multiple pages
+
 # Pagination
 paginate: 10
+
+sass:
+    sass_dir: _sass
+    style: compressed
 
 # Exclude these files from your production _site
 exclude:
