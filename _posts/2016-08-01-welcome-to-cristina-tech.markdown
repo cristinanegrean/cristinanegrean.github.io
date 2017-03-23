@@ -3,7 +3,6 @@ layout: post
 title:  "Welcome to cristina.tech!"
 date:   2016-08-01 23:21:06 +0200
 image: /img/welcome.png
-category: about
 ---
 Hello everyone.
 
