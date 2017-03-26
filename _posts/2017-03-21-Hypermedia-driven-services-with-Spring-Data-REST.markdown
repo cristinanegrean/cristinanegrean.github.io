@@ -608,7 +608,7 @@ The listing of the `HolidayRepository` and `AgentRepository` interfaces can be f
 
 As the screenshot shows there are many more RESTful endpoints exposed by the wanderlust service. I have created a test collection for the other relevant endpoints and you can give them a spin yourself with [Postman](https://www.getpostman.com/). The test collection can be downloaded [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/Wanderlust_OpenTravelAPI_Postman_collection.json).
 
-Of course, manual testing can be a drag and as a developer we like to automate as most as possible. Listing below shows how to automate integration testing of HTTP operations on the `Destination` resource.
+Manual testing can be a drag and as a developer, we like to automate testing as much as possible. Listing below shows how to automate integration testing of HTTP operations on the `Destination` resource.
 
 Listing 10: [src/test/java/cristina/tech/blog/travel/domain/WanderlustIntegrationTests.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/test/java/cristina/tech/blog/travel/domain/WanderlustIntegrationTests.java)
 
