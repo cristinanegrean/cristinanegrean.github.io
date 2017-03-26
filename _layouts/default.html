@@ -63,11 +63,16 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                   <div class="navi">
                       <ul>
-                          <li><a href="{{ site.baseurl }}/">Blog</a></li>
-                          <li><a href="{{ site.baseurl }}/about/">About</a></li>
+                          <li>
+                              <a href="{{ site.baseurl }}/">Blog<img class="img-responsive hidden-sm hidden-md hidden-lg" src="{{ site.baseurl }}/img/site/favicon.svg" height="40" width="40"/></a>
+                          </li>
+                          <li>
+                              <a href="{{ site.baseurl }}/about/">About<img class="img-responsive hidden-sm hidden-md hidden-lg" src="{{ site.baseurl }}/img/site/QRCode.png" height="40" width="40"/></a>
+                          </li>
                       </ul>
-                      <img class="img-responsive" src="{{ site.baseurl }}/img/site/QRCode.png"/>
-                      <img class="img-responsive" src="{{ site.baseurl }}/img/site/favicon.svg" width="200" height="200"/>
+                      <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/QRCode.png"/>
+                      <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/favicon.svg"/>
+
                   </div>
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-0">
@@ -195,6 +200,8 @@
     $box.imagesLoaded(function () {
         $box.masonry();
     });
+    // customize site for Bootstrap XS (extra small) devices breakpoint
+
 </script>
 
 <!-- Custom JS. Type your JS code in custom.js file -->
@@ -224,5 +231,6 @@
     <div class="breakpoint device-md visible-md"></div>
     <div class="breakpoint device-lg visible-lg"></div>
 </div>
+
 </body>
 </html>

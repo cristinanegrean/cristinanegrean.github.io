@@ -43,6 +43,9 @@ h1 {
 p {
     margin: 0 0 10px;
 }
+.header-2 .navi ul li a img {
+  float: right;
+}
 img.p-image {
     border: 0.3em solid rgba(77, 148, 255, 0.8);
     border-radius: 999em;

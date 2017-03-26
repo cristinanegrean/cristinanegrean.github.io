@@ -4,7 +4,17 @@ layout: default
 <article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
   <header class="post-header">
     <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-    <p class="post-meta"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %}</p>
+    <p class="post-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>{% if page.author %} •
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %} •
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url }}&title={{ page.title }}&source={{ site.url }}" rel="nofollow" target="_blank" title="Share on LinkedIN">
+            <img src="{{ '/img/social-media/LinkedIn.png' | prepend: site.baseurl }}" alt="Share on LinkedIn" />
+        </a> •
+        <a href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ page.url }}&via={{ site.twitter_username }}&related={{ site.twitter_username }}" rel="nofollow" target="_blank" title="Share on Twitter">
+              <img src="{{ '/img/social-media/Twitter.png' | prepend: site.baseurl }}"
+                   alt="Share on Twitter" />
+        </a>
+    </p>
   </header>
   <div class="post-content" itemprop="articleBody"><!--justify-text-->
     {{ content }}

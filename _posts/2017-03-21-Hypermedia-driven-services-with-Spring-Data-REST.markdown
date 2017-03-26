@@ -26,7 +26,7 @@ It takes the features of [Spring HATEOAS](http://projects.spring.io/spring-hateo
 
 This guide will give you a high-level walk through of my process of creating a microservice - called [Wanderlust](https://github.com/cristinanegrean/wanderlust-open-travel-api) - that exposes a discoverable REST API of a simple open-travel domain model using [JSON HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08) as media type.
 
-## Minimum Viable Product (MVP)
+## Minimum Viable Product
 * list, search by country or name travel destinations
 * create, validate, update and delete a travel destination
 * list, search travel agents by name
@@ -35,7 +35,7 @@ This guide will give you a high-level walk through of my process of creating a m
 * create, validate a holiday package for a travel destination
 * pagination and sorting for list and search operations
 
-## Technology Stack / Prerequisites
+## Technology Stack
 
 * [Java 8 SDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * [Postgresql 9](https://www.postgresql.org/)
@@ -50,11 +50,19 @@ When running on OS X, installion steps can be found in the project's [README](ht
 ## "Bootiful Wanderlust" with Spring Boot and Spring Initializr
 
 Sometimes the hardest part of any project is getting started. You have to setup a directory structure for various project artifacts, create a build file and populate it with all library dependencies. This is where [Spring Initializr](https://start.spring.io/) comes into handy. [Spring Initializr](https://start.spring.io/) is ultimately a web application that can generate a [Spring Boot](http://projects.spring.io/spring-boot/) project structure for you. It doesn’t generate any application code, but it will give you a basic project structure and either a [Maven](https://maven.apache.org/) or a [Gradle](https://gradle.org/) build specification to build your code with. All you need to do is write the application code.
-[Spring Boot](http://projects.spring.io/spring-boot/), on the other hand, helps package the autonomous data microservice application as an uber-self-runnable-JAR (Java Application Archive) with an embedded application container.
+[Spring Boot](http://projects.spring.io/spring-boot/), on the other hand, helps package the autonomous data microservice application as an uber-self-runnable-JAR (Java Application Archive) with an embedded application container ([Apache Tomcat](http://tomcat.apache.org/) - defaultly autoconfigured, [Jetty](http://www.eclipse.org/jetty/), (JBoss Undertow)[http://undertow.io/]). [Spring Boot](http://projects.spring.io/spring-boot/) also became "de-facto" way to create Spring applications.
 
-The most straightforward way to use the Spring Initializr is to point your web browser to (http://start.spring.io)[http://start.spring.io]. Fill in basic project information on the left side of the form, search and add dependencies listed in the figure below on the right side of the form and you should be all set to download the project template.
+### Why Spring Boot?
+* It's suitable for Cloud Native Applications that follow the [12factor](http://12factor.net) patterns (developed by the Netflix engineering team)
+* Productivity increases by reducing time of development and deployment
+* Enterprise-production-ready Spring applications
+* Non-functional requirements, such as Spring Boot Actuator (a module that brings metrics, health checks and management features)
 
- <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/SpringInitializr.png" alt="Spring Initializr"/>
+The most straightforward way to use the [Spring Initializr](https://start.spring.io/) is to point your web browser to [http://start.spring.io](http://start.spring.io). Fill in basic project information on the left side of the form, search and add dependencies listed in the figure below on the right side of the form and you should be all set to download the project template.
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/SpringInitializr.png" alt="Spring Initializr"/>
+
+The <i class="blue">Generate Project</i> button will download the template project.
 
 ## "REST-Assured": Building Continuous Delivery confidence with Test Driven Development
 
@@ -68,9 +76,9 @@ The most straightforward way to use the Spring Initializr is to point your web b
 
   <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/Jacoco.png" alt="Drill-down on test coverage per code package"/>
 
- So just go ahead and open the project template structure generated with Spring Initializr and add the <i class="blue">jacoco</i> and <i class="blue">coveralls</i> dependencies. The result should look similar to the listing below.
+ Go ahead and open the project template structure generated with Spring Initializr in your favorite IDE and add the <i class="blue">jacoco</i> and <i class="blue">coveralls</i> dependencies to the Gradle Build specification. The result should look similar to the listing below.
 
-`build.gradle`
+Listing 1: [build.gradle](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/build.gradle)
 
 {% highlight gradle %}  
 group 'cristina.tech'
@@ -118,19 +126,19 @@ repositories {
 }
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
-    compile('org.springframework.data:spring-data-rest-hal-browser')
-    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    compile('org.springframework.boot:spring-boot-starter-actuator') //Production ready features to help you monitor and manage your application
+    compile('org.springframework.boot:spring-boot-starter-data-jpa') //Java Persistence API including spring-data-jpa, spring-orm and Hibernate
+    compile('org.springframework.boot:spring-boot-starter-data-rest') //Exposing Spring Data repositories over REST via spring-data-rest-webmvc
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310') //Instruct Jackson JSON serializer/deserializer to work with Java 8 Date & Time API
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.boot:spring-boot-starter-test') //Imports both Spring Boot test modules as well has JUnit, AssertJ, Hamcrest, Mockito, JSONassert, JsonPath 
 
-    runtime('org.flywaydb:flyway-core')
-    runtime('org.postgresql:postgresql')
-    runtime('com.zaxxer:HikariCP')
+    runtime('org.springframework.data:spring-data-rest-hal-browser')  //Browsing Spring Data REST repositories in your browser
+    runtime('org.flywaydb:flyway-core') //Flyway Database Migrations library
+    runtime('org.postgresql:postgresql') //PostgreSQL jdbc driver
+    runtime('com.zaxxer:HikariCP') //high-performance, production-quality JDBC connection pool
 
-    testRuntime('com.h2database:h2')
+    testRuntime('com.h2database:h2') //H2 in-memory database for tests (with embedded support)
 }
 
 jacoco {
@@ -164,7 +172,7 @@ tasks.coveralls {
 }
 {% endhighlight %}
 
-The Gradle IDEA plugin - `apply plugin: 'idea'` - generates files that are used by IntelliJ IDEA, thus making it possible to open the project from IDEA. To generate the project files, simply open a terminal window, navigate to the project root directory and run the `idea` task.
+The Gradle IDEA plugin - `apply plugin: 'idea'` - generates files for working with the project in IntelliJ IDEA. To generate the project files, simply open a terminal window, navigate to the project root directory and run the `idea` task.
 
 ```
 Cristinas-iMac:wanderlust-open-travel-api cristina$ ./gradlew idea
@@ -179,7 +187,7 @@ Cristinas-iMac:wanderlust-open-travel-api cristina$ ./gradlew idea
 One of the design principles of microservices architecture is to have a separate data store for each microservice. If you got so far, you should already have a [PostgreSQL](https://www.postgresql.org/) data store instance running on your machine with a created database named <i class="blue">wanderlust</i>, as well as USERNAME_POSTGRES and PWD_POSTGRES environment variables configured and resolvable according to the project's [README](https://raw.githubusercontent.com/cristinanegrean/wanderlust-open-travel-api/master/README.md)
 
 To check whether your connection to the database is working properly, you can open a command line tool and type in:
-```
+```bash
 psql -h localhost wanderlust
 ```
 
@@ -204,24 +212,32 @@ This last one can be added to <i class="blue">build.gradle</i> file:
 
 Additionally we will check that Spring Boot's AutoConfiguration feature has yielded the proper connection properties and tweak them accordingly.
 
-<img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/datasource_config.png" alt="Spring Boot Properties for postgres Profile "/>
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+  <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/datasource_config.png" alt="Spring Boot Properties for postgres Profile "/>
+</div>
 
-```properties
+Listing 2:
+[application-postgres.properties](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/resources/application-postgres.properties)
+
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+{% highlight properties %}
 # Datasource configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/wanderlust
 spring.datasource.driverClassName=org.postgresql.Driver
 spring.datasource.username=${USERNAME_POSTGRES}
 spring.datasource.password=${PWD_POSTGRES}
-# This property controls the maximum size that the pool is allowed to reach, including both idle and in-use connections. Basically this value will determine the maximum number of actual connections to the database backend. A reasonable value for this is best determined by your execution environment. When the pool reaches this size, and no idle connections are available, calls to getConnection() will block for up to connectionTimeout milliseconds before timing out. Default: 10
 spring.datasource.hikari.maximumPoolSize=10
-# This property controls the maximum number of milliseconds that a client (that's you) will wait for a connection from the pool. If this time is exceeded without a connection becoming available, a SQLException will be thrown. Lowest acceptable connection timeout is 250 ms. Default: 30000 (30 seconds)
 spring.datasource.hikari.connectionTimeout=1500
-```
+{% endhighlight %}
+
+</div>
+
 Finally we have come to the point where we can model the <i class="blue">wanderlust</i> database.
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/schema.png" alt="Spring Boot Properties for postgres Profile "/>
 
-`src/main/resources/db/migration/V0__DDL_wanderlust.sql`
+Listing 3: [src/main/resources/db/migration/V0__DDL_wanderlust.sql](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/resources/db/migration/V0__DDL_wanderlust.sql)
 
 ```sql
 DROP TABLE IF EXISTS schema_version;
@@ -282,7 +298,7 @@ CREATE TABLE travel_agent_holiday_packages (
 )
 ```
 
-`src/main/resources/db/migration/V1__DML_wanderlust.sql`
+Listing 4: [src/main/resources/db/migration/V1__DML_wanderlust.sql](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/resources/db/migration/V1__DML_wanderlust.sql)
 
 ```sql
 INSERT INTO destinations
@@ -308,7 +324,63 @@ INSERT INTO travel_agent_holiday_packages
 VALUES ((SELECT currval('travel_agents_id_seq')), (SELECT currval('holiday_packages_id_seq')));
 ```
 
-Database scripts will be run automatically by [Flywaydb](https://flywaydb.org) upon service start. You can check the schema version and installation details via [Spring Actuator endpoint](http://localhost:9000/flyway) or command line:
+Database scripts will be run automatically by [Flywaydb](https://flywaydb.org) upon service start. Before starting the service, I will change the default server port. Spring Boot default is 8080 and it supplies you with the `server.port` property for configuring the port on which our Spring Boot application should run.
+
+Listing 5: [src/main/resources/application.properties](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/resources/application.properties)
+
+{% highlight properties %}
+info.app.name=wanderlust
+info.app.description=Create a RESTful API with Spring Data REST
+info.app.version=1.0.0
+logging.level.org.springframework.data.jpa=INFO
+logging.level.org.springframework.data.rest=INFO
+flyway.validate.on.migrate=false
+spring.data.rest.base.path=/api/opentravel
+server.port=9000
+spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS = false
+{% endhighlight %}
+
+To start the service, open a terminal window and type `./gradlew bootRun` :
+
+```
+$ Cristinas-iMac:wanderlust-open-travel-api cristina$ ./gradlew bootRun
+```
+
+You may be wondering: Wait a minute, what is this `bootRun` command? How can I install it? If you revisit <i class="blue">Listing 1: build.gradle</i>, line
+`apply plugin: 'org.springframework.boot'` provides Spring Boot support in Gradle. [The Spring Boot Gradle Plugin](http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/html/build-tool-plugins-gradle-plugin.html) allows you to package executable jar or war archives. The default option for packaging in Spring Initializr is jar (Java ARchive) and that is also reflected in <i class="blue">Listing 1: build.gradle</i>
+
+{% highlight gradle %}
+jar {
+    baseName = 'wanderlust'
+    version = '1.0.0-SNAPSHOT'
+}
+{% endhighlight %}
+
+Listing 6: [src/main/java/cristina/tech/blog/travel/WanderlustApplication.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/java/cristina/tech/blog/travel/WanderlustApplication.java)
+
+```java
+package cristina.tech.blog.travel;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+
+@SpringBootApplication
+@EntityScan(
+        basePackageClasses = { WanderlustApplication.class, Jsr310JpaConverters.class }
+)
+public class WanderlustApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(WanderlustApplication.class, args);
+    }
+}
+```
+
+Listing 6 shows you the entry point for a Spring Boot application in Java. The `main()` method uses Spring Boot’s SpringApplication.run() method to launch an application. Did you notice that there wasn’t a single line of XML? No web.xml file either. This web application is 100% pure Java and you didn’t have to deal with configuring any plumbing or infrastructure. The `run()` method call accepts two parameters - the class annotated with `@SpringBootApplication` and the application's arguments.
+
+You can check the schema version and installation details via [Spring Actuator endpoint](http://localhost:9000/flyway) or command line:
 
 ```sql
 wanderlust=# select * from schema_version;
@@ -332,7 +404,7 @@ The `Destination` class encapsulates validation constraints with the use of [Hib
 [JSR 303/349 Bean Validation](http://beanvalidation.org/) `@Size`,`@Pattern` annotations. As you can see the name and the country of the destination are mandatory fields.
 I have used the message attribute of the bean validation annotations to provide API clients with descriptive validation error messages.
 
-Listing of `src/main/java/cristina/tech/blog/travel/domain/Destination.java`
+Listing 7: [src/main/java/cristina/tech/blog/travel/domain/Destination.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/java/cristina/tech/blog/travel/domain/Destination.java)
 
 ```java
 package cristina.tech.blog.travel.domain;
@@ -423,7 +495,7 @@ public class Destination extends AbstractEntity {
 
 Additionally it inherits common attributes as: id (unique resource identifier), createdAt, modifiedAt from `AbstractEntity`. The last two are used in the context of database auditing: tracking and logging events related to all persistent entities.
 
-Listing of `src/main/java/cristina/tech/blog/travel/domain/AbstractEntity.java`
+Listing 8: [src/main/java/cristina/tech/blog/travel/domain/AbstractEntity.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/java/cristina/tech/blog/travel/domain/AbstractEntity.java)
 
 ```java
 package cristina.tech.blog.travel.domain;
@@ -486,30 +558,269 @@ public abstract class AbstractEntity implements Serializable {
 }
 ```
 
-<i class="blue">"REST components communicate by transferring a representation of the data in a format matching one of the evolving set of standard data types.”</i> - Fielding and Taylor. In the definition above, `standard data types` is a reference to media types known by the [Web](https://www.w3.org/), typically something you would specify in an `Accept` HTTP header. And a Java class isn't one! Thus there is some magic glue needed to translate a `Destination` domain object to a [json](http://www.json.org/) (JavaScript Object Notation) representation for example.
+<i class="blue">"REST components communicate by transferring a representation of the data in a format matching one of the evolving set of standard data types.”</i> - Fielding and Taylor. And by `standard data types` it is referred to a media type, something you would specify in `Accept` or `Content-Type` HTTP headers. Thus there is some magic glue needed to translate a `Destination` domain object to a [json](http://www.json.org/) (JavaScript Object Notation) representation, for example.
 
-Spring Data REST does that automatically for you by using <i class="blue">Spring Data REST’s ObjectMapper</i>, which has been specially configured to use intelligent serializers that can turn domain objects into links and back again.For JSON representation there are 2 such intelligent serializers supported in Spring Data REST: [Jackson JSON](https://github.com/FasterXML/jackson) and [GSON](https://github.com/google/gson). Jackson is being auto configured as default by Spring Boot. <i class="blue">Spring Data REST’s ObjectMapper</i> will try and serialize unmanaged beans as normal POJOs and it will try and create links to managed beans where that’s necessary. But if your domain model doesn’t easily lend itself to reading or writing plain JSON, you may want to configure Jackson’s ObjectMapper with your own custom type mappings and (de)serializers.
+Spring Data REST does that automatically for you by using <i class="blue">Spring Data REST’s ObjectMapper</i>, which has been specially configured to use intelligent serializers that can turn domain objects into links and back again. For JSON representation there are 2 such intelligent serializers supported in Spring Data REST: [Jackson JSON](https://github.com/FasterXML/jackson) and [GSON](https://github.com/google/gson). Jackson is being auto configured as default by Spring Boot. <i class="blue">Spring Data REST’s ObjectMapper</i> will try and serialize unmanaged beans as normal POJOs and it will try and create links to managed beans where that’s necessary. But if your domain model doesn’t easily lend itself to reading or writing plain JSON, you may want to configure Jackson’s ObjectMapper with your own custom type mappings and (de)serializers.
 
-In my case, <i class="blue">Spring Data REST’s ObjectMapper</i> did the trick. I however have chosen to instruct [Jackson JSON](https://github.com/FasterXML/jackson) to simplify the view of my resources to not include `null` or empty attributes by using annotation `@JsonInclude(JsonInclude.Include.NON_EMPTY)` on `AbstractEntity`. The other excerpt, deviation from default view that I did, was not including the auditing attributes, created and modified date, in the JSON representation: see `@JsonIgnoreProperties({"createdAt", "modifiedAt"})` on `AbstractEntity`. The two date fields are initialized by application events that occur inside the persistence mechanism. As such the `@PrePersist` and `@PreUpdate` callback annotations will initialize the creation and modified timestamps of the API domain objects.
+In my case, <i class="blue">Spring Data REST’s ObjectMapper</i> did the trick. I however have chosen to instruct [Jackson JSON](https://github.com/FasterXML/jackson) to simplify the view of my resources to not include `null` or empty attributes by using annotation `@JsonInclude(JsonInclude.Include.NON_EMPTY)` on `AbstractEntity`. The other excerpt was not including the auditing attributes, created and modified date, in the JSON representation: see `@JsonIgnoreProperties({"createdAt", "modifiedAt"})` on `AbstractEntity`. The two date fields are initialized by application events that occur inside the persistence mechanism. As such the `@PrePersist` and `@PreUpdate` callback annotations will initialize the creation and modified timestamps of the API domain objects.
+
+Coding the other two domain objects: `Holiday` and `Agent` is similar, you could try to do the exercise yourself based on the schema design or check the code listing [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/tree/master/src/main/java/cristina/tech/blog/travel/domain).
 
 ## Coding the Repositories
 
-The general idea of Spring Data REST is that builds on top of Spring Data repositories and automatically exports those as REST resources. I created several repositories, one for each entity: `DestinationRepository`, `HolidayRepository` and `AgentRepository`. All repositories are Java interfaces extending from [PagingAndSortingRepository](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html) to leverage Spring's pagination and sorting support!
+The general idea of Spring Data REST is that builds on top of Spring Data repositories and automatically exports those as REST resources. I've created several repositories, one for each entity: `DestinationRepository`, `HolidayRepository` and `AgentRepository`. All repositories are Java interfaces extending from [PagingAndSortingRepository](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html) interface, defined in Spring Data Commons, fact that ensures that common CRUD operations as: `findAll`, `findOne`, `save`, `exists`, `count`, `delete`, `deleteAll` will be exposed as HTTP operations on all domain objects. Additionally it provides out-of-the-box pagination and sorting support.
 
-For this repository, Spring Data REST exposes a collection resource at <i class="blue">/destinations</i>. It also exposes an item resource for each of the items managed by the repository under the URI template <i class="blue">/destinations/{id}</i>.
+Listing 9: [src/main/java/cristina/tech/blog/travel/DestinationRepository.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/java/cristina/tech/blog/travel/DestinationRepository.java)
+
+```java
+package cristina.tech.blog.travel;
+
+import cristina.tech.blog.travel.domain.Destination;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import java.util.List;
+import java.util.Optional;
+
+@RepositoryRestResource(collectionResourceRel = "destinations", path = "destinations")
+public interface DestinationRepository extends PagingAndSortingRepository<Destination, Integer> {
+
+    List<Destination> findByCountry(@Param("country") String country);
+
+    Optional<Destination> findByName(@Param("name") String name);
+}
+```
+Listing 9 showcases the `DestinationRepository` which encapsulates various operations involving `Destination` objects. Spring Boot automatically spins up Spring Data JPA to create a concrete implementation of the DestinationRepository, at runtime, and configure it to talk to our back-end PostgreSQL database using JPA. `@RepositoryRestResource` is not required for a repository to be exported. It is only used here to document to the export details, such as RESTful endpoints at: <i class="blue">/destinations/{id}</i> (the collection resource and <i class="blue">/destinations/{id}</i> (the item resource)
+
+By default, Spring Data REST will expose your CrudRepository using the name of the domain class, lower-cased, and apply the [Evo Inflector](https://github.com/atteo/evo-inflector) to pluralize this word.
+
+I have also defined two custom queries to retrieve a list of `Destination` objects based on the country and find zero or one destination by name. Note that there is a UNIQUE database constraint on destination name. These two queries will be automatically exposed as RESTful endpoints at: <i class="blue">/destinations/search/findByCountry?country={country}</i>,
+respectively: <i class="blue">/destinations/search/findByName?name={name}</i>
+
+The listing of the `HolidayRepository` and `AgentRepository` interfaces can be found [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/tree/master/src/main/java/cristina/tech/blog/travel).
 
 ## Running the API
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman"/>
 
+"Ta da"! The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations/{id}</i> endpoint.
+
+As the screenshot shows there are many more RESTful endpoints exposed by the wanderlust service. I have created a test collection for the other relevant endpoints and you can give them a spin yourself with [Postman](https://www.getpostman.com/). The test collection can be downloaded [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/Wanderlust_OpenTravelAPI_Postman_collection.json).
+
+Of course, manual testing can be a drag and as a developer we like to automate as most as possible. Listing below shows how to automate integration testing of HTTP operations on the `Destination` resource.
+
+Listing 10: [src/test/java/cristina/tech/blog/travel/domain/WanderlustIntegrationTests.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/test/java/cristina/tech/blog/travel/domain/WanderlustIntegrationTests.java)
+
+```java
+package cristina.tech.blog.travel.domain;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.PUT;
+
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class WanderlustIntegrationTests {
+    private static final String KOTOR_FACT        =
+            "At 1300 metres deep, the Grand Canyon of Tara River is actually the deepest canyon in Europe and second largest in the world after the Colorado canyon in the USA.";
+    private static final String KOTOR_DESCRIPTION = "The gem of Montenegro";
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @Test
+    public void destinations() throws IOException {
+        Destination destinationKotor = new Destination("Kotor", "ME");
+
+        // POST, create destination
+        URI uri = restTemplate.postForLocation("/destinations", destinationKotor);
+
+        // setup API response type to be a Destination HTTP Resource
+        ParameterizedTypeReference<Resource<Destination>> responseType = new ParameterizedTypeReference<Resource<Destination>>() {};
+
+        // GET by URI, id as URI Path Param, i.e.: http://localhost:54294/destinations/1, assert Response HTTP code 200: OK
+        ResponseEntity<Resource<Destination>> getDestinationByURI = restTemplate.exchange(uri.toString(), GET, null, responseType);
+        assertThat(destinationKotor.getCountry()).isEqualTo(getDestinationByURI.getBody().getContent().getCountry());
+        assertThat(HttpStatus.OK.value()).isEqualTo(getDestinationByURI.getStatusCode().value());
+
+        // PUT, replace destination, assert assert Response HTTP code 200: OK
+        List<String> facts = new ArrayList<>(1);
+        facts.add(KOTOR_FACT);
+        destinationKotor.setFacts(facts);
+        ResponseEntity<Resource<Destination>> putDestination = restTemplate.exchange(uri.toString(), PUT, new HttpEntity<>(destinationKotor), responseType);
+        assertThat(destinationKotor.getFacts()).isEqualTo(putDestination.getBody().getContent().getFacts());
+        assertThat(getDestinationByURI.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
+
+        // PATCH, update destination, does not work with exchange method, see: https://jira.spring.io/browse/SPR-15347
+        destinationKotor.setDescription(KOTOR_DESCRIPTION);
+        restTemplate.postForLocation(UriComponentsBuilder.fromUri(uri).queryParam("_method", PATCH.name()).build().toString(), destinationKotor);
+
+        // GET by name, filter on destination name, assert return HTTP code 200
+        ResponseEntity<Resource<Destination>> getDestinationByName =
+                restTemplate.exchange(UriComponentsBuilder.fromPath("/destinations/search/findByName").queryParam("name", "Kotor").build().toString(), GET, null, responseType);
+        assertThat(destinationKotor.getDescription()).isEqualTo(getDestinationByName.getBody().getContent().getDescription());
+        assertThat(getDestinationByName.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+
+        // DELETE
+        restTemplate.delete(uri.toString());
+
+        // GET by country, assert destination does not exist anymore
+        ResponseEntity<Resource<Destination>> getDestinationByCountry =
+                restTemplate.exchange(UriComponentsBuilder.fromPath("/destinations/search/findByCountry").queryParam("country", "ME").build().toString(), GET, null, responseType);
+        assertThat(getDestinationByCountry.getBody().getContent().getId()).isEqualTo(null);
+    }
+}
+```
+
 ## HAL and Resource discoverability
 
 A core principle of [HATEOAS](https://spring.io/understanding/HATEOAS) (Hypermedia as the Engine of Application State) is that resources should be discoverable through the publication of links that point to the available resources. There are a few competing de-facto standards of how to represent links in JSON. By default, Spring Data REST uses HAL to render responses. HAL defines links to be contained in a property of the returned document.
+
+If you can remember from <i class="blue">Listing 1: build.gradle</i>, we have added a Gradle runtime dependency for browsing Spring Data REST repositories in your Web browser It is an API browser for the hal+json media type.
+
+When you point your browser to location: http://localhost:9000/api/opentravel/, you should see something similar to below. The HAL Browser makes for quite a nice Wanderlust REST API documentation, by listing: links, headers, URI templates, response body.
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/HAL_Browser.png" alt="Learn more of the REST API with the HAL browser"/>
 
 ## RESTing in the APLS
 
 <i class="blue">"ALPS is a data format for defining simple descriptions of application-level semantics, similar in complexity to HTML microformats. An ALPS document can be used as a profile to explain the application semantics of a document with an application-agnostic media type (such as HTML, HAL, Collection+JSON, Siren, etc.). This increases the reusability of profile documents across media types."</i> - M. Admundsen / L. Richardson / M. Foster
 
+```
+$ Cristinas-iMac:wanderlust-open-travel-api cristina$ curl http://localhost:9000/api/opentravel/profile
+{
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:9000/api/opentravel/profile"
+    },
+    "holidays" : {
+      "href" : "http://localhost:9000/api/opentravel/profile/holidays"
+    },
+    "destinations" : {
+      "href" : "http://localhost:9000/api/opentravel/profile/destinations"
+    },
+    "agents" : {
+      "href" : "http://localhost:9000/api/opentravel/profile/agents"
+    }
+  }
+}
+$ Cristinas-iMac:wanderlust-open-travel-api cristina$ curl http://localhost:9000/api/opentravel/profile/destinations
+{
+  "alps" : {
+    "version" : "1.0",
+    "descriptors" : [ {
+      "id" : "destination-representation",
+      "href" : "http://localhost:9000/api/opentravel/profile/destinations",
+      "descriptors" : [ {
+        "name" : "name",
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "country",
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "description",
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "facts",
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "createdAt",
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "modifiedAt",
+        "type" : "SEMANTIC"
+      } ]
+    }, {
+      "id" : "get-destinations",
+      "name" : "destinations",
+      "type" : "SAFE",
+      "rt" : "#destination-representation",
+      "descriptors" : [ {
+        "name" : "page",
+        "doc" : {
+          "value" : "The page to return.",
+          "format" : "TEXT"
+        },
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "size",
+        "doc" : {
+          "value" : "The size of the page to return.",
+          "format" : "TEXT"
+        },
+        "type" : "SEMANTIC"
+      }, {
+        "name" : "sort",
+        "doc" : {
+          "value" : "The sorting criteria to use to calculate the content of the page.",
+          "format" : "TEXT"
+        },
+        "type" : "SEMANTIC"
+      } ]
+    }, {
+      "id" : "create-destinations",
+      "name" : "destinations",
+      "type" : "UNSAFE",
+      "rt" : "#destination-representation"
+    }, {
+      "id" : "get-destination",
+      "name" : "destination",
+      "type" : "SAFE",
+      "rt" : "#destination-representation"
+    }, {
+      "id" : "patch-destination",
+      "name" : "destination",
+      "type" : "UNSAFE",
+      "rt" : "#destination-representation"
+    }, {
+      "id" : "delete-destination",
+      "name" : "destination",
+      "type" : "IDEMPOTENT",
+      "rt" : "#destination-representation"
+    }, {
+      "id" : "update-destination",
+      "name" : "destination",
+      "type" : "IDEMPOTENT",
+      "rt" : "#destination-representation"
+    }, {
+      "name" : "findByName",
+      "type" : "SAFE",
+      "descriptors" : [ {
+        "name" : "name",
+        "type" : "SEMANTIC"
+      } ]
+    }, {
+      "name" : "findByCountry",
+      "type" : "SAFE",
+      "descriptors" : [ {
+        "name" : "country",
+        "type" : "SEMANTIC"
+      } ]
+    } ]
+  }
+}
+```
 
 ## Source Code
 You can find the full code base of my Incubator Wanderlust OpenTravel API at my public [GitHub repo](https://github.com/cristinanegrean/wanderlust-open-travel-api).
