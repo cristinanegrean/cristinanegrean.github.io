@@ -591,11 +591,11 @@ public interface DestinationRepository extends PagingAndSortingRepository<Destin
     Optional<Destination> findByName(@Param("name") String name);
 }
 ```
-Listing 9 showcases the `DestinationRepository` which encapsulates various operations involving `Destination` objects. Spring Boot automatically spins up Spring Data JPA to create a concrete implementation of the DestinationRepository, at runtime, and configure it to talk to our back-end PostgreSQL database using JPA. `@RepositoryRestResource` is not required for a repository to be exported. It is only used here to document to the export details, such as RESTful endpoints at: <i class="blue">/destinations/{id}</i> (the collection resource and <i class="blue">/destinations/{id}</i> (the item resource)
+Listing 9 showcases the `DestinationRepository` which encapsulates various operations involving `Destination` objects. Spring Boot automatically spins up Spring Data JPA to create a concrete implementation of the DestinationRepository, at runtime, and configure it to talk to our back-end PostgreSQL database using JPA. `@RepositoryRestResource` is not required for a repository to be exported. It is only used here to document to the export details, such as RESTful endpoints at: <i class="blue">/destinations</i> (the collection resource) and <i class="blue">/destinations/{id}</i> (the item resource)
 
 By default, Spring Data REST will expose your CrudRepository using the name of the domain class, lower-cased, and apply the [Evo Inflector](https://github.com/atteo/evo-inflector) to pluralize this word.
 
-I have also defined two custom queries to retrieve a list of `Destination` objects based on the country and find zero or one destination by name. Note that there is a UNIQUE database constraint on destination name. These two queries will be automatically exposed as RESTful endpoints at: <i class="blue">/destinations/search/findByCountry?country={country}</i>,
+I have also defined two custom queries to retrieve a list of `Destination` objects based on the country and find zero or one destination by name. Note that there is a UNIQUE database constraint on destination name. These two queries will be automatically exposed as RESTful endpoints: <i class="blue">/destinations/search/findByCountry?country={country}</i>,
 respectively: <i class="blue">/destinations/search/findByName?name={name}</i>
 
 The listing of the `HolidayRepository` and `AgentRepository` interfaces can be found [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/tree/master/src/main/java/cristina/tech/blog/travel).
@@ -604,7 +604,7 @@ The listing of the `HolidayRepository` and `AgentRepository` interfaces can be f
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman"/>
 
-"Ta da"! The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations/{id}</i> endpoint.
+"Ta da"! The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations</i> endpoint.
 
 As the screenshot shows there are many more RESTful endpoints exposed by the wanderlust service. I have created a test collection for the other relevant endpoints and you can give them a spin yourself with [Postman](https://www.getpostman.com/). The test collection can be downloaded [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/Wanderlust_OpenTravelAPI_Postman_collection.json).
 
