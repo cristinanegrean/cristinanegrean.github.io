@@ -50,7 +50,7 @@ When running on OS X, installion steps can be found in the project's [README](ht
 ## "Bootiful Wanderlust" with Spring Boot and Spring Initializr
 
 Sometimes the hardest part of any project is getting started. You have to setup a directory structure for various project artifacts, create a build file and populate it with all library dependencies. This is where [Spring Initializr](https://start.spring.io/) comes into handy. [Spring Initializr](https://start.spring.io/) is ultimately a web application that can generate a [Spring Boot](http://projects.spring.io/spring-boot/) project structure for you. It doesn’t generate any application code, but it will give you a basic project structure and either a [Maven](https://maven.apache.org/) or a [Gradle](https://gradle.org/) build specification to build your code with. All you need to do is write the application code.
-[Spring Boot](http://projects.spring.io/spring-boot/), on the other hand, helps package the autonomous data microservice application as an uber-self-runnable-JAR (Java Application Archive) with an embedded application container ([Apache Tomcat](http://tomcat.apache.org/) - defaultly autoconfigured, [Jetty](http://www.eclipse.org/jetty/), (JBoss Undertow)[http://undertow.io/]). [Spring Boot](http://projects.spring.io/spring-boot/) also became "de-facto" way to create Spring applications.
+[Spring Boot](http://projects.spring.io/spring-boot/), on the other hand, helps package the autonomous data microservice application as an uber-self-runnable-JAR (Java ARchive) with an embedded application container ([Apache Tomcat](http://tomcat.apache.org/) - autoconfigured by default, [Jetty](http://www.eclipse.org/jetty/), [JBoss Undertow](http://undertow.io/)). [Spring Boot](http://projects.spring.io/spring-boot/) also became "de-facto" way to create Spring applications.
 
 ### Why Spring Boot?
 * It's suitable for Cloud Native Applications that follow the [12factor](http://12factor.net) patterns (developed by the Netflix engineering team)
@@ -568,7 +568,7 @@ Coding the other two domain objects: `Holiday` and `Agent` is similar, you could
 
 ## Coding the Repositories
 
-The general idea of Spring Data REST is that builds on top of Spring Data repositories and automatically exports those as REST resources. I've created several repositories, one for each entity: `DestinationRepository`, `HolidayRepository` and `AgentRepository`. All repositories are Java interfaces extending from [PagingAndSortingRepository](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html) interface, defined in Spring Data Commons, fact that ensures that common CRUD operations as: `findAll`, `findOne`, `save`, `exists`, `count`, `delete`, `deleteAll` will be exposed as HTTP operations on all domain objects. Additionally it provides out-of-the-box pagination and sorting support.
+The general idea of Spring Data REST is that builds on top of Spring Data repositories and automatically exports those as REST resources. I've created several repositories, one for each entity: `DestinationRepository`, `HolidayRepository` and `AgentRepository`. All repositories are Java interfaces extending from [PagingAndSortingRepository](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/PagingAndSortingRepository.html) interface, defined in Spring Data Commons, fact that ensures that common CRUD operations as: `findAll`, `findOne`, `save`, `exists`, `count`, `delete`, `deleteAll` will be inherited by all domain objects.
 
 Listing 9: [src/main/java/cristina/tech/blog/travel/DestinationRepository.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/main/java/cristina/tech/blog/travel/DestinationRepository.java)
 
@@ -591,24 +591,25 @@ public interface DestinationRepository extends PagingAndSortingRepository<Destin
     Optional<Destination> findByName(@Param("name") String name);
 }
 ```
-Listing 9 showcases the `DestinationRepository` which encapsulates various operations involving `Destination` objects. Spring Boot automatically spins up Spring Data JPA to create a concrete implementation of the DestinationRepository, at runtime, and configure it to talk to our back-end PostgreSQL database using JPA. `@RepositoryRestResource` is not required for a repository to be exported. It is only used here to document to the export details, such as RESTful endpoints at: <i class="blue">/destinations</i> (the collection resource) and <i class="blue">/destinations/{id}</i> (the item resource)
+Listing 9 showcases the `DestinationRepository` which encapsulates various operations involving `Destination` objects. Spring Boot automatically spins up Spring Data JPA to create a concrete implementation of the DestinationRepository, at runtime, and configure it to talk to our back-end PostgreSQL database using JPA. `@RepositoryRestResource` annotation is not required for a repository to be exported. I've added it to explicitly, to document the export details, such as RESTful endpoints at: <i class="blue">/destinations</i> (the collection resource) and <i class="blue">/destinations/{id}</i> (the item resource).
 
-By default, Spring Data REST will expose your CrudRepository using the name of the domain class, lower-cased, and apply the [Evo Inflector](https://github.com/atteo/evo-inflector) to pluralize this word.
+By default, Spring Data REST will expose your CrudRepository using the name of the domain class (in this case `Destination`), lower-cased, and apply the [Evo Inflector](https://github.com/atteo/evo-inflector) to pluralize this word.
 
 I have also defined two custom queries to retrieve a list of `Destination` objects based on the country and find zero or one destination by name. Note that there is a UNIQUE database constraint on destination name. These two queries will be automatically exposed as RESTful endpoints: <i class="blue">/destinations/search/findByCountry?country={country}</i>,
 respectively: <i class="blue">/destinations/search/findByName?name={name}</i>
 
 The listing of the `HolidayRepository` and `AgentRepository` interfaces can be found [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/tree/master/src/main/java/cristina/tech/blog/travel).
 
+
 ## Running the API
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman"/>
 
-"Ta da"! The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations</i> endpoint.
+<i class="blue">"Ta da"!</i> The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations</i> endpoint.
 
-As the screenshot shows there are many more RESTful endpoints exposed by the wanderlust service. I have created a test collection for the other relevant endpoints and you can give them a spin yourself with [Postman](https://www.getpostman.com/). The test collection can be downloaded [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/Wanderlust_OpenTravelAPI_Postman_collection.json).
+There are many more RESTful endpoints exposed by the wanderlust service. I've created a test collection for other relevant endpoints and you can test them with [Postman](https://www.getpostman.com/). The test collection can be downloaded [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/Wanderlust_OpenTravelAPI_Postman_collection.json).
 
-Manual testing can be a drag and as a developer, we like to automate testing as much as possible. Listing below shows how to automate integration testing of HTTP operations on the `Destination` resource.
+Manual testing can be a drag, and as a developer, we like to automate testing as much as possible. Listing below shows how to automate integration testing of HTTP operations on the `Destination` resource.
 
 Listing 10: [src/test/java/cristina/tech/blog/travel/domain/WanderlustIntegrationTests.java](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/src/test/java/cristina/tech/blog/travel/domain/WanderlustIntegrationTests.java)
 
@@ -697,9 +698,9 @@ public class WanderlustIntegrationTests {
 
 A core principle of [HATEOAS](https://spring.io/understanding/HATEOAS) (Hypermedia as the Engine of Application State) is that resources should be discoverable through the publication of links that point to the available resources. There are a few competing de-facto standards of how to represent links in JSON. By default, Spring Data REST uses HAL to render responses. HAL defines links to be contained in a property of the returned document.
 
-If you can remember from <i class="blue">Listing 1: build.gradle</i>, we have added a Gradle runtime dependency for browsing Spring Data REST repositories in your Web browser It is an API browser for the hal+json media type.
+If you can remember from <i class="blue">Listing 1: build.gradle</i>, we have added a Gradle runtime dependency for browsing Spring Data REST repositories in your Web browser. It is an [API browser](https://github.com/mikekelly/hal-browser) for the <i class="blue">hal+json</i> media type.
 
-When you point your browser to location: http://localhost:9000/api/opentravel/, you should see something similar to below. The HAL Browser makes for quite a nice Wanderlust REST API documentation, by listing: links, headers, URI templates, response body.
+When you point your browser to location: <i class="blue">http://localhost:9000/api/opentravel/</i>, you should see something similar to below. The HAL Browser makes for quite a nice Wanderlust REST API documentation, by listing: links, headers, URI templates, response body.
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/HAL_Browser.png" alt="Learn more of the REST API with the HAL browser"/>
 
