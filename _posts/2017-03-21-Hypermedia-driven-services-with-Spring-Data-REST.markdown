@@ -4,7 +4,7 @@ author: Cristina Negrean
 title: 'Expose a discoverable REST API of your domain model using HAL JSON as media type'
 image: /img/open-travel-rest-api.gif
 tags: [Spring Data REST, Spring Initializr, Spring Boot, Flyway, Spring Data JPA, ALPS, JSON HAL]
-category: Spring Data REST, Back-end API, Wanderlust
+category: Spring Data REST
 comments: true
 ---
 ## Background
@@ -66,8 +66,8 @@ The <i class="blue">Generate Project</i> button will download the template proje
 
 ## "REST-Assured": Building Continuous Delivery confidence with Test Driven Development
 
- Before even starting to write a line of code, is a good practice to think about the approach to take to automate code quality checks so that you can code and refactor with confidence. And at the same time strive to minimize the number of defects!
- While I will show you how to unit and integration test the back-end API in a later post, I'll start by adding the [tooling](https://github.com/jacoco/jacoco) that calculates the percentage of code accessed by tests to the project build specification file (build.gradle).
+ Before even starting to write a line of code, it is a good practice to think about the approach to take to automate code quality checks so that you can code and refactor with confidence. And at the same time strive to minimize the number of defects!
+ While I will show you how to fully unit and integration test the back-end API in a later post, I'll start by adding the [tooling](https://github.com/jacoco/jacoco) that calculates the percentage of code accessed by tests to the project build specification file (build.gradle).
  The goal is to have each time when building the project, JaCoCo (Java Code Coverage) produce an XML report in the build directory:  `wanderlust-open-travel-api/build/reports/jacoco/test/jacocoTestReport.xml` to be used with the Continuous Integration (CI) server of your choice - for me that is [Travis](https://travis-ci.org/) - to visually quantify test coverage and its [evolution](https://coveralls.io/github/cristinanegrean/wanderlust-open-travel-api) between chronological software increments.
 
  <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/TravisCIBadges.png" alt="Test Coverage Badge with JaCoCo Report XML, GitHub, Travis CI and Coveralls"/>

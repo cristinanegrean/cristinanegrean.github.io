@@ -9,6 +9,9 @@ url: "http://cristinanegrean.github.io" # the base hostname & protocol for your 
 twitter_username: cristinanegrean
 github_username:  cristinanegrean
 
+# Configure Permalinks for pages, posts, or collections. Jekyll uses by default URI template: /:categories/:year/:month/:day/:title.html and I want “pretty URLs”
+permalink: /:title
+
 # Build settings
 markdown: kramdown
 
