@@ -5,12 +5,12 @@ description: Software Engineer
 metadata:
   keywords: Cristina,Tech,Blog,Java,Spring,Microservices,Scala,DevOps
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://cristinanegrean.github.io" # the base hostname & protocol for your site
+url: "http://cristina.tech" # the base hostname & protocol for your site
 twitter_username: cristinanegrean
 github_username:  cristinanegrean
 
 # Configure Permalinks for pages, posts, or collections. Jekyll uses by default URI template: /:categories/:year/:month/:day/:title.html and I want “pretty URLs”
-permalink: /:title
+permalink: /:year/:month/:day/:title
 
 # Build settings
 markdown: kramdown
