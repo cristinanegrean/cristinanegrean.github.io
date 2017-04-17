@@ -130,13 +130,12 @@ img.float-image {
     text-align: center;
 }
 .typewrite {
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom: .1em solid;
   display: inline-block;
   font-weight: bold;
   font-size: 150%;
   background: #609cec;
   color: #fff !important;
-}
-.hidden {
-  display: none; visibility: hidden;
 }
