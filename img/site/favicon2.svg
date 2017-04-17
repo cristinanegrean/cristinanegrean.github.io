@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="448"
+   height="520"
+   id="canvas"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="favicon2.svg">
+  <metadata
+     id="metadata31">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs29">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 260 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="448 : 260 : 1"
+       inkscape:persp3d-origin="224 : 173.33333 : 1"
+       id="perspective4179" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="2560"
+     inkscape:window-height="1315"
+     id="namedview27"
+     showgrid="false"
+     inkscape:zoom="0.5"
+     inkscape:cx="-113.68766"
+     inkscape:cy="221.92229"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="canvas" />
+  <polygon
+     points="327.8461,70 223.92305,10 223.92305,130 "
+     id="tr0"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="120,70 223.92305,10 223.92305,130 "
+     id="tr1"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="223.92305,130 120,70 120,190 "
+     id="tr2"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="16.076952,130 120,70 120,190 "
+     id="tr3"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="120,190 16.076952,130 16.076952,250 "
+     id="tr4"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="431.76915,130 327.8461,70 327.8461,190 "
+     id="tr5"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="223.92305,130 327.8461,70 327.8461,190 "
+     id="tr6"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="327.8461,190 223.92305,130 223.92305,250 "
+     id="tr7"
+     transform="translate(-110,-126)"
+     style="fill:#49b650" />
+  <polygon
+     points="223.92305,130 223.92305,250 120,190 "
+     id="tr8"
+     style="fill:#ffdd55"
+     transform="translate(-114,-126)" />
+  <polygon
+     points="120,310 223.92305,250 120,190 "
+     id="tr9"
+     style="fill:#009aff;fill-opacity:1"
+     transform="translate(-114,-126)" />
+  <polygon
+     points="16.076952,250 120,190 120,310 "
+     id="tr10"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="120,310 16.076952,250 16.076952,370 "
+     id="tr11"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="431.76915,130 431.76915,250 327.8461,190 "
+     id="tr12"
+     transform="translate(-114,-126)"
+     style="fill:none" />
+  <polygon
+     points="327.8461,190 327.8461,310 223.92305,250 "
+     id="tr14"
+     transform="translate(-108,-124)"
+     style="fill:#96a0c3" />
+  <polygon
+     points="223.92305,250 223.92305,370 120,310 "
+     id="tr16"
+     transform="translate(-114,-126)"
+     style="fill:none" />
+  <polygon
+     points="223.92305,370 120,310 120,430 "
+     id="tr17"
+     style="fill:#609cec"
+     transform="translate(-114,-126)" />
+  <polygon
+     points="16.076952,370 120,310 120,430 "
+     id="tr18"
+     transform="translate(-44,-110)"
+     style="fill:none" />
+  <polygon
+     points="431.76915,250 431.76915,370 327.8461,310 "
+     id="tr19"
+     transform="translate(-114,-126)"
+     style="fill:none" />
+  <polygon
+     points="327.8461,310 327.8461,430 431.76915,370 "
+     id="tr20"
+     transform="translate(-114,-126)"
+     style="fill:none" />
+  <polygon
+     points="327.8461,430 223.92305,370 223.92305,490 "
+     id="tr22"
+     style="fill:#e9c6af"
+     transform="translate(-110,-126)" />
+  <polygon
+     points="223.92305,370 223.92305,490 120,430 "
+     id="tr23"
+     transform="translate(-114,-126)"
+     style="fill:#71459b" />
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4154"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:Helvetica;-inkscape-font-specification:'Helvetica Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     transform="matrix(2.1186699,0,0,2.2287386,-108.48572,-115.27704)"><flowRegion
+       id="flowRegion4156"><rect
+         id="rect4158"
+         width="85.932205"
+         height="72.711861"
+         x="61.694916"
+         y="48.474575"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Helvetica;-inkscape-font-specification:'Helvetica Bold'" /></flowRegion><flowPara
+       id="flowPara4160" /></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4162"
+     style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Helvetica;font-style:normal;font-weight:bold;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Helvetica Bold';font-stretch:normal;font-variant:normal;"><flowRegion
+       id="flowRegion4164"><rect
+         id="rect4166"
+         width="132.20338"
+         height="81.525421"
+         x="288.64407"
+         y="293.05084"
+         style="-inkscape-font-specification:'Helvetica Bold';font-family:Helvetica;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-size:40px;" /></flowRegion><flowPara
+       id="flowPara4168" /></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4215"
+     style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Helvetica;font-style:normal;font-weight:bold;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Helvetica Bold';font-stretch:normal;font-variant:normal;"><flowRegion
+       id="flowRegion4217"><rect
+         id="rect4219"
+         width="132.43271"
+         height="57.647179"
+         x="302.25818"
+         y="269.15686"
+         style="-inkscape-font-specification:'Helvetica Bold';font-family:Helvetica;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-size:40px;" /></flowRegion><flowPara
+       id="flowPara4221" /></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4223"
+     style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Helvetica;font-style:normal;font-weight:bold;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Helvetica Bold';font-stretch:normal;font-variant:normal;"><flowRegion
+       id="flowRegion4225"><rect
+         id="rect4227"
+         width="158.91925"
+         height="93.481911"
+         x="288.2359"
+         y="237.99623"
+         style="-inkscape-font-specification:'Helvetica Bold';font-family:Helvetica;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-size:40px;" /></flowRegion><flowPara
+       id="flowPara4229" /></flowRoot>  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:Helvetica;-inkscape-font-specification:'Helvetica Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="15.276703"
+     y="417.16989"
+     id="text4231"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan4233"
+       x="15.276703"
+       y="417.16989" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="468.96759"
+     y="199.04543"
+     id="text4202"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan4204"
+       x="468.96759"
+       y="199.04543" /></text>
+  <image
+     y="176.94704"
+     x="222.72246"
+     id="image5731"
+     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAIAAAAiOjnJAAAABmJLR0QA/wD/AP+gvaeTAAAEEElE
+QVR4nO3dUW4kJxRAUTvK/rc8WUBZCULvQrVzzve4usa+QkLQ8P3nz58vmPbX7RfgdxIWCWGREBYJ
+YZEQFglhkRAWCWGREBYJYZEQFom/F//d9/d3+h7/7rlSvvc+eyvuK5+18uTnc7r36Sy+sxGLhLBI
+CIuEsEgIi8TqrPCp29PczcJOziW755x88vYM1IhFQlgkhEVCWCSERWJ/Vvh0d861shK3t1o3NUtd
+eXL321gxOLs0YpEQFglhkRAWCWGRmJwVnrQ3B1x5ztPU7tBu3vpCRiwSwiIhLBLCIiEsEp86Kzy5
+DrjyUyuf9YvngE9GLBLCIiEsEsIiISwSk7PCt81o7p7uMjVL3Xvn638LIxYJYZEQFglhkRAWif1Z
+4d2TMKd2kD51Oz+7d777t/iREYuEsEgIi4SwSAiLxPf1RaXOyVNipvyaP4cRi4SwSAiLhLBICItE
+ewbp3fW7FSfndyd3ok49Z/vTjVgkhEVCWCSERUJYJPZvsT/5Lbk9J08BnbobccVHnHVjxCIhLBLC
+IiEsEsIisb+D9O4tfnfXCt+2Wtfdr7H3nC8jFhFhkRAWCWGREBaJ9gzSbn43tT9z5clPJ3d13r3P
+YvvJRiwSwiIhLBLCIiEsEvuzwu6Mzb0Vq6kVtJOrkG+7wdAOUt5OWCSERUJYJIRFYnIH6cl9lZ2p
+fZ4r7q54PtlBytsJi4SwSAiLhLBI7J82s/dTUzsku2817r3Pyfnd+89f/TJiEREWCWGREBYJYZFo
+T5t5ev/5M3vvs2Lqfe5++iIjFglhkRAWCWGREBaJyVvs7+6i7J6z5+5O1Kn32WbEIiEsEsIiISwS
+wiLRnkH61N2hMHW6y8pn7Z2SuvLku3yvkLcTFglhkRAWCWGRaG+xfzp8a95/Prm7TaNbm5v6Hfpe
+IZ9HWCSERUJYJIRFoj2DtJvfrbzPymed3Oc59T5T75zOZI1YJIRFQlgkhEVCWCRWZ4XdCtpJ3exp
+5bM+8f++95wvIxYRYZEQFglhkRAWicnTZk66e6/fnpOrdd0aqFkhNwmLhLBICIuEsEi09xVOmbof
+8O6t8VOf7r5C/r+ERUJYJIRFQlgk9s8gvXsbYDcH7GaOb/smpu8V8nmERUJYJIRFQlgkJm+meNvt
+6odv6Is+/eScdOqnvoxYRIRFQlgkhEVCWCQmZ4Un3V3RW/mpKXfv4NhmxCIhLBLCIiEsEsIi8amz
+wpPfyHvbXfNTrBXyeYRFQlgkhEVCWCQmZ4Un92d2K18nz+rs7vI4eXLpj4xYJIRFQlgkhEVCWCT2
+Z4WfuII2NcOamvF1t9ifnLf+yIhFQlgkhEVCWCSEReJT7yvk5YxYJIRFQlgkhEVCWCSERUJYJIRF
+QlgkhEVCWCSEReIfcUhEn/MBk6oAAAAASUVORK5CYII=
+"
+     style="image-rendering:optimizeQuality"
+     preserveAspectRatio="none"
+     height="200"
+     width="200" />
+</svg>

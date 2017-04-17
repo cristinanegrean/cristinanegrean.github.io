@@ -70,9 +70,13 @@
                               <a href="{{ site.baseurl }}/about/">About<img class="img-responsive hidden-sm hidden-md hidden-lg" src="{{ site.baseurl }}/img/site/QRCode.png" height="40" width="40"/></a>
                           </li>
                       </ul>
-                      <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/QRCode.png"/>
-                      <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/favicon.svg"/>
-
+                      <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/favicon2.svg"/>
+                      <span class="foot-item hidden-xs">
+                          <a href="" class="typewrite" data-period="2000" data-type='[ "Hello, my name is Cristina.", "I engineer software.", "I am creative.", "I like to learn new technologies and new things in general.", "Welcome to my blog.",
+                          "Enjoy reading."]'>
+                            <span class="wrap"></span>
+                          </a>
+                      </span>
                   </div>
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-0">
@@ -82,8 +86,8 @@
                             <img class="img-responsive" src="{{ page.image | prepend: site.baseurl }}"/>
                         {% else %}
                             <!-- Main image image -->
-                            <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
-                            <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
+                              <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
+                              <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge.<a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
                         {% endif %}
                     </div>
                 </div>
@@ -101,15 +105,15 @@
 
             <!-- Disqus -->
             {% if page.comments %}
-            <div id="disqus_thread">{{ page.url | prepend: site.url }}</div>
+            <div id="disqus_thread">{{ page.url | prepend: https_url }}</div>
             <script type="text/javascript">
                 var disqus_config = function () {
-                    this.page.url = "{{ page.url | prepend: site.url }}";
+                    this.page.url = "{{ page.url | prepend: https_url }}";
                     this.page.identifier = "{{ page.url }}";
                     this.page.title = "{{ page.title }}";
                 };
             </script>
-            <script src="//cristina-tech.disqus.com/embed.js" async></script>
+            <script src="https://cristina-tech.disqus.com/embed.js" async></script>
             {% endif %}
         </div>
     </div>
@@ -163,7 +167,7 @@
         </div>
         <!-- Foot Ends -->
         <!-- Footer Content -->
-        <p class="pull-left">The contents of this website are &copy; {{site.time | date: "%Y" }} under the terms of the <a href="https://opensource.org/licenses/MIT" class="blue">MIT</a> license</p>
+        <p class="pull-left">Copyright &copy; {{site.time | date: "%Y" }} Cristina Negrean, under the terms of <a href="https://opensource.org/licenses/MIT" class="blue">MIT</a> license</p>
         <ul class="list-inline pull-right">
             <!-- List -->
             <li><a href="{{ site.baseurl }}/">Blog</a>

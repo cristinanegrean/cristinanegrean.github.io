@@ -129,3 +129,14 @@ img.float-image {
 .align-center-text {
     text-align: center;
 }
+.typewrite {
+  border-bottom: .1em solid;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 150%;
+  background: #609cec;
+  color: #fff !important;
+}
+.hidden {
+  display: none; visibility: hidden;
+}
