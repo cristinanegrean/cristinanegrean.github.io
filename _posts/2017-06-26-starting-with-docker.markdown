@@ -244,7 +244,7 @@ However there is a much simpler way by leveraging [Docker Compose](https://docs.
 
 Listing 3: `docker-compose.yml`
 
-{% highlight yml %}
+```
 version: '2'
 services:
   postgresdb:
@@ -267,4 +267,10 @@ services:
       - "9000:9000"
     links:
       - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+```
+
+{% highlight bash %}
+bash-3.2$ docker-compose up
 {% endhighlight %}
