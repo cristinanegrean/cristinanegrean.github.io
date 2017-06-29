@@ -17,9 +17,40 @@ In case you can not wait and want to try out the Dockerized Spring Boot Applicat
 {% highlight bash %}
 $ git clone https://github.com/cristinanegrean/wanderlust-open-travel-api
 $ cd wanderlust-open-travel-api
-$ ./gradlew clean build buildDocker
 $ docker-compose up
 {% endhighlight %}
+
+After above you will have a running multi-container Docker application with
+a PostgreSQL datastore and a RESTful API. To check it out, use Docker client
+command *docker ps*
+
+{% highlight bash %}
+$ docker ps
+CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS              PORTS                    NAMES
+fbb8a96762db        open-travel-spring-boot-docker   "java -Djava.secur..."   21 minutes ago      Up 21 minutes       0.0.0.0:9000->9000/tcp   open-travel-service
+63b39c4345bc        postgres:9.6.3                   "docker-entrypoint..."   21 minutes ago      Up 21 minutes       0.0.0.0:5432->5432/tcp   wanderlust-datastore
+{% endhighlight %}
+
+The difference from the [previous blog post](https://cristina.tech/2017/03/28/hypermedia-driven-services-with-spring-data-rest) where the RESTful API endpoints and HAL browser where available relatively to *http://localhost:9000/api/opentravel/*, the data driven RESTful API is accessible
+from within the Docker host machine.
+
+You can use the *Docker client* or *command-line utility* to check the ip address
+where Docker is running:
+
+{% highlight bash %}
+bash-3.2$ docker-machine ip default
+192.168.99.100
+{% endhighlight %}
+
+and use the IP in the browser or a tool like cURL or Postman to test the Dockerized Spring Boot Data REST application with PostgreSQL datastore.
+
+HAL browser:
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/docker/containerized_wanderlust.png" alt="Dockerized Spring Boot Data REST application with PostgreSQL datastore"/>
+
+List Destinations:
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/docker/curl_list_destinations.png" alt="Dockerized Spring Boot Data REST application with PostgreSQL datastore"/>
 
 ## What is Docker?
 
@@ -50,14 +81,6 @@ I am using [Docker for Mac](https://www.docker.com/docker-mac) in this post, as 
 Docker for Mac application does not use [VirtualBox](https://docs.docker.com/machine/drivers/virtualbox/), instead provisions a [HyperKit VM](https://blog.docker.com/2016/05/docker-unikernels-open-source/) based on [Alpine Linux](https://alpinelinux.org/) which is running the Docker Engine. So with the Docker for Mac application you get only one VM and the app manages it as opposed to Docker Toolbox where you could have created multiple VMs with *docker-machine*.
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/docker/docker4mac.png" alt="Native Docker Application"/>
-
-You can use the *Docker client* or *command-line utility* to check the ip address
-where Docker is running:
-
-{% highlight bash %}
-bash-3.2$ docker-machine ip default
-192.168.99.100
-{% endhighlight %}
 
 An alternative to the Docker Native Application is [Docker Toolbox](https://www.docker.com/products/docker-toolbox) that uses [VirtualBox](https://docs.docker.com/machine/drivers/virtualbox/) and the installer includes the following:
 * Docker Client docker binary
@@ -176,7 +199,7 @@ In Listing 2: `build.gradle`, the task buildDocker toggles the
  <img class="img-responsive"
  src="{{ site.baseurl }}/img/posts/docker/dockerhub.png" alt="DockerHub Docker Registry"/>
 
- ## The *No Gradle Plugin* Way
+## The *No Plugin* Way
 
 If you don't want to use the *Gradle Docker Build plugin*, you can achieve
 all above Docker workflow steps: build, tag and push, using the command-line utility:
@@ -240,7 +263,15 @@ bash-3.2$ docker run --name wanderlustdb -e POSTGRES_PASSWORD=mysecretpassword -
 bash-3.2$ docker run -e "SPRING_PROFILES_ACTIVE=postgres" -p 9000:9000 -t cristinatech/open-travel-spring-boot-docker:1.0.0-SNAPSHOT
 {% endhighlight %}
 
-However there is a much simpler way by leveraging [Docker Compose](https://docs.docker.com/compose/#installation-and-set-up) and the following *docker-compose.yml* configuration:
+But wait! There is a much simpler way, especially when you have more that 2 containers! By leveraging [Docker Compose](https://docs.docker.com/compose/#installation-and-set-up) which has
+already been installed with the Docker for Mac native application!
+
+*Docker Compose* is a tool for defining and running multi-container Docker applications. It needs a Dockerfile - which we already have - so the app's
+environment can be reproduced anywhere. The magic happens in *docker-compose.yml*
+where you need to define the services that make up your application, so they
+can be run together in a isolated environment.
+
+My *docker-compose.yml* looks like bellow:
 
 Listing 3: `docker-compose.yml`
 
@@ -249,14 +280,13 @@ version: '2'
 services:
   postgresdb:
     container_name: wanderlust-datastore
-    image: postgres
-             ports:
-              - "5432:5432"
-             environment:
-              - POSTGRES_USER=cristinanegrean
-              - POSTGRES_PASSWORD=mysecretpassword
-              - POSTGRES_DB=wanderlust
-
+    image: postgres:9.6.3
+    ports:
+         - "5432:5432"
+    environment:
+         - POSTGRES_USER=postgres
+         - POSTGRES_PASSWORD=demo
+    command: postgres
   web:
     container_name: open-travel-service
     build: build/libs
@@ -266,10 +296,14 @@ services:
     ports:
       - "9000:9000"
     links:
-      - postgres
+      - postgresdb
     environment:
-      SPRING_PROFILES_ACTIVE: postgres
+      #SPRING_PROFILES_ACTIVE: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: demo
 ```
+Lastly, run *docker-compose up* and Compose will start and run the entire app.
 
 {% highlight bash %}
 bash-3.2$ docker-compose up
