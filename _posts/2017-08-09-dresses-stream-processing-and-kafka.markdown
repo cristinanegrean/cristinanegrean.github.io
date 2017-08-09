@@ -8,8 +8,8 @@ category: Stream Processing
 comments: false
 ---
 
-In this blog post I will show you how to adopt a full-fledged stream processing framework,
-[Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/) to build an message and event driven microservice: `Bootiful dress service`.
+In this blog post I will show you how to adopt a full-fledged stream processing framework:
+[Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/) to build a message & event driven microservice: `Bootiful dress service`.
 
 The microservice relies on a dedicated broker, [Apache Kafka](http://kafka.apache.org/),
 responsible for distributing the events: `Dress Created Event`, `Dress Updated Event`
@@ -86,3 +86,5 @@ $ sudo python3 producer.py
 And here you go, you should be all setup to stream process dresses :)
 
 <img class="img-responsive" src="{{site.baseurl }}/img/posts/spring-cloud-stream/dockerized-bootiful-dress-service.png" alt="Dress Message Events Stream Processing"/>
+
+<br/>
