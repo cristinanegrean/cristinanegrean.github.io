@@ -293,5 +293,3 @@ spring:
  * and persist `@Entity` domain objects to PostgreSQL database
 
  In a future post, I will write about the testing support in Spring Cloud Stream and how I've leveraged it to integration test the `DressEventStream.java` stream processing component.
-
- Looking forward to your experiences with Spring Cloud Stream or how those match up against using [Kafka's Streams API](https://www.confluent.io/blog/introducing-kafka-streams-stream-processing-made-simple/), which I am keen as well on trying out these days.

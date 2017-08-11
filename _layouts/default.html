@@ -13,11 +13,11 @@
     {% if page.layout == 'post' %}
     {% assign author = site.data.authors[page.author] %}
     <!-- Facebook Open Graph -->
-    <meta property="og:url" content="http://cristinanegrean.github.io{{ page.url }}" />
+    <meta property="og:url" content="https://cristinanegrean.github.io{{ page.url }}" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ page.title }} - {{ author.first_name }} {{ author.last_name }}" />
     <meta property="og:description" content="{{ site.title }}" />
-    <meta property="og:image" content="http://cristinanegrean.github.io{{ page.image }}" />
+    <meta property="og:image" content="https://cristinanegrean.github.io{{ page.image }}" />
     {% endif %}
 
     <!-- Styles -->
@@ -87,7 +87,7 @@
                         {% else %}
                             <!-- Main image image -->
                               <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
-                              <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge.<a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
+                              <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
                         {% endif %}
                     </div>
                 </div>
@@ -103,7 +103,7 @@
         <div class="row tk-acumin-pro">
             {{content}}
 
-            <!-- Disqus -->
+            <!-- Disqus
             {% if page.comments %}
             <div id="disqus_thread">{{ page.url | prepend: https_url }}</div>
             <script type="text/javascript">
@@ -114,7 +114,7 @@
             };
             </script>
             <script src="https://cristina-tech.disqus.com/embed.js" async></script>
-            {% endif %}
+            {% endif %} -->
         </div>
     </div>
     <!-- Main content ends -->
