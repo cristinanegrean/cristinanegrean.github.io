@@ -54,6 +54,10 @@ img.p-image-horiz {
     border: 0.3em solid white;
     border-radius: 5em;
 }
+img.p-image-horiz-min {
+    border: 0.3em solid white;
+    border-radius: 2em;
+}
 img.float-image {
     float: left;
     margin: 10px 10px 10px 0;

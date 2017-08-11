@@ -2,48 +2,40 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{ site.title }} - Code, Create, Share</title>
+    <title>Cristina Negrean - Code, Create, Share</title>
     <!-- Description, Keywords and Author -->
-    <meta name="description" content="{{ site.description }}">
-    <meta name="keywords" content="{{ site.metadata.keywords }}">
+    <meta name="description" content="Software Engineer">
+    <meta name="keywords" content="Cristina,Tech,Blog,Java,Spring,Microservices,Scala,DevOps">
     <meta name="author" content="Cristina Negrean">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {% if page.layout == 'post' %}
-    {% assign author = site.data.authors[page.author] %}
-    <!-- Facebook Open Graph -->
-    <meta property="og:url" content="http://cristinanegrean.github.io{{ page.url }}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ page.title }} - {{ author.first_name }} {{ author.last_name }}" />
-    <meta property="og:description" content="{{ site.title }}" />
-    <meta property="og:image" content="http://cristinanegrean.github.io{{ page.image }}" />
-    {% endif %}
+    
 
     <!-- Styles -->
     <!-- Bootstrap CSS -->
-    <link href="{{ site.baseurl }}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font awesome CSS -->
-    <link href="{{ site.baseurl }}/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
     <!-- Magnific Popup -->
-    <link href="{{ site.baseurl }}/css/magnific-popup.css" rel="stylesheet">
+    <link href="/css/magnific-popup.css" rel="stylesheet">
     <!-- Owl carousel -->
-    <link href="{{ site.baseurl }}/css/owl.carousel.css" rel="stylesheet">
+    <link href="/css/owl.carousel.css" rel="stylesheet">
 
     <!-- CSS for this page -->
     <!-- Base style -->
-    <link href="{{ site.baseurl }}/css/styles/style.css" rel="stylesheet">
+    <link href="/css/styles/style.css" rel="stylesheet">
     <!-- Skin CSS -->
-    <link href="{{ site.baseurl }}/css/styles/skin-blue.css" rel="stylesheet" id="color_theme">
+    <link href="/css/styles/skin-blue.css" rel="stylesheet" id="color_theme">
 
     <!-- Syntax highlighting -->
-    <link href="{{ site.baseurl }}/css/syntax.css" rel="stylesheet">
+    <link href="/css/syntax.css" rel="stylesheet">
 
     <!-- Custom CSS. Type your CSS code in custom.css file -->
-    <link href="{{ site.baseurl }}/css/custom.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ site.baseurl }}/img/site/favicon.png" sizes="any" type="image/png">
+    <link rel="icon" href="/img/site/favicon.png" sizes="any" type="image/png">
 
     <!-- Adobe Typekit Fonts: https://typekit.com/fonts
     <script src="https://use.typekit.net/rdv7tfq.js"></script>
@@ -64,13 +56,13 @@
                   <div class="navi">
                       <ul>
                           <li>
-                              <a href="{{ site.baseurl }}/">Blog<img class="img-responsive hidden-sm hidden-md hidden-lg" src="{{ site.baseurl }}/img/site/favicon.svg" height="40" width="40"/></a>
+                              <a href="/">Blog<img class="img-responsive hidden-sm hidden-md hidden-lg" src="/img/site/favicon.svg" height="40" width="40"/></a>
                           </li>
                           <li>
-                              <a href="{{ site.baseurl }}/about/">About<img class="img-responsive hidden-sm hidden-md hidden-lg" src="{{ site.baseurl }}/img/site/QRCode.png" height="40" width="40"/></a>
+                              <a href="/about/">About<img class="img-responsive hidden-sm hidden-md hidden-lg" src="/img/site/QRCode.png" height="40" width="40"/></a>
                           </li>
                       </ul>
-                      <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/favicon2.svg"/>
+                      <img class="img-responsive hidden-xs" src="/img/site/favicon2.svg"/>
                       <span class="foot-item hidden-xs hidden-sm">
                           <a href="#" class="typewrite" data-period="2000" data-type='[ "Hello, my name is Cristina.", "I engineer software.", "I am creative.", "I am passionate about technology.", "Welcome to my tech blog!",
                           "Created for developers, by a developer.", "I care about the craft of software and about making things better.", "Nice to meet you and thanks for reading!"]'>
@@ -81,14 +73,11 @@
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-0">
                     <div class="logo">
-                        {% if page.image and page.category %}
-                            <!-- Blog post image -->
-                              <img class="img-responsive p-image-horiz-min" src="{{ page.image | prepend: site.baseurl }}"/>
-                        {% else %}
+                        
                             <!-- Main image image -->
-                              <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
+                              <img class="img-responsive p-image-horiz" src="/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
                               <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge.<a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
-                        {% endif %}
+                        
                     </div>
                 </div>
             </div>
@@ -101,20 +90,116 @@
     <div class="main-block container">
 
         <div class="row tk-acumin-pro">
-            {{content}}
+            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+    <header id="post-header">
+        <h4 id="post-subtitle">Posts by tag</h4>
+        <h1 id="post-title">AMQP</h1>
+    </header>
+
+    <div class="row blog-masonry">
+        
+            
+                <!-- Grid Item - Image, Heading and Para -->
+                <div class="item">
+                    <!-- Entry for each grid -->
+                    <div class="grid-entry">
+                        <!-- Grid Image Container -->
+                        <div class="grid-img">
+                            <!-- Image -->
+                            <a href="/2017/08/09/dresses-stream-processing-and-apache-kafka" class="read-more"><img src="/img/bootiful_dress.gif" class="img-responsive" alt=""/></a>
+                        </div>
+                        <!-- Grid entry information -->
+                        <div class="entry-info">
+                            <!-- Heading -->
+                            <h4><a href="/2017/08/09/dresses-stream-processing-and-apache-kafka">Dresses, Stream Processing and Apache Kafka</a></h4>
+
+                            <div class="bor"></div>
+                            <!-- Paragraph -->
+                            <p></p>
+                            <a href="/2017/08/09/dresses-stream-processing-and-apache-kafka" class="read-more">Read More <i class="fa fa-angle-double-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+
+    <!-- Pagination -->
+    
+    <!-- End Pagination -->
+
+</div>
+
+<!-- Sidebar column -->
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Categories Widget -->
+        <div class="s-widget">
+            <!-- Heading -->
+            <h5><i class="fa fa-folder color"></i>&nbsp; Categories</h5>
+            <!-- Widgets Content -->
+            <div class="widget-content categories">
+                <ul class="list-6">
+                    
+                        <li><a href="/categories/spring-data-rest">Spring Data REST</a></li>
+                    
+                        <li><a href="/categories/docker">Docker</a></li>
+                    
+                        <li><a href="/categories/spring-cloud-stream">Spring Cloud Stream</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tag Widget -->
+        <div class="s-widget">
+            <h5><i class="fa fa-tags color"></i>&nbsp; Tags</h5>
+            <!-- Widgets Content -->
+            <div class="widget-content">
+                
+                    <a href="/tags/spring-data-rest" class="label label-color">Spring Data REST</a> 
+                    <a href="/tags/spring-initializr" class="label label-color">Spring Initializr</a> 
+                    <a href="/tags/spring-boot" class="label label-color">Spring Boot</a> 
+                    <a href="/tags/flyway" class="label label-color">Flyway</a> 
+                    <a href="/tags/spring-data-jpa" class="label label-color">Spring Data JPA</a> 
+                    <a href="/tags/alps" class="label label-color">ALPS</a> 
+                    <a href="/tags/json-hal" class="label label-color">JSON HAL</a> 
+                    <a href="/tags/docker" class="label label-color">Docker</a> 
+                    <a href="/tags/docker-for-mac" class="label label-color">Docker for Mac</a> 
+                    <a href="/tags/dockerized-spring-boot-application" class="label label-color">Dockerized Spring Boot Application</a> 
+                    <a href="/tags/dockerhub" class="label label-color">Dockerhub</a> 
+                    <a href="/tags/spring-cloud-stream" class="label label-color">Spring Cloud Stream</a> 
+                    <a href="/tags/apache-kafka" class="label label-color">Apache Kafka</a> 
+                    <a href="/tags/amqp" class="label label-color">AMQP</a> 
+            </div>
+        </div>
+
+        <!-- Social media widget -->
+        <div class="s-widget">
+            <h5><i class="fa fa-share color"></i>&nbsp; Social Media</h5>
+            <!-- Widgets Content -->
+            <div class="widget-content brand-bg">
+                <!-- Social Media Icons -->
+                <a target="_blank" href="https://github.com/cristinanegrean" class="github"><i class="fa fa-github circle-3"></i></a>
+                <a target="_blank" href="https://nl.linkedin.com/in/cristinanegrean" class="linkedin"><i class="fa fa-linkedin circle-3"></i></a>
+                <a target="_blank" href="https://twitter.com/cristinanegrean" class="twitter"><i class="fa fa-twitter circle-3"></i></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 
             <!-- Disqus -->
-            {% if page.comments %}
-            <div id="disqus_thread">{{ page.url | prepend: https_url }}</div>
-            <script type="text/javascript">
-                var disqus_config = function () {
-                    this.page.url = "{{ page.url | prepend: https_url }}";
-                    this.page.identifier = "{{ page.url }}";
-                    this.page.title = "{{ page.title }}";
-            };
-            </script>
-            <script src="https://cristina-tech.disqus.com/embed.js" async></script>
-            {% endif %}
+            
         </div>
     </div>
     <!-- Main content ends -->
@@ -151,13 +236,25 @@
                             <!-- Foot Item Content -->
                             <div class="foot-item-content">
                                 <ul class="list-unstyled">
-                                    {% for post in site.posts limit:3 %}
+                                    
                                     <li>
-                                        <span>{{ post.date | date_to_string }}</span> &raquo;
-                                        <a href="{{ post.url }}">
-                                            {{ post.title }}</a>
+                                        <span>09 Aug 2017</span> &raquo;
+                                        <a href="/2017/08/09/dresses-stream-processing-and-apache-kafka">
+                                            Dresses, Stream Processing and Apache Kafka</a>
                                     </li>
-                                    {% endfor %}
+                                    
+                                    <li>
+                                        <span>29 Jun 2017</span> &raquo;
+                                        <a href="/2017/06/29/dockerized-data-microservice-application">
+                                            Getting Started with Docker</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <span>28 Mar 2017</span> &raquo;
+                                        <a href="/2017/03/28/hypermedia-driven-services-with-spring-data-rest">
+                                            Expose a discoverable REST API of your domain model using HAL JSON as media type</a>
+                                    </li>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -167,11 +264,11 @@
         </div>
         <!-- Foot Ends -->
         <!-- Footer Content -->
-        <p class="pull-left">Copyright &copy; {{site.time | date: "%Y" }} Cristina Negrean, under the terms of <a href="https://opensource.org/licenses/MIT" class="blue">MIT</a> license</p>
+        <p class="pull-left">Copyright &copy; 2017 Cristina Negrean, under the terms of <a href="https://opensource.org/licenses/MIT" class="blue">MIT</a> license</p>
         <ul class="list-inline pull-right">
             <!-- List -->
-            <li><a href="{{ site.baseurl }}/">Blog</a>
-            <li><a href="{{ site.baseurl }}/about/">About</a></li>
+            <li><a href="/">Blog</a>
+            <li><a href="/about/">About</a></li>
         </ul>
         <!-- Clearfix -->
         <div class="clearfix"></div>
@@ -184,17 +281,17 @@
 <!-- Scroll to top -->
 <span class="totop"><a href="#"><i class="fa fa-angle-up bg-color"></i></a></span>
 
-<script src="{{ site.baseurl }}/js/jquery.js"></script>
-<script src="{{ site.baseurl }}/js/bootstrap.min.js"></script>
-<script src="{{ site.baseurl }}/js/placeholders.js"></script>
-<script src="{{ site.baseurl }}/js/jquery.magnific-popup.min.js"></script>
-<script src="{{ site.baseurl }}/js/owl.carousel.min.js"></script>
-<script src="{{ site.baseurl }}/js/respond.min.js"></script>
-<script src="{{ site.baseurl }}/js/html5shiv.js"></script>
-<script src="{{ site.baseurl }}/js/main.js"></script>
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/placeholders.js"></script>
+<script src="/js/jquery.magnific-popup.min.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/respond.min.js"></script>
+<script src="/js/html5shiv.js"></script>
+<script src="/js/main.js"></script>
 
-<script src="{{ site.baseurl }}/js/imagesloaded.min.js"></script>
-<script src="{{ site.baseurl }}/js/masonry.js"></script>
+<script src="/js/imagesloaded.min.js"></script>
+<script src="/js/masonry.js"></script>
 
 <!-- Javascript for this page -->
 <script>
@@ -209,7 +306,7 @@
 </script>
 
 <!-- Custom JS. Type your JS code in custom.js file -->
-<script src="{{ site.baseurl }}/js/custom.js"></script>
+<script src="/js/custom.js"></script>
 
 <!-- Google Analytics
 <script>
