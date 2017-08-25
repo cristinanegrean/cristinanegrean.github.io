@@ -2,22 +2,20 @@
 layout: post
 author: Cristina Negrean
 title: 'Dresses, Stream Processing and Apache Kafka'
-image: /img/bootiful_dress.gif
+image: /img/bootiful_dresses_service_overview.png
 tags: [Spring Cloud Stream, Apache Kafka, AMQP]
 category: Spring Cloud Stream
-comments: true
 ---
 
 In this blog post I will show you how to adopt a full-fledged stream processing framework:
 [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/) to build a message & event driven microservice: `Bootiful dress service`.
 
 The microservice relies on a dedicated broker, [Apache Kafka](http://kafka.apache.org/),
-responsible for distributing the events: `Dress Created Event`, `Dress Updated Event`
-and `Dress Rated Event`. The three events are represented as JSON strings, UTF-8 encoded,
-and are sourced to Kafka via a Python producer script: `producer.py`, leveraging a dataset of dresses:
-`data/dresses.p`.
+responsible for distributing the events: `Dress Created Event`, `Dress Updated Event` and `Dress Rated Event`.
+This isn't a blog post on [what is Kafka](https://dzone.com/articles/what-is-kafka) and you're not required to be an [Apache Kafka](http://kafka.apache.org/) expert to be able to follow through.
+The three events are represented as JSON strings, UTF-8 encoded, and are sourced to Kafka via a Python producer script: `producer.py`, leveraging a dataset of dresses: `data/dresses.p`.
 
-Using a broker, asynchronous communication approach between producer and consumer (also called pub/sub from publisher/subscriber), has particular advantages over a feed, synchronous approach:
+Architecture wise, using a broker, asynchronous communication approach between producer and consumer (also called pub/sub from publisher/subscriber), has particular advantages over a feed, synchronous approach:
 * you have a central place where your events are stored, feeds are not accessible when the producing application is down
 * scaling is easier with a broker – what happens if you suddenly need to double your consuming applications because of load? Who subscribes to the feed? If both subscribe, events are processed twice. With a broker like [Apache Kafka](http://kafka.apache.org/) you easily create consumer groups, and each event is only processed by one application of this group.
 
@@ -27,21 +25,17 @@ Other reasons to consider when pulling in any heavy dependencies on a full-fledg
 * when you want to do something more involved, say `compute aggregations - i.e trending dresses` or join streams of data, inventing a solution on top of the Kafka consumer APIs is fairly involved;
 * `durability` of consumer group subscriptions, that is, a binder implementation ensures that group subscriptions are persistent, and once at least one subscription for a group has been created, the group will receive messages, even if they are sent while all applications in the group are stopped;
 * `connectors for various middleware vendors` including message brokers as [Apache Kafka](http://kafka.apache.org/) and/or [RabbitMQ](https://www.rabbitmq.com/), storage (relational, non-relational, filesystem);
-* least but not last: `testing support`, where [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/) integrates nicely with [Spring Profiles](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-profiles.html) to
+* last but not least: `testing support`, where [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/) integrates nicely with [Spring Profiles](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-profiles.html) to
 segregate configuration between the three environments, profiles supported by the microservice: `development`, `docker` and `test`.
 
-There are so many moving parts here, so lets get a visual of the `Bootiful dress service` and it's dependencies:
-
-<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-cloud-stream/bootiful_dresses_service_overview.png" alt="Bootiful Dresses Service Overview"/>
-
-* Kafka itself
+There are so quite some moving parts here, so lets make an inventory:
+* Apache Kafka broker itself
 * A Python Producer
 * The actual stream processing job (AMQP protocol, worker role) written in Java, on top of Spring Cloud Stream framework, packaged as a DevOps friendly, uber-fat-jar ([Spring Boot](https://projects.spring.io/spring-boot/))
-* A database, [PostgreSQL](https://www.postgresql.org/) for persisting output of the stream processing job.
-Same database used, in first instance, for lookups and aggregations as well.
+* A database, [PostgreSQL](https://www.postgresql.org/) for persisting output of the stream processing job. Same database used, in first instance, for lookups and aggregations as well.
 * A REST API (HTTP protocol, web role) written in Java, on top of [Spring Data REST](http://projects.spring.io/spring-data-rest/), that serves live requests to users, devices and/or frontends.
 
-`Note`: to further reduce infrastructure footprint, the HTTP (web role) and AMQP (worker role) components are packaged together into a single container deployment model.
+> <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png" alt="Note"/> To further reduce infrastructure footprint, the HTTP (web role) and AMQP (worker role) components are packaged together into a single container deployment model.
 
 # Skip the details and get me started right away
 
@@ -87,7 +81,7 @@ $ cd spring-cloud-stream-kafka/src/main/resources/
 $ sudo python3 producer.py
 ```
 
-And here you go, you should be all setup to stream process dresses and dress ratings. Screenshots below show the fully dockerized application infrastructure and exploring the REST API endpoints:
+Ta da! 🎉  you should be all setup to stream process dresses and dress ratings. Screenshots below show the fully dockerized application infrastructure and exploring the REST API endpoints:
 
 <img class="img-responsive" src="{{site.baseurl }}/img/posts/spring-cloud-stream/dockerized-bootiful-dress-service.png" alt="Dress Message Events Stream Processing Logs"/>
 
@@ -100,6 +94,8 @@ And here you go, you should be all setup to stream process dresses and dress rat
 <img class="img-responsive" src="{{site.baseurl }}/img/posts/spring-cloud-stream/sorting.png" alt="Sorting"/>
 
 <img class="img-responsive" src="{{site.baseurl }}/img/posts/spring-cloud-stream/dress_by_uuid.png" alt="Dress Endpoint"/>
+
+<img class="img-responsive" src="{{site.baseurl }}/img/posts/spring-cloud-stream/trending_dresses_endpoint.png" alt="Trending Endpoint"/>
 
 # Lets See Some Code
 
@@ -228,6 +224,7 @@ spring:
           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
           consumer:
             durableSubscription: true
+            concurrency: 10
             headerMode: raw
         iratings:
           destination: ratings
@@ -235,6 +232,7 @@ spring:
           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
           consumer:
             durableSubscription: true
+            concurrency: 10
             headerMode: raw
 ---
 spring:
@@ -278,18 +276,25 @@ spring:
             headerMode: raw
  ```
 
- That is a hands full, but if you focus on keys `spring.cloud.stream.bindings.idresses.destination`
- and `spring.cloud.stream.bindings.iratings.destination` you should get the idea on how the Spring Cloud Stream input channel links to the appropriate Kafka topic.
+ That is a hands full, nonetheless by paying attention to values of configuration keys
+ `spring.cloud.stream.bindings.idresses.destination` and `spring.cloud.stream.bindings.iratings.destination` you will learn how Spring Cloud Stream binds an input channel to the appropriate Kafka topic.
 
- Other `important` configurations above that took some trial and error, attentive read through Spring Cloud Stream's documentation, Google search, application debugging are:
- * `spring.cloud.stream.bindings.<channelName>.consumer.headerMode=raw` As Kafka does not support message headers natively, and inbound data is coming from outside Spring Cloud Stream application, python kafka producer more precisely, Spring Cloud Stream's default: `embeddedHeaders` was giving me
- a `java.lang.StringIndexOutOfBoundsException: String index out of range: at org.springframework.cloud.stream.binder.EmbeddedHeaderUtils.extractHeaders` in an incipient setup.
- * `spring.cloud.stream.bindings.<channelName>.consumer.contentType` will not work with `'application/json'`, but you have to map the plain Java object, Jackson JSON annotated with a `'application/x-java-object;type=<JavaClassType>'` to get rid of deserialization error: `Caused by: com.fasterxml.jackson.databind.JsonMappingException: Can not deserialize instance of java.lang.String out of START_OBJECT token`. I've found this one not that well documented and intuitive, as `application/json` works just great for a Spring Cloud Stream `Sink` consumer, when the producer is a Spring Cloud Stream `Source` application.
- * `spring.cloud.stream.kafka.binder.brokers=kafka` and `spring.cloud.stream.kafka.binder.zkNodes=zookeeper` in the `docker` profile. While the defaults `localhost` work well with the `development` profile, `DOCKER_IP` environment variable interpolation did not work out well for me, but using hostnames together with an edit of the `/etc/hosts` file to map `kafka` hostname to `127.0.0.1` did the trick.
+
+ > <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png" alt="Important configurations"/>
+ Other configuration settings listed above that are worth mentioning:
+ >* `spring.cloud.stream.bindings.<channelName>.consumer.headerMode=raw` As Kafka does not support message headers natively, and inbound data is coming from outside Spring Cloud Stream application, python kafka producer more precisely, Spring Cloud Stream's default value: `embeddedHeaders` will yield
+ a <i>java.lang.StringIndexOutOfBoundsException: String index out of range: at org.springframework.cloud.stream.binder.EmbeddedHeaderUtils.extractHeaders</i>, thus default value has been overwritten.
+ >* `spring.cloud.stream.bindings.idresses.consumer.contentType='application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'` Though the message events are represented as JSON, using default contentType value `'application/json'` only works when the `Source` application is also Spring Cloud Stream. In my case the `Source` is a Python application, so I have to map the plain Java object, Jackson JSON annotated, in order to get rid of deserialization error <i>Caused by: com.fasterxml.jackson.databind.JsonMappingException: Can not deserialize instance of java.lang.String out of START_OBJECT token</i>.
+ >* `spring.cloud.stream.kafka.binder.brokers=kafka` and `spring.cloud.stream.kafka.binder.zkNodes=zookeeper` in the `docker` profile. While the defaults `localhost` work well with the `development` profile, `DOCKER_IP` environment variable interpolation did not work out well for me, but using hostnames together with an edit of the `/etc/hosts` file to map `kafka` hostname to `127.0.0.1` did the trick.
 
  Further the line, the `DressEventStoreService.java` and `RatingEventStoreService.java` autowired components are plain `@Service` classes handling:
- * out-of-order events: i.e. `Dress Updated Event` before `Dress Created Event`, `Dress Rated Event` before `Dress Created Event`
- * translate worker job POJO to a JPA `@Entity`
- * and persist `@Entity` domain objects to PostgreSQL database
+ * out-of-order events logic: i.e. `Dress Updated Event` before `Dress Created Event`, `Dress Rated Event` before `Dress Created Event`
+ * translate worker job POJO (Plain Java Objects) to a JPA `@Entity` domain object
+ * validate and persist `@Entity` domain objects to PostgreSQL database
 
  In a future post, I will write about the testing support in Spring Cloud Stream and how I've leveraged it to integration test the `DressEventStream.java` stream processing component.
+ Thank you for reading!
+
+ PS: I will take up the challenge of wearing a dress more often, after all I've realized that I only take them out the closet on holidays or play time.
+
+ <img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-cloud-stream/bootiful_dress.gif" alt="Cristina wearing a dress"/>

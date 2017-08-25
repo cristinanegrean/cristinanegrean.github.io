@@ -84,10 +84,16 @@
                         {% if page.image and page.category %}
                             <!-- Blog post image -->
                               <img class="img-responsive p-image-horiz-min" src="{{ page.image | prepend: site.baseurl }}"/>
+                              {% if page.imagecredits %} <span class="foot-item">{{ page.imagecredits }}</span> {% endif %}
                         {% else %}
-                            <!-- Main image image -->
-                              <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.JPG" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
+                            <!-- Main page image
+                              <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.jpg" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
                               <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
+                            -->
+                            <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/abn-amro-beyond-banking.png" alt="Cristina volunteering at ABN AMRO Beyond Banking Hackaton"/>
+                            <span class="foot-item">Cristina volunteering at ABN AMRO 'Beyond Banking' Hackaton as part of the tech jury, learning from &amp; meeting inspiring people.
+                            Hereby pictured while getting a demo from one of the winning teams on their gamified social stock trading application, set off to make stock investment a learnsome &amp; exciting process for everyone.
+                            <a href="https://www.youtube.com/watch?feature=youtu.be&v=vAp4KcrTPRI">ABN AMRO Beyond Banking, June 2017</a></span>
                         {% endif %}
                     </div>
                 </div>

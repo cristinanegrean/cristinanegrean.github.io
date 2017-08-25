@@ -5,7 +5,6 @@ title: 'Expose a discoverable REST API of your domain model using HAL JSON as me
 image: /img/open-travel-rest-api.gif
 tags: [Spring Data REST, Spring Initializr, Spring Boot, Flyway, Spring Data JPA, ALPS, JSON HAL]
 category: Spring Data REST
-comments: true
 ---
 ## Background
 
@@ -605,7 +604,7 @@ The listing of the `HolidayRepository` and `AgentRepository` interfaces can be f
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/wanderlust-api/destinations_postman.png" alt="Testing the API with Postman"/>
 
-<i class="blue">"Ta da"!</i> The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations</i> endpoint.
+<i class="blue">Ta da! 🎉</i> The screenshot above shows the back-end API in action, more specifically the <i class="blue">/destinations</i> endpoint.
 
 There are many more RESTful endpoints exposed by the wanderlust service. I've created a test collection for other relevant endpoints and you can test them with [Postman](https://www.getpostman.com/). The test collection can be downloaded [here](https://github.com/cristinanegrean/wanderlust-open-travel-api/blob/master/Wanderlust_OpenTravelAPI_Postman_collection.json).
 

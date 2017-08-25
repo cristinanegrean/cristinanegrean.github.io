@@ -3,9 +3,9 @@ layout: post
 author: Cristina Negrean
 title: 'Getting Started with Docker'
 image: /img/docker.png
+imagecredits: 'Image credits to docker.com. Fun fact: the turtle and the cat symbolize the dev and the ops roles, both having fun with Docker 😃😄😆😍'
 tags: [Docker, Docker for Mac, Dockerized Spring Boot Application, Dockerhub]
 category: Docker
-comments: true
 ---
 
 In a [previous blog post](https://cristina.tech/2017/03/28/hypermedia-driven-services-with-spring-data-rest) I have written on how to create a Spring Boot application that exposes a discoverable REST API of a simple travel domain model. This guide provides insight on my take-aways regarding lightweight virtualization with [Docker](https://www.docker.com/) and walks you through the process of containerizing the [Wanderlust Spring Boot application](https://github.com/cristinanegrean/wanderlust-open-travel-api).
