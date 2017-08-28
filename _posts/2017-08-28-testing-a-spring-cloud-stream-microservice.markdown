@@ -186,9 +186,8 @@ Spring Cloud Stream will create an implementation of the `DressInboundChannels` 
 * `DressRepository` and `RatingRepository` are as well injected into integration test with the purpose of
 performing read operations against the test, in-memory H2 database. We are functionally validating that
 `DressMessageEvent` and `RatingMessageEvent` events dispatched to `idresses` and `iratings`
-input channels are ending up persisted correctly into the data store via assertions in `assertDressStored`,
-tests: `streamStoreBrowseDress` and `streamStoreRatingAndDressBrowseDressCheckAverageRating`.
-* `TestRestTemplate` is a convenience alternative to Spring’s RestTemplate that is useful in integration tests. As the microservice has both AMQP role - by implementing a consumer for Kafka topics - and a Web role - exposes a REST API to browse, search dresses data, assertions in `browseDressUriCheckContent` will validate functionally the Web role of the microservice.
+input channels are ending up persisted correctly into the data store via assertions in `assertDressStored(String dressId, int expectedAverageRating)`
+* `TestRestTemplate` is a convenience alternative to Spring’s RestTemplate that is useful in integration tests. As the microservice has both AMQP role - by implementing a consumer for Kafka topics - and a Web role - exposes a REST API to browse, search dresses data, assertions in `browseDressUriCheckContent(String dressId, int expectedAverageRating)` will partly validate the Web role of the microservice.
 
 ### Testing components in isolation, Slice and Dice, @MockBean
 
