@@ -111,10 +111,10 @@ img.float-image {
 @media screen and (min-width: 768px) {
     .header-2 .col-md-6 {
         width: 50%;
-        float: left;
+        float: right;
     }
     .header-2 .navi {
-        float: right;
+        float: left;
     }
 }
 .page-heading-two h2 {
