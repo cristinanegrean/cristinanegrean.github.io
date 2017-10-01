@@ -56,7 +56,7 @@ java -jar spring-cloud-dataflow-server-local-1.2.3.RELEASE.jar
 > <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png"/>
 The local Data Flow by default uses embedded H2 database for storing stream, task and app states.
 >> I've tried as well current milestone version *spring-cloud-dataflow-server-local-1.3.0.M2.jar*,
-however the *Analytics Dashboard* is still is still under active development to support *d3.js* charts with the new *Angular 4* based *Dashboard UI*
+however the *Analytics Dashboard* is still under active development to support *d3.js* charts with the new *Angular 4* based *Dashboard UI*.
 
 4) Download, launch and connect to Spring Cloud Data Flow’s `shell`:
 
@@ -97,7 +97,7 @@ Using Spring Cloud Data Flow’s `shell` again, I am issuing three commands to c
 consume real-time tweets in Dutch, Hungarian, Hebrew and Japanese languages, count the number of occurrences of each distinct hashtag and language in consumed tweet payloads.
 
 ```
-dataflow:>stream create langbasedtweets --definition "twitterstream --language=‘en,nl,hu,he,jp’ --consumerKey=<CONSUMER_KEY> --consumerSecret=<CONSUMER_SECRET> --accessToken=<ACCESS_TOKEN> --accessTokenSecret=<ACCESS_TOKEN_SECRET> | log" --deploy
+dataflow:>stream create langbasedtweets --definition "twitterstream --language=‘nl,hu,he,jp’ --consumerKey=<CONSUMER_KEY> --consumerSecret=<CONSUMER_SECRET> --accessToken=<ACCESS_TOKEN> --accessTokenSecret=<ACCESS_TOKEN_SECRET> | log" --deploy
 Created new stream 'langbasedtweets'
 dataflow:>stream create langbasedhashtags --definition ":langbasedtweets.twitterstream > field-value-counter --fieldName=entities.hashtags.text --name=langbasedhashtags" --deploy
 Created new stream 'langbasedhashtags'
@@ -126,8 +126,7 @@ Current milestone version 1.3.0.M2 has undergone a revamp of the *Dashboard UI* 
 still undergoing upgrades to port *field-value-counter* and *aggregate-counter* [D3.js](https://d3js.org/) widgets to the *Angular 4* infrastructure. Therefore I have chosen to use 1.2.3.RELEASE
 version of the *Analytics Dashboard* for my *Twitter API* experiment.
 
-Ta da! 🎉 below some screenshots of the *bubble chart* for the real-time hashtags analytics and *pie chart*
-of the language distribution of the consumed tweets.
+Ta da! 🎉 below some screenshots of the *bubble and pie charts* for the hashtags text and language *field-value-counters*.
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/twitter-analytics/hashtags-bubble-chart.png"/>
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/twitter-analytics/language-counter-pie-chart.png"/>
