@@ -21,7 +21,6 @@ kramdown:
     # Use existing pygments syntax highlighting css
     css_class: 'highlight'
 
-
 # Use the following plug-ins
 gems:
   - jekyll

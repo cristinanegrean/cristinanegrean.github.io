@@ -7,9 +7,6 @@ dl, dd, ol, ul, figure {
     margin: 0;
     padding: 0;
 }
-
-
-
 /**
  * Basic styling
  */
@@ -22,9 +19,6 @@ body {
     background-color: $background-color;
     -webkit-text-size-adjust: 100%;
 }
-
-
-
 /**
  * Set `margin-bottom` to maintain vertical rhythm
  */
@@ -34,9 +28,6 @@ ul, ol, dl, figure,
 %vertical-rhythm {
     margin-bottom: $spacing-unit / 2;
 }
-
-
-
 /**
  * Images
  */
@@ -44,47 +35,33 @@ img {
     max-width: 100%;
     vertical-align: middle;
 }
-
-
-
 /**
  * Figures
  */
 figure > img {
     display: block;
 }
-
 figcaption {
     font-size: $small-font-size;
 }
-
-
-
 /**
  * Lists
  */
 ul, ol {
     margin-left: $spacing-unit;
 }
-
 li {
     > ul,
     > ol {
          margin-bottom: 0;
     }
 }
-
-
-
 /**
  * Headings
  */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
 }
-
-
-
 /**
  * Links
  */
@@ -101,9 +78,6 @@ a {
         text-decoration: underline;
     }
 }
-
-
-
 /**
  * Blockquotes
  */
@@ -119,9 +93,6 @@ blockquote {
         margin-bottom: 0;
     }
 }
-
-
-
 /**
  * Code formatting
  */
@@ -132,11 +103,9 @@ code {
     border-radius: 3px;
     background-color: #eef;
 }
-
 code {
     padding: 1px 5px;
 }
-
 pre {
     padding: 8px 12px;
     overflow-x: scroll;
@@ -147,9 +116,6 @@ pre {
         padding-left: 0;
     }
 }
-
-
-
 /**
  * Wrapper
  */
@@ -169,9 +135,6 @@ pre {
         padding-left: $spacing-unit / 2;
     }
 }
-
-
-
 /**
  * Clearfix
  */
@@ -183,9 +146,6 @@ pre {
         clear: both;
     }
 }
-
-
-
 /**
  * Icons
  */
