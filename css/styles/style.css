@@ -915,24 +915,24 @@ a.brown:focus {
 /* Label */
 .label {
 	border-radius: 2px;
-	font-weight: normal;
+	font-weight: bold;
 	padding: 3px 7px;
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 18px;
 }
 /* Label sizes */
 .label.label-xs {
-	font-size: 10px;
+	font-size: 12px;
 	padding: 1px 5px;
 	line-height: 12px;
 }
 .label.label-sm {
-	font-size: 11px;
+	font-size: 13px;
 	padding: 2px 6px;
 	line-height: 15px;
 }
 .label.label-lg {
-	font-size: 13px;
+	font-size: 15px;
 	padding: 5px 9px;
 	line-height: 23px;
 }

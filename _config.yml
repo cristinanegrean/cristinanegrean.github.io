@@ -27,7 +27,7 @@ gems:
   - jekyll-paginate  # break the main listing of posts up into smaller lists and display them over multiple pages
 
 # Pagination
-paginate: 10
+paginate: 6
 
 sass:
     sass_dir: _sass
