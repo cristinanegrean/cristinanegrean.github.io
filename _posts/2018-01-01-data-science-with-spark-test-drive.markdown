@@ -91,14 +91,16 @@ $ ln -s spark-2.2.1-bin-hadoop2.7 /opt/spark`
 ```
 Having the symbolic link will make the path reference shorter and you will be able to download and use multiple Spark versions. Finally, tell your bash where to find Spark. To do so, configure your $PATH variable by adding the following lines in your `.bash_profile` file:
 
-```
+```bash_profile
 export SPARK_HOME=/opt/spark
-export PATH=$PATH:$SPARK_HOME/bin
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS='notebook'
+export PATH=$PATH:$SPARK_HOME/bin:$PYSPARK_DRIVER_PYTHON:$PYSPARK_DRIVER_PYTHON_OPTS
 ```
 
 Check that you have Java, Scala, Python added to your $PATH too:
 
-```
+```bash_profile
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export JRE_HOME=$JAVA_HOME/jre
 export SCALA_HOME=/opt/scala-2.12.3
@@ -120,8 +122,10 @@ Standalone Spark installation comes also with quite some samples. For the Scala 
 [virtualenv](https://pypi.python.org/pypi/virtualenv) is a tool to create isolated Python environments.
 
 First setup a project path:
-```bash
+```bash_profile
 $ export PY_WORKON_HOME=~/pyEnvs
+```
+```bash
 $ mkdir -p $PY_WORKON_HOME
 $ cd $PY_WORKON_HOME
 ```
