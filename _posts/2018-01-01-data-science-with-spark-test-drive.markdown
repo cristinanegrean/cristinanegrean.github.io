@@ -2,8 +2,8 @@
 layout: post
 author: Cristina Negrean
 title: 'Data Science with Spark Test Drive'
-image: /img/spark-data-science-setup.png
-tags: [Data Science, XebiaLabs, PySpark, Jupyter Notebook, Databricks, virtualenv]
+image: /img/py-spark-data-science-test-drive.png
+tags: [Data Science, PySpark, Jupyter Notebook, Databricks, virtualenv]
 category: Data science for software engineers
 ---
 
@@ -133,18 +133,23 @@ $ cd $PY_WORKON_HOME
 If you're running Python 2.7.9+ (not recommended), `pip` the Python package manager is already installed, but you'll have to install [virtualenv](https://pypi.python.org/pypi/virtualenv) and then create an isolated data science Python environment, named `pySpark-env` as below:
 
 ```bash
-$ python pip install --upgrade virtualenv
+$ python -m pip install --upgrade virtualenv
 $ virtualenv pySpark-env
 ```
 
-When running Python 3.4+ (recommended), you already have built-in support for virtual environments with - venv:
+When running Python 3.4+ (recommended), you already have built-in support for virtual environments with `venv` package:
 
 ```bash
 $ python3 -m venv $PY_WORKON_HOME/pySpark-env
+```
+
+The source command actives the Python virtual environment.
+
+```bash
 $ source pySpark-env/bin/activate
 ```
 
-The source command actives the virtual environment, thus you should be now all setup with a clean, isolated Python environment. Typing ```pip freeze``` shows at this moment no Python modules installed in the `pySpark-env`. To complete the full environment setup, install general purpose modules needed for data science projects with Python and Spark, and start Jupyter Notebook on the port of your choice (hereby 8988):
+To complete the full environment setup, install general purpose modules needed for data science projects with Python and Spark, and start Jupyter Notebook on the port of your choice (hereby 8988):
 
 ```bash
 $ pip install pyspark findspark jupyter sklearn scipy numpy pandas matplotlib
