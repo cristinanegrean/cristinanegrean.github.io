@@ -83,6 +83,24 @@ Also in Prometheus GUI, a new target named `stackdriver-exporter-prometheus-metr
 
 ### 3. Create insights and Prometheus alerting rules based on GCP metrics
 
-The advantage of having all important system and application metrics centralized in one time-series monitoring datastore is that it is easier to setup alerting on metrics and easier to see all alerts active at a certain moment. As well while troubleshooting you don't need to switch between the Stackdriver UI and Prometheus UI to get insights in different metrics types.
+The advantage of having all important metrics centralized is that you can see alerts you set up in one overview:
 
-To sum it up, no matter the tooling or approach you choose to centralize your monitoring, there will always be pro's and con's, so proper evaluation of what your use-case requires is important. As an example, we like [Grafana](https://grafana.com/) more when it comes to creating insights into metrics - better graphing capabilities and integrates out-of-the box with both Prometheus and Stackdriver metrics data sources - but we needed an alerting tool that allows templated labels for alerting rules. At which Prometheus proved to be more suited. As well found Prometheus UI querying feature simpler, allowing easier troubleshooting compared to Stackdriver UI Metrics Explorer.
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/centralized-metrics/prometheus_alerts.png"/>
+
+Also the way you write alerts is consistent. As exemplified above, Prometheus [alerting rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) are used for alerts on Dataflow metrics.
+
+The disadvantage is that you'll need to consider setting a time offset for individual metrics in a query.  
+
+```yaml
+- alert: DataflowStreamingPipelineIsBeginningToLag
+   expr: stackdriver_dataflow_job_dataflow_googleapis_com_job_system_lag offset 5m > 60
+```
+
+In the example above, `the current state` of `stackdriver_dataflow_job_dataflow_googleapis_com_job_system_lag` metric corresponds to the `5 minutes ago state` of Stackdriver metric `job/system_lag`. The rule expression is checking whether the alert condition is being met. System lag is the current maximum duration that an item of data has been awaiting processing, in seconds.
+The offset you need to set is also the value configured in the Helm chart installation for parameter `stackdriver.metrics.interval`.
+
+To sum it up, no matter the tooling or approach you choose to centralize your metrics monitoring, there will always be pro's and con's, so proper evaluation of what your use-case requires is important.
+
+As an example, I like [Grafana](https://grafana.com/) most when it comes to graphing capabilities. It also integrates out-of-the box with both Prometheus and Stackdriver metrics data sources.
+
+Prometheus however supports [templating](https://prometheus.io/docs/prometheus/latest/configuration/template_examples/) in the annotations and labels of alerts, giving it an edge when it comes to writing alerting rules.
