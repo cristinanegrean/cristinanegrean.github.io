@@ -4439,7 +4439,7 @@ a.brown:focus {
 /********/
 /* Blog Side Bar */
 .sidebar{
-	max-width:350px;
+	margin-left: 20px;
 }
 .sidebar .s-widget{
 	margin-bottom:20px;

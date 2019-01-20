@@ -114,19 +114,6 @@
 
         <div class="row tk-acumin-pro">
             {{content}}
-
-            <!-- Disqus
-            {% if page.comments %}
-            <div id="disqus_thread">{{ page.url | prepend: https_url }}</div>
-            <script type="text/javascript">
-                var disqus_config = function () {
-                    this.page.url = "{{ page.url | prepend: https_url }}";
-                    this.page.identifier = "{{ page.url }}";
-                    this.page.title = "{{ page.title }}";
-            };
-            </script>
-            <script src="https://cristina-tech.disqus.com/embed.js" async></script>
-            {% endif %} -->
         </div>
     </div>
     <!-- Main content ends -->
@@ -152,7 +139,7 @@
                         <div class="foot-item">
                             <!-- Heading -->
                             <h5 class="bold"><i class="fa fa-legal"></i>&nbsp;&nbsp;Disclaimer</h5>
-                            <p>Opinions expressed on this blog reflect the writer’s point of view only. Code samples showcase writer's personal projects.</p>
+                            <p>Opinions expressed on this blog reflect the writer’s point of view only.</p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -163,7 +150,7 @@
                             <!-- Foot Item Content -->
                             <div class="foot-item-content">
                                 <ul class="list-unstyled">
-                                    {% for post in site.posts limit:4 %}
+                                    {% for post in site.posts limit:3 %}
                                     <li>
                                         <span>{{ post.date | date_to_string }}</span> &raquo;
                                         <a href="{{ post.url }}">

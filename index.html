@@ -5,11 +5,11 @@ layout: default
 <!-- blog One -->
 <div class="row">
     <!-- Mainbar column -->
-    <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+    <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
         <div class="blog-masonry">
             {% for post in paginator.posts %}
             <!-- Post Item -->
-            <div class="col-xs-6 col-md-4 item">
+            <div class="col-xs-6 col-md-6 col-md-6 item">
                 <div class="grid-entry">
                     <!-- Post Image Container -->
                     <div class="grid-img">
@@ -31,8 +31,8 @@ layout: default
         <div class="row">
             <!-- Pagination -->
             {% if paginator.total_pages > 1 %}
-            <nav class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-                <ul class="pagination center-block">
+            <nav class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
+                <ul class="pagination">
                     {% if paginator.previous_page %}
                         <li>
                           <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}" aria-label="Previous">

@@ -20,7 +20,7 @@ body {
 @media (max-width: 785px) {
     body {
         /* Margin bottom by footer height*/
-        margin-bottom: 721px;
+        margin-bottom: 521px;
     }
     .footer {
         /* Set the fixed height of the footer here*/
