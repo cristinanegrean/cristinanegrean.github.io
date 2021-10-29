@@ -7,6 +7,7 @@ Personal Blog cristina.tech
     - `(sudo) gem install rake-jekyll`
     - `(sudo) gem install jekyll`
     - `(sudo) gem install jekyll-paginate`
+    - `(sudo) gem install webrick` (since Ruby 3.0)
 - Run `jekyll serve` in the root directory of the tech blog
 - Browse to http://localhost:4000/
 

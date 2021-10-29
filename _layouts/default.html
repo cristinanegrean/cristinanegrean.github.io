@@ -57,7 +57,7 @@
     <div class="header-2">
 
         <!-- Container -->
-        <div class="container bckg-no-repeat-top-left" style="background-image: url({{ site.baseurl }}/img/site/bckg.png);">
+        <div class="container bckg-no-repeat-top-left">
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                   <div class="navi hidden-lg">
@@ -93,13 +93,7 @@
                               <img class="img-responsive p-image-horiz-min" src="{{ page.image | prepend: site.baseurl }}"/>
                               {% if page.imagecredits %} <span class="foot-item">{{ page.imagecredits }}</span> {% endif %}
                         {% else %}
-                            <!-- Main page image
-                              <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/devoxx4kids_main_page.jpg" alt="Cristina volunteering at First8 Devoxx4Kids held in Nieuwegein October 2015 to raise awareness around the joy of coding among children"/>
-                              <span class="foot-item">Cristina pictured alongside Tobias Poll and the next generation of Java Hipsters, having fun at hacking Minecraft with Java and Forge. <a href="https://first8.wistia.com/medias/0mqd2g53pn">Devoxx4Kids Nieuwegein, October 2015</a>. Photo courtesy of <a href="http://www.first8.nl/">First8 BV</a></span>
-                            -->
-                            <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/abn-amro-beyond-banking.png" alt="Cristina volunteering at ABN AMRO Beyond Banking Hackaton"/>
-                            <span class="foot-item">
-                              Cristina pictured volunteering at <a href="https://www.youtube.com/watch?feature=youtu.be&v=vAp4KcrTPRI">ABN AMRO Beyond Banking Hackaton, June 2017</a></span>
+                            <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/bckg.jpg" />
                         {% endif %}
                     </div>
                 </div>
