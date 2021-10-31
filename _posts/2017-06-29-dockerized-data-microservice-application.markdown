@@ -4,7 +4,7 @@ author: Cristina Negrean
 title: 'Getting Started with Docker'
 image: /img/docker.png
 imagecredits: 'Image credits to docker.com. Fun fact: the turtle and the cat symbolize the dev and the ops roles, both having fun with Docker 😃😄😆😍'
-tags: [Docker, Docker for Mac, Dockerized Spring Boot Application, Dockerhub]
+tags: [Docker, Docker for Mac, Spring Boot, Dockerhub]
 category: Docker
 ---
 
