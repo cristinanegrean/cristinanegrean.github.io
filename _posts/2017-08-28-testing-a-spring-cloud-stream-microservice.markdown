@@ -3,7 +3,7 @@ layout: post
 author: Cristina Negrean
 title: 'Testing a Spring Cloud Stream Microservice'
 image: /img/spring-cloud-stream-test.png
-tags: [Spring Cloud Stream, Test Driven Development, AMQP]
+tags: [Spring Cloud Stream, Test Driven Development, AMQP, Spring Boot]
 category: Spring Cloud Stream
 ---
 

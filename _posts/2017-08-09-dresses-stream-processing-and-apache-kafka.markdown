@@ -3,7 +3,7 @@ layout: post
 author: Cristina Negrean
 title: 'Dresses, Stream Processing and Apache Kafka'
 image: /img/bootiful_dresses_service_overview.png
-tags: [Spring Cloud Stream, Apache Kafka, AMQP]
+tags: [Spring Cloud Stream, Apache Kafka, AMQP, Spring Boot]
 category: Spring Cloud Stream
 ---
 
