@@ -230,7 +230,7 @@ REGION=${6:-eu-central-1}
 echo "PROFILE=${PROFILE} ; CONFIG=${CONFIG} ; VAL=${VAL}; DEPLOYMENT=${DEPLOYMENT}; NAMESPACE=${NAMESPACE}; REGION=${REGION}" >&2
 aws-vault --debug exec ${PROFILE} --region ${REGION} -- aws ssm put-parameter --name /config-${PROFILE}/application/${CONFIG} --type String --value "${VAL}" --overwrite >&2
 aws-vault --debug exec ${PROFILE} --region ${REGION} -- aws ssm put-parameter --name /config-${PROFILE}/${DEPLOYMENT}/${CONFIG} --type String --value "${VAL}" --overwrite >&2
-aws-vault --debug exec ${PROFILE} --region ${REGION} -- kubectl rollout restart deployment.apps/${DEPLOYMENT} -n gateway-private >&2
+aws-vault --debug exec ${PROFILE} --region ${REGION} -- kubectl rollout restart deployment.apps/${DEPLOYMENT} -n ${NAMESPACE} >&2
 #
 ```
 Listing 3: `cat ssm-config-overwrite.sh`
