@@ -25,10 +25,11 @@ The post is written with a focus on macOS, but it should work on Linux devices a
 * [k9s](https://k9scli.io/topics/install/)
 * [aws-vault](https://github.com/99designs/aws-vault)
 * [kubectl](https://kubernetes.io/docs/tasks/tools/)
+* [kubectx](https://kubernetes.io/docs/tasks/tools/)
 
 On macOS using Homebrew package manager, dependencies installation is a one liner: 
 
-`brew install awscli kubectl aws-vault derailed/k9s/k9s`
+`brew install awscli kubectl aws-vault derailed/k9s/k9s kubectx`
 
 ## Access to AWS using aws-vault
 
@@ -102,12 +103,15 @@ source_profile=<your user name>
 role_arn=arn:aws:iam::<acc aws account>:role/OrganizationAccountAccessRole
 mfa_serial=arn:aws:iam::<iam aws account>:mfa/<your user name>
 ```
+Listing 1: `cat ~/.aws/config`
 
 > <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png" alt="Note"/> If the development source code repo contains as well some Terraform code, you may find the AWS account numbers configured in there.
 
 ## AWS EKS Access
 
-Now that we have set up AWS vault and the named profile, we can write a `bash script` based on `aws-vault` commands to switch between Elastic Kubernetes Service clusters the operation guy or girl has set up developer access for.
+Now that we have set up AWS vault and the named profile, we can write a `bash script` based on `aws-vault` commands 
+to setup all Elastic Kubernetes Service clusters, the operation guy or girl has set up developer access for. This is
+needed first time you set up the EKS clusters, to add them to your `.kube/config` file.
 
 ```bash
 #!/usr/bin/env bash
@@ -116,31 +120,18 @@ PROFILE=$1
 [ -z "$PROFILE" ] && echo "You need to provide a profile name" && exit 1
 REGION=${2:-eu-central-1}
 aws-vault --debug exec ${PROFILE} -- aws eks update-kubeconfig --name nlo-${PROFILE}-gateway --region ${REGION}
-aws-vault --debug exec ${PROFILE} -- k9s
 #
 ```
-Listing 1: `cat auth-eks.sh`
+Listing 2: `cat auth-eks-setup.sh`
 
-Do not forget to make it executable: `chmod +x auth-eks.sh`
+Do not forget to make it executable: `chmod +x auth-eks-setup.sh`
 
 Let's depict the Bash script and how it works:
-* validates and documents its permitted usage patterns `./auth-eks.sh <profile>` or `./auth-eks.sh <profile> <region>`
+* validates and documents its permitted usage patterns `./auth-eks-setup.sh <profile>` or `./auth-eks-setup.sh <profile> <region>`
 * in case no region command line argument is given, REGION bash script variable will default to value `eu-central-1`. The default is based on the fact that all EKS clusters I have developer access to, in my current assignment, are provisioned in AWS region Europe (Frankfurt), except for the `tst` AWS account and profile, where that is `eu-west-1` aka Europe (Ireland). Hence the region is an optional command line argument, thus adapt this to your own use case.
 * returns a set of temporary security credentials in a [session](https://github.com/99designs/aws-vault/blob/master/USAGE.md#managing-sessions) that you can use to access Amazon Web Services resources (Elastic Kubernetes Service is one such resource) in the `<profile>` AWS account, where profile command line argument should be one of the profiles you've defined in `~/.aws/config`. Note you most likely will not have access to any resources in the AWS account where your IAM user resides, thus the first command line argument will be: `dev`, `tst` or `acc`
-* for in-depth understanding, note that `aws-vault exec` uses in the background the `AWS Security Token Service API` to generate the set of temporary credentials via the `GetSessionToken` or `AssumeRole` API calls:
-```bash
-aws sts assume-role \
-  --role-arn "$ROLE_ARN" \
-  --role-session-name "session-${PROFILE}-$(date +%s)" \
-  --profile "$IDENTITY_PROFILE" \
-  --serial-number "$MFA_SERIAL_NUMBER" \
-  --duration-seconds 3600 \
-  --token-code "$TOKEN"
-```
-* the set of temporarily credentials within the `aws-vault session` is then used to switch context to the EKS cluster named `nlo-${PROFILE}-gateway` in either command line argument or default set by script AWS region. Note that having a consistent naming convention of Kubernetes clusters hosting same application, hereby `gateway`, services across AWS accounts pertinent to `dev`, `tst`, `acc` is desired. Replace `gateway` with your own naming.
-* the switching of context is necessary as we assume you have [access to multiple clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/) via your `kubeconfig file`: `~/.kube/config`
-* last bit of the script connects to the Kubernetes cluster to which you've switch context to in previous `asw-vault` command
-
+* for in-depth understanding, note that `aws-vault exec` uses in the background the `AWS Security Token Service API` to generate the set of temporary credentials via the `GetSessionToken` or `AssumeRole` API calls
+* the set of temporarily credentials within the `aws-vault session` is then used to authenticate, add cluster and context to your `~/.kube/config` file.  Replace hard coded strings in cluster name according to your own project naming convention.
 Note how the script uses  `--debug` so that you can see directly in the command line how it works.
 
 ```
@@ -166,42 +157,111 @@ Note how the script uses  `--debug` so that you can see directly in the command 
 2021/11/12 15:31:44 Setting subprocess env: AWS_SESSION_EXPIRATION
 2021/11/12 15:31:44 Exec command aws eks update-kubeconfig --name nlo-dev-gateway --region eu-central-1
 2021/11/12 15:31:44 Found executable /usr/local/bin/aws
-Updated context arn:aws:eks:eu-central-1:10xxxxxxx3:cluster/nlo-dev-gateway in /Users/cristinanegrean/.kube/config
-2021/11/12 15:31:45 aws-vault v6.3.1
-2021/11/12 15:31:45 Loading config file /Users/cristinanegrean/.aws/config
-2021/11/12 15:31:45 Parsing config file /Users/cristinanegrean/.aws/config
-2021/11/12 15:31:45 [keyring] Considering backends: [file]
-2021/11/12 15:31:45 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 15:31:45 profile cnegrean: using stored credentials
-2021/11/12 15:31:45 profile cnegrean: using GetSessionToken (with MFA)
-2021/11/12 15:31:45 profile dev: using AssumeRole (chained MFA)
-2021/11/12 15:31:45 Using STS endpoint https://sts.amazonaws.com
-2021/11/12 15:31:45 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 15:31:45 Re-using cached credentials ****************G6JQ from sts.GetSessionToken, expires in 1h12m39.128717s
-2021/11/12 15:31:46 Generated credentials ****************O6DI using AssumeRole, expires in 59m59.542313s
-2021/11/12 15:31:46 Setting subprocess env: AWS_DEFAULT_REGION=eu-central-1, AWS_REGION=eu-central-1
-2021/11/12 15:31:46 Setting subprocess env: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-2021/11/12 15:31:46 Setting subprocess env: AWS_SESSION_TOKEN, AWS_SECURITY_TOKEN
-2021/11/12 15:31:46 Setting subprocess env: AWS_SESSION_EXPIRATION
-2021/11/12 15:31:46 Exec command k9s 
-2021/11/12 15:31:46 Found executable /usr/local/bin/k9s                                                                          
+Updated context arn:aws:eks:eu-central-1:10xxxxxxx3:cluster/nlo-dev-gateway in /Users/cristinanegrean/.kube/config                                                                  
 ```
-Listing 2: `./auth-eks.sh dev`
+Listing 3: `./auth-eks-setup.sh dev` with obfuscated AWS account ID of `dev` profile
 
-## K9s — the powerful terminal UI for Kubernetes
+After adding project related EKS clusters to your `~/.kube/config` file, use `kubectx` to assign contexts shorter names.
+Example:
 
-Note how in the prerequisites, I mention installing `kubectl` which is the de-facto CLI for interacting with Kubernetes clusters?
-If you have experience with it, great, use it, however your average Java developer will have a steep learning curve into `Kubernetes (K8s)` and interacting with `K8s Cluster Objects` via `kubectl`.
-Here is where [K9S](https://github.com/derailed/k9s) comes to rescue, providing a terminal-based UI to manage Kubernetes clusters that aims to simplify navigating, observing, and managing your applications running in `K8S` or its public cloud hosted variants: `EKS` and `GKE`.
-The application uses the standard `.kube/config` file, the same way `kubectl` is working.
+```bash
+kubectx nlo-dev-gateway=arn:aws:eks:eu-central-1:10xxxxxxxxx3:cluster/nlo-dev-gateway
+kubectx nlo-tst-gateway=arn:aws:eks:eu-west-1:15xxxxxxxxx0:cluster/nlo-tst-gateway
+kubectx nlo-acc-gateway=arn:aws:eks:eu-central-1:80xxxxxxxxx5:cluster/nlo-acc-gateway
+```
+Listing 4: renaming cluster contexts for Dutch Lottery API Gateway assignment with obfuscated AWS account IDs
 
-Below is how it looks in action, after I've obfuscated some IP details:
-<img class="img-responsive" src="{{ site.baseurl }}/img/posts/developers-free-lift-to-eks/gateway_eks_k9s.png"/>
+Above `kubectx` commands, will alter automatically your `~/.kube/config` file, giving an alias kind of `name` to the original
+context, that is much easier and shorter.
 
+```
+contexts:
+- context:
+    cluster: arn:aws:eks:eu-central-1:80xxxxxxxxx5:cluster/nlo-acc-gateway
+    user: arn:aws:eks:eu-central-1:80xxxxxxxxx5:cluster/nlo-acc-gateway
+  name: nlo-acc-gateway
+- context:
+    cluster: arn:aws:eks:eu-central-1:10xxxxxxxxx3:cluster/nlo-dev-gateway
+    user: arn:aws:eks:eu-central-1:10xxxxxxxxx3:cluster/nlo-dev-gateway
+  name: nlo-dev-gateway
+- context:
+    cluster: arn:aws:eks:eu-west-1:15xxxxxxxxx0:cluster/nlo-tst-gateway
+    user: arn:aws:eks:eu-west-1:15xxxxxxxxx0:cluster/nlo-tst-gateway
+  name: nlo-tst-gateway
+```
+Listing 5: `contexts` snippet example from my `~/.kube/config` file with obfuscated AWS account IDs
 
-## Basic Navigation
+The last important step is to edit your `~/.kube/config` file, wrap the `get-token` around the `aws-vault` command:
 
-Here are the commands for most common Kubernetes resources:
+```
+users:
+- name: arn:aws:eks:eu-central-1:10xxxxxxxxx3:cluster/nlo-dev-gateway
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      args:
+      - exec
+      - dev
+      - --
+      - aws
+      - --region
+      - eu-central-1
+      - eks
+      - get-token
+      - --cluster-name
+      - nlo-dev-gateway
+      command: aws-vault
+      env: null
+- name: arn:aws:eks:eu-west-1:15xxxxxxxxx0:cluster/nlo-tst-gateway
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      args:
+      - exec
+      - tst
+      - --
+      - aws
+      - --region
+      - eu-west-1
+      - eks
+      - get-token
+      - --cluster-name
+      - nlo-tst-gateway
+      command: aws-vault
+      env: null      
+- name: arn:aws:eks:eu-central-1:80xxxxxxxxx5:cluster/nlo-acc-gateway
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      args:
+      - exec
+      - acc
+      - --
+      - aws
+      - --region
+      - eu-central-1
+      - eks
+      - get-token
+      - --cluster-name
+      - nlo-acc-gateway
+      command: aws-vault
+      env: null   
+```
+Listing 6: `users` snippet example from my `~/.kube/config` file with obfuscated AWS account IDs
+
+## K9s — the powerful terminal UI for Kubernetes and Switching Contexts Easily
+
+Now you're all setup to connect to the Kubernetes clusters, list and switch contexts with one simple command: `k9s`
+In `K9S` terminal UI issue command: `ctx` to list contexts. As `K9S` is using your `~/.kube/config` file, you will
+notice it will connect by default to the `current-context` listed in your `~/.kube/config` file, in the terminal UI marked
+by `(*)` context name suffix.
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/developers-free-lift-to-eks/k9s_ctx.png"/>
+
+You can then use `arrow up` or `arrow down` to navigate to other context and by pressing `Enter`, you switch context.
+
+## Other useful K9S Navigation Commands
+
 * `no` — Nodes;
 * `ns` — Namespaces;
 * `deploy` — Deployments;
@@ -210,6 +270,21 @@ Here are the commands for most common Kubernetes resources:
 * `ing` — Ingresses;
 * `rs` — ReplicaSets;
 * `cm` — ConfigMaps;
+
+## Alternative if you prefer going fully command line 
+
+In case you prefer interacting with the Kubernetes resources with `kubectl` and fully from your command line,
+you can use `kubectx` to easily switch contexts:
+
+```bash
+➜  ~ kubectx
+minikube
+nlo-acc-gateway
+nlo-dev-gateway
+nlo-tst-gateway
+➜  ~ kubectx nlo-dev-gateway
+Switched to context "nlo-dev-gateway".
+```
 
 ## Changing application service X configuration Y to new value Z on environment W
 
@@ -226,86 +301,18 @@ VAL=$3
 DEPLOYMENT=$4
 NAMESPACE=$5
 [ -z "$PROFILE" -o -z "$CONFIG" -o -z "$VAL" -o -z "$DEPLOYMENT" -o -z "$NAMESPACE" ] && echo "You need to provide a profile name, ssm config name, ssm config value to set, kubernetes deployment name to restart, kubernetes namespace deployment resides" && exit 1
-REGION=${6:-eu-central-1}
-echo "PROFILE=${PROFILE} ; CONFIG=${CONFIG} ; VAL=${VAL}; DEPLOYMENT=${DEPLOYMENT}; NAMESPACE=${NAMESPACE}; REGION=${REGION}" >&2
-aws-vault --debug exec ${PROFILE} --region ${REGION} -- aws ssm put-parameter --name /config-${PROFILE}/application/${CONFIG} --type String --value "${VAL}" --overwrite >&2
-aws-vault --debug exec ${PROFILE} --region ${REGION} -- aws ssm put-parameter --name /config-${PROFILE}/${DEPLOYMENT}/${CONFIG} --type String --value "${VAL}" --overwrite >&2
-aws-vault --debug exec ${PROFILE} --region ${REGION} -- kubectl rollout restart deployment.apps/${DEPLOYMENT} -n ${NAMESPACE} >&2
+echo "PROFILE=${PROFILE} ; CONFIG=${CONFIG} ; VAL=${VAL}; DEPLOYMENT=${DEPLOYMENT}; NAMESPACE=${NAMESPACE};" >&2
+aws-vault --debug exec ${PROFILE} -- aws ssm put-parameter --name /config-${PROFILE}/application/${CONFIG} --type String --value "${VAL}" --overwrite >&2
+aws-vault --debug exec ${PROFILE} -- aws ssm put-parameter --name /config-${PROFILE}/${DEPLOYMENT}/${CONFIG} --type String --value "${VAL}" --overwrite >&2
+aws-vault --debug exec ${PROFILE} -- kubectl rollout restart deployment.apps/${DEPLOYMENT} -n ${NAMESPACE} >&2
 #
 ```
-Listing 3: `cat ssm-config-overwrite.sh`
+Listing 7: `cat ssm-config-overwrite.sh`
 
-How it works:
+Usage: `./ssm-config-overwrite.sh <profile> <config-name> <config-value> <k8s-deployment-name> <k8s-namespace>`
 
-```
-➜  ~ ./ssm-config-overwrite.sh tst test.config someRandomValue game-process gateway-private eu-west-1  
-PROFILE=tst ; CONFIG=test.config ; VAL=someRandomValue; DEPLOYMENT=game-process; NAMESPACE=gateway-private; REGION=eu-west-1
-2021/11/12 17:00:11 aws-vault v6.3.1
-2021/11/12 17:00:11 Loading config file /Users/cristinanegrean/.aws/config
-2021/11/12 17:00:11 Parsing config file /Users/cristinanegrean/.aws/config
-2021/11/12 17:00:11 [keyring] Considering backends: [file]
-2021/11/12 17:00:11 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 17:00:11 profile cnegrean: using stored credentials
-2021/11/12 17:00:11 profile cnegrean: using GetSessionToken (with MFA)
-2021/11/12 17:00:11 profile tst: using AssumeRole (chained MFA)
-2021/11/12 17:00:11 Using STS endpoint https://sts.amazonaws.com
-2021/11/12 17:00:11 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 17:00:11 Re-using cached credentials ****************6T2I from sts.GetSessionToken, expires in 7h58m44.205944s
-2021/11/12 17:00:12 Generated credentials ****************ZMBN using AssumeRole, expires in 59m59.520134s
-2021/11/12 17:00:12 Setting subprocess env: AWS_DEFAULT_REGION=eu-west-1, AWS_REGION=eu-west-1
-2021/11/12 17:00:12 Setting subprocess env: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-2021/11/12 17:00:12 Setting subprocess env: AWS_SESSION_TOKEN, AWS_SECURITY_TOKEN
-2021/11/12 17:00:12 Setting subprocess env: AWS_SESSION_EXPIRATION
-2021/11/12 17:00:12 Exec command aws ssm put-parameter --name /config-tst/application/test.config --type String --value someRandomValue --overwrite
-2021/11/12 17:00:12 Found executable /usr/local/bin/aws
-2021/11/12 17:00:19 aws-vault v6.3.1
-2021/11/12 17:00:19 Loading config file /Users/cristinanegrean/.aws/config
-2021/11/12 17:00:19 Parsing config file /Users/cristinanegrean/.aws/config
-2021/11/12 17:00:19 [keyring] Considering backends: [file]
-2021/11/12 17:00:19 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 17:00:19 profile cnegrean: using stored credentials
-2021/11/12 17:00:19 profile cnegrean: using GetSessionToken (with MFA)
-2021/11/12 17:00:19 profile tst: using AssumeRole (chained MFA)
-2021/11/12 17:00:19 Using STS endpoint https://sts.amazonaws.com
-2021/11/12 17:00:19 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 17:00:19 Re-using cached credentials ****************6T2I from sts.GetSessionToken, expires in 7h58m36.607079s
-2021/11/12 17:00:19 Generated credentials ****************3U23 using AssumeRole, expires in 59m59.025258s
-2021/11/12 17:00:19 Setting subprocess env: AWS_DEFAULT_REGION=eu-west-1, AWS_REGION=eu-west-1
-2021/11/12 17:00:19 Setting subprocess env: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-2021/11/12 17:00:19 Setting subprocess env: AWS_SESSION_TOKEN, AWS_SECURITY_TOKEN
-2021/11/12 17:00:19 Setting subprocess env: AWS_SESSION_EXPIRATION
-2021/11/12 17:00:19 Exec command aws ssm put-parameter --name /config-tst/game-process/test.config --type String --value someRandomValue --overwrite
-2021/11/12 17:00:19 Found executable /usr/local/bin/aws
-2021/11/12 17:00:23 aws-vault v6.3.1
-2021/11/12 17:00:23 Loading config file /Users/cristinanegrean/.aws/config
-2021/11/12 17:00:23 Parsing config file /Users/cristinanegrean/.aws/config
-2021/11/12 17:00:23 [keyring] Considering backends: [file]
-2021/11/12 17:00:23 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 17:00:23 profile cnegrean: using stored credentials
-2021/11/12 17:00:23 profile cnegrean: using GetSessionToken (with MFA)
-2021/11/12 17:00:23 profile tst: using AssumeRole (chained MFA)
-2021/11/12 17:00:23 Using STS endpoint https://sts.amazonaws.com
-2021/11/12 17:00:23 [keyring] Expanded file dir to /Users/cristinanegrean/.awsvault/keys/
-2021/11/12 17:00:23 Re-using cached credentials ****************6T2I from sts.GetSessionToken, expires in 7h58m32.852906s
-2021/11/12 17:00:23 Generated credentials ****************YFGD using AssumeRole, expires in 59m59.213069s
-2021/11/12 17:00:23 Setting subprocess env: AWS_DEFAULT_REGION=eu-west-1, AWS_REGION=eu-west-1
-2021/11/12 17:00:23 Setting subprocess env: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-2021/11/12 17:00:23 Setting subprocess env: AWS_SESSION_TOKEN, AWS_SECURITY_TOKEN
-2021/11/12 17:00:23 Setting subprocess env: AWS_SESSION_EXPIRATION
-2021/11/12 17:00:23 Exec command kubectl rollout restart deployment.apps/game-process -n gateway-private
-2021/11/12 17:00:23 Found executable /usr/local/bin/kubectl
-deployment.apps/game-process restarted
-➜  ~ 
-```
-Listing 4: `./ssm-config-overwrite.sh tst test.config someRandomValue game-process gateway-private eu-west-1`
+## Other useful AWS SSM Commands
 
-## Summary
-
-Hopefully my brain dump will inspire a new generation of Java developers, at least on my assignment, the `cloud native` one `:smile:` and I will get the chance to get some feedback on my `Bash scripts`!
-
-
-
-
-
-
-
+* describe all parameters on `tst` environment for `game-process` application service: `aws-vault exec tst -- aws ssm describe-parameters --parameter-filters "Key=Name,Option=BeginsWith,Values=/config-tst/game-process/"`
+* describe all parameters on `dev` environment that contain `cruks` in parameter name: `aws-vault exec dev -- aws ssm describe-parameters --parameter-filters "Key=Name,Option=Contains,Values=cruks"`
+* get parameter by name on `acc` environment and decrypt value for `SecureString` parameter type: `aws-vault exec acc -- aws ssm get-parameter --name "/config-acc/player-process/cruks-service.keystore-password" --with-decryption`
