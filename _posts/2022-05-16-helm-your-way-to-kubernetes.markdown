@@ -11,7 +11,10 @@ In this blog post I am experimenting with [Helm, the package manager for Kuberne
 of [codecentric's Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) for out-of-the-box *real-time insights*
 and management capabilities of a suite of microservices deployed to Amazon Web Services, using AWS's container orchestration support (EKS).
 
-One of the easiest ways to install Java web services on Amazon Elastic Kubernetes Service (EKS) is using [Helm](https://helm.sh/)
+[Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) is a web application, used for managing and monitoring Spring Boot applications.
+[Spring Boot](https://spring.io/projects/spring-boot) makes it easy to create stand-alone, `production-grade` Spring based Applications that you can "just run".
+
+One of the easiest ways to install Java Spring applications on Amazon Elastic Kubernetes Service (EKS) is using [Helm](https://helm.sh/)
 as it offers:
 * package management via a common `blue-print` called `helm chart` which is a collection of `yaml` files bundled together 
 * templating of dynamic configuration, think of possible Java options (`java -X`), service name, http port, any other configuration eligible for being externalised in order to make the `helm chart` more re-usable, as well as application secrets
@@ -70,7 +73,19 @@ bitnami/spring-cloud-dataflow	9.0.0        	2.9.4      	Spring Cloud Data Flow i
 
 ## Lessons Learnt and Chart Usage
 
-### Lesson 1: Namespace Bound or Cluster-Wide?
+### Treat your pods according to their needs
+
+Containers are just processes. In Kubernetes not all containers are equal. When you launch a pod in Kubernetes 
+a really nice and sophisticated piece of software called `scheduler` determines which host should be chosen to run it.
+If you describe your pod after it is running, you'll notice a label called [QoS Class](https://kubernetes.io/docs/tasks/configure-pod-container/quality-service-pod/).
+
+While leveraging Spring Boot Admin [helm chart](https://github.com/evryfs/helm-charts/blob/master/charts/spring-boot-admin/values.yaml#L84),
+the QoS class that gets assigned to the pod is `BestEffort`. And yes, that's the worst, less prioritized class.
+The Spring Boot Admin pod would be between the first one(s) to be evicted, murdered as a process ;), when host is running low on resources.
+While that's perfectly fine in a development environment, in production running one replica of the Spring Boot Admin process with `QoS Class: BestEffort`
+means your insights on your Spring Boot applications may come and go.
+
+### Namespace Bound or Cluster-Wide?
 
 In my assignment, I needed to scrape Spring Boot Applications being installed in two Kubernetes namespaces. 
 With the initial Helm chart installation and setting configuration `spring.cloud.kubernetes.discovery.all-namespaces` to `true` (see Listing 1 below), the installation is discovering only services installed
@@ -246,7 +261,7 @@ metadata:
 ```
 [Listing 4 - `ServiceAccount` object definition]
 
-### Lesson 2: Filter Out Noise
+### Discovery Based on Kubernetes Service Label
 
 In each of the two namespaces, there is more running than just Spring Boot applications, so I needed to define a filter for which services to scrape.
 This can be done using property `spring.cloud.kubernetes.discovery.service-labels` (see Listing 1 above), a map is required here for label name and value.
@@ -275,7 +290,7 @@ As you can see in the `Wallboard` below, there are no `spring-boot-admin` or `tr
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/wallboard.png" alt="Wallboard"/>
 
-### Lesson 3: Customizations
+### UI Customizations
 
 First time, I have installed the Helm chart, I was noticing an `unspecified`, see `Wallboard` image above, but also in the `Applications` overview feature.
 That is when your Spring Boot Application has no `build version` in the JSON output of `/actuator/info` endpoint. There may be valid reasons for not exposing the
@@ -290,13 +305,19 @@ Below screenshot exemplifies both the `Page-Title` and `Build version` customiza
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/applications.png" alt="Applications Status Overview"/>
 
-## Useful Features of the Admin Console
+## Useful Features of the Spring Boot Admin
 
-A former colleague wrote a [Trifork blog post](https://blog.trifork.com/2018/12/06/managing-spring-boot-microservices-with-spring-boot-admin-on-kubernetes/) in the past on `Spring Boot Admin`.
+Behind the scenes, Spring Boot Admin magic is given by the Spring Boot Actuator endpoints.
+
+A former colleague wrote a [Trifork blog post](https://blog.trifork.com/2018/12/06/managing-spring-boot-microservices-with-spring-boot-admin-on-kubernetes/) 
+making a nice inventory of useful features in `Spring Boot Admin`. 
 The features he describes in his blog post, section `The top cool features we like and use most` are relevant as well in my current assignment, except the `DB migrations`.
-To extend on [previous Trifork blog post](https://blog.trifork.com/2018/12/06/managing-spring-boot-microservices-with-spring-boot-admin-on-kubernetes/) there are a few other unmentioned features:
+To extend on [that Trifork blog post](https://blog.trifork.com/2018/12/06/managing-spring-boot-microservices-with-spring-boot-admin-on-kubernetes/) there are a few other unmentioned features:
 * be able to download a `Heap Dump` or `Thread Dump`
 * list scheduled tasks
+* display application's request mappings
+* application's health indicator
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/mappings.png" alt="Mappings"/>
 
 `Happy Helming` and feel free to drop me message if you've found another cool use-case for `Spring Boot Admin`!
 
