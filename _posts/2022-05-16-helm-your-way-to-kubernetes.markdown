@@ -314,10 +314,9 @@ making a nice inventory of useful features in `Spring Boot Admin`.
 The features he describes in his blog post, section `The top cool features we like and use most` are relevant as well in my current assignment, except the `DB migrations`.
 To extend on [that Trifork blog post](https://blog.trifork.com/2018/12/06/managing-spring-boot-microservices-with-spring-boot-admin-on-kubernetes/) there are a few other unmentioned features:
 * be able to download a `Heap Dump` or `Thread Dump`
-* list scheduled tasks
+* list scheduled tasks, caches (if you have any)
 * display application's request mappings
 * application's health indicator
-<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/mappings.png" alt="Mappings"/>
 
 `Happy Helming` and feel free to drop me message if you've found another cool use-case for `Spring Boot Admin`!
 
