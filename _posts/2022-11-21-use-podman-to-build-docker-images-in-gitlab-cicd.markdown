@@ -222,9 +222,17 @@ I went through documentation to get more advanced and secure ways of authenticat
 The <em>docker login</em> was a no-brainer, that was what the pipeline job script was already using, i.e.:
 
 ```textmate
+aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions
+```
+
+or on own machine using [aws-vault](https://cristina.tech/2021/11/12/developers-lift-and-shift-to-eks):
+
+```textmate
 aws-vault exec ecr -- aws ecr  get-login-password --region eu-west-1 | docker login --username AWS --password-stdin xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions
 ```
-[Listing 6 - <em>ECR authentication</em> command using <em>aws-vault</em> and <em>docker login</em> with obfuscated AWS account in ECR repositoryUri]
+[Listing 6 - <em>ECR authentication</em> in pipeline script and local machine using <em>docker login</em> with obfuscated AWS account in ECR repositoryUri]
+
+> <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png" alt="Note"/> <em>docker login</em> creates or updates `$HOME/.docker/config.json` file, which contains in "auths" a list of authenticated registries and the credentials store, like "osxkeychain" on macOS.
 
 The <em>podman login</em> proved to be what I was exactly looking for. <em>Podman</em> is a open-sourced Red Hat product
 designed to build, manage and run containers with a Kubernetes-like approach.
@@ -233,8 +241,14 @@ designed to build, manage and run containers with a Kubernetes-like approach.
 * Drop-in-replacement for docker commands: Podman provides a Docker-compatible command line front end that can simply alias the Docker cli. One catch is that for the <em>build</em> command <em>Podman behavior</em> is to call <em>buildah bud</em>. <em>Buildah</em> provides the <em>build-using-dockerfile (bud)</em> command that emulates <em>Docker's build command</em>
 * both <em>Podman</em> and <em>Buildah</em> are actively maintained, after being open sourced by Red Hat, and there is a community and plenty of documentation around them. Red Hat is also using [Podman](https://www.redhat.com/en/blog/rhel-9-delivers-latest-container-technologies-development-and-production) actively in RedHat and CentOS versions 8 and higher.
 
+> <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png" alt="Note"/> On local machines where one has [aws-vault installed and configured](https://cristina.tech/2021/11/12/developers-lift-and-shift-to-eks), <em>podman login</em> command is: 
+```textmate
+aws-vault exec ecr -- aws ecr  get-login-password --region eu-west-1 | podman login --username AWS --password-stdin xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions
+```
+and <em>podman login</em> will create or update file `$HOME/.config/containers/auth.json`, and will then store the username and password from STDIN as a base64 encoded string in "auth" for each authenticated registry listed in "auths". See [here](https://docs.podman.io/en/latest/markdown/podman-login.1.html) <em>podman-login</em> full docs.
+
 Thus <em>Podman</em> is a much better fit, than <em>jib</em>, for existing pipelines intensively using scripting with Docker commands.
-I definitely recommand <em>jib</em> when starting a Java project from scratch. I've even seen successfully in action <em>jib</em> with [skaffold](https://skaffold.dev/docs/pipeline-stages/builders/jib/) which is a command line tool open sourced by Google, that facilitates continuous development for container based & Kubernetes applications.
+I definitely recommand <em>jib</em> when starting a Java project from scratch. I've even seen <em>jib</em> successfully in action with [skaffold](https://skaffold.dev/docs/pipeline-stages/builders/jib/) which is a command line tool open sourced by Google, that facilitates continuous development for container based & Kubernetes applications.
 
 ## Unprivileged Docker/OCI Container Image Builds: Implementation using Podman
 
@@ -400,6 +414,6 @@ config.template.toml:   |
 ## Conclusion
 
 As a result, getting rid of <em>dind</em>:
-* facilitates upgrading Kubernetes version on tooling cluster to a version where Docker is not default runtime.
+* facilitates upgrading Kubernetes version on tooling cluster to a version where Docker is not default runtime, by making sure no privileged <em>pods</em> execute <em>Docker commands</em>.
 * improves Kubernetes cluster <em>security</em>, since dropping <em>privileged</em> mode for containers on tooling cluster worker nodes.
 * facilitates Kubernetes application security, on <em>podman run</em> usage, as containers in <em>Podman</em> do not have root access by default.
