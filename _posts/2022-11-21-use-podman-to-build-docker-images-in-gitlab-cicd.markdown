@@ -63,7 +63,7 @@ In other words, the container can then do almost everything that the host, hereb
 When editing above ConfigMap by setting <em>privileged = false</em>, and then restarting the <em>subscriptions-gitlab-runner</em> deployment, the pipeline jobs would start 
 failing with message a connection could not be established to the Docker daemon.
 
-Kubernetes project also deprecated Docker as a container runtime after v1.20, and `containerd` became default container runtime since v1.22. 
+The Kubernetes project also deprecated Docker as a container runtime after v1.20, and `containerd` became the default container runtime since v1.22. 
 The `dockershim` component of Kubernetes, that allows to use Docker as a container runtime for Kubernetes, [was removed in release v1.24](https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/check-if-dockershim-removal-affects-you/#find-docker-dependencies).
 
 The privileged mode required for running <em>docker:dind</em>, as well as complying with Kubernetes cluster security guidelines on keeping components up-to-date,
@@ -81,12 +81,12 @@ My process of choosing a <em>rootless by design</em> container build tool starte
 * [Red Hat's](https://developers.redhat.com/blog/2019/02/21/podman-and-buildah-for-docker-users#) [podman](https://podman.io/) and [buildah](https://buildah.io/) 
 * [Cloud Native Buildpacks](https://buildpacks.io/) and [Paketo](https://paketo.io/) from the [CNCF](https://www.cncf.io/) projects landscape 
 
-I've gave up on <em>kaniko</em> after I've stumbled on [this performance issue report](https://github.com/GoogleContainerTools/kaniko/issues/875),
-and one colleague from Operations asked me whether I've stumbled on [this error](https://github.com/GoogleContainerTools/kaniko/issues/2214),
-he ran into with <em>kaniko</em>, on another project. He fixed it in the end by removing the mail symbolic loop. 
+I gave up on <em>kaniko</em> after I've stumbled on [this performance issue report](https://github.com/GoogleContainerTools/kaniko/issues/875),
+and one colleague from Operations asked me whether I ran into [this error](https://github.com/GoogleContainerTools/kaniko/issues/2214),
+which was fixed by removing the mail symbolic loop.
 One of the pipelines I needed to refactor was pretty slow already, thus I was looking for an option at least equally performant or faster compared to <em>dind</em>.
 
-Next I dived into <em>jib</em> which takes a Java developer friendly approach with no Dockerfile to maintain and provided plugins to integrate with Maven or Gradle.
+Next I dived into <em>jib</em> which takes a Java developer friendly approach with no Dockerfile to maintain and provides plugins to integrate with Maven or Gradle.
 I've started a proof-of-concept (POC) on the simpler pipeline I needed to refactor, a Java Spring Boot application for AWS Simple Queue Service (SQS) dead-letter-queue management, building code with Gradle tool. 
 In the POC, first step was to build the container image with <em>jib</em> Gradle plugin, and then publish it to Amazon Elastic Container Registry (ECR), 
 using the [easiest, most straight forward authentication method](https://github.com/GoogleContainerTools/jib/blob/master/jib-maven-plugin/README.md#using-specific-credentials):
@@ -234,7 +234,7 @@ aws-vault exec ecr -- aws ecr  get-login-password --region eu-west-1 | docker lo
 
 > <img class="img-responsive" src="{{ site.baseurl }}/img/site/blockquote-green-red.png" alt="Note"/> <em>docker login</em> creates or updates `$HOME/.docker/config.json` file, which contains in "auths" a list of authenticated registries and the credentials store, like "osxkeychain" on macOS.
 
-The <em>podman login</em> proved to be what I was exactly looking for. <em>Podman</em> is a open-sourced Red Hat product
+The <em>podman login</em> proved to be exactly what I was looking for. <em>Podman</em> is a open-sourced Red Hat product
 designed to build, manage and run containers with a Kubernetes-like approach.
 * Daemon-less - <em>Docker uses a deamon</em>, the ongoing program running in the background, to create images and run containers. <em>Podman has a daemon-less architecture</em> which means it can run containers under the user starting the container.
 * Rootless - <em>Podman</em>, since it doesn't have a deamon to manage its activity, also dispenses root privileges for its containers. 
@@ -247,8 +247,8 @@ aws-vault exec ecr -- aws ecr  get-login-password --region eu-west-1 | podman lo
 ```
 and <em>podman login</em> will create or update file `$HOME/.config/containers/auth.json`, and will then store the username and password from STDIN as a base64 encoded string in "auth" for each authenticated registry listed in "auths". See [here](https://docs.podman.io/en/latest/markdown/podman-login.1.html) <em>podman-login</em> full docs.
 
-Thus <em>Podman</em> is a much better fit, than <em>jib</em>, for existing pipelines intensively using scripting with Docker commands.
-I definitely recommand <em>jib</em> when starting a Java project from scratch. I've even seen <em>jib</em> successfully in action with [skaffold](https://skaffold.dev/docs/pipeline-stages/builders/jib/) which is a command line tool open sourced by Google, that facilitates continuous development for container based & Kubernetes applications.
+Thus <em>Podman</em> is a much better fit than <em>jib</em>, for existing pipelines intensively using scripting with Docker commands.
+I definitely recommend <em>jib</em> when starting a Java project from scratch. I've even seen <em>jib</em> successfully in action with [skaffold](https://skaffold.dev/docs/pipeline-stages/builders/jib/) which is a command line tool open sourced by Google, that facilitates continuous development for container based & Kubernetes applications.
 
 ## Unprivileged Docker/OCI Container Image Builds: Implementation using Podman
 
@@ -299,25 +299,17 @@ function publish_service_ecr {
   BUILD_TAG="${DOCKER_IMAGE_NAME}:build_${APP_VERSION}_${CI_PIPELINE_ID}"
   TAGS="-t ${BRANCH_TAG} -t ${BUILD_TAG} -t ${LATEST_TAG}"
 
-  if [[ $DOCKER_IMAGE_NAME =~ swagger-ui$ ]]; then
-    podman build \
-      --build-arg PIPELINE_ID_ARG=${CI_PIPELINE_ID} \
-      ${TAGS} \
-      -f docker/swagger-service/Dockerfile-build \
-      ${DOCKER_IMAGE_BUILD_PATH}
-  else
-    #copy the project root VERSION file to the docker-image for this service
-    cp ../VERSION ${DOCKER_IMAGE_BUILD_PATH}/build/VERSION
-    #extract the libs jars
-    cd ${DOCKER_IMAGE_BUILD_PATH}/build/libs
-    java -Djarmode=layertools -jar *.jar extract
-    cd -
-    podman build \
-      --build-arg PIPELINE_ID_ARG=${CI_PIPELINE_ID} \
-      ${TAGS} \
-      -f docker/java-service/Dockerfile-build \
-      ${DOCKER_IMAGE_BUILD_PATH}
-  fi
+  #copy the project root VERSION file to the docker-image for this service
+  cp ../VERSION ${DOCKER_IMAGE_BUILD_PATH}/build/VERSION
+  #extract the libs jars
+  cd ${DOCKER_IMAGE_BUILD_PATH}/build/libs
+  java -Djarmode=layertools -jar *.jar extract
+  cd -
+  podman build \
+    --build-arg PIPELINE_ID_ARG=${CI_PIPELINE_ID} \
+    ${TAGS} \
+    -f docker/java-service/Dockerfile-build \
+    ${DOCKER_IMAGE_BUILD_PATH}
 
   podman push "${BRANCH_TAG}"
   podman push "${BUILD_TAG}"
@@ -342,21 +334,15 @@ mkdir -p tmp
 for SERVICE in $SERVICES
 do
   echo "Publishing service: $SERVICE";
-
-  #Auth ECR
+  #Auth to ECR
   auth/auth-to-tooling-ecr.sh
-
-  if [ $SERVICE == "swagger" ]
-  then
-    $PUBLISH_FUNCTION . xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions/$SERVICE-ui 2> tmp/publish_service_$SERVICE.log > tmp/publish_service_$SERVICE.log &
-  else
-    $PUBLISH_FUNCTION ../subscriptions/$SERVICE/$SERVICE-app xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions/$SERVICE-app 2> tmp/publish_service_$SERVICE.log > tmp/publish_service_$SERVICE.log &
-  fi
+  #Call publish_service_ecr function with container image build path and image name
+  $PUBLISH_FUNCTION ../subscriptions/$SERVICE/$SERVICE-app xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions/$SERVICE-app 2> tmp/publish_service_$SERVICE.log > tmp/publish_service_$SERVICE.log &
 done;
 ```
 [Listing 9 - Snippet from <em>subscriptions/deployment/build.sh</em> script with obfuscated AWS account in ECR repositoryUri's]
 
-where DOCKER_IMAGE_BUILD_PATH is the <em>Gradle module path</em> of each application service, i.e. `./subscriptions/batch/batch-app` for `batch` (micro)service.
+where <em>DOCKER_IMAGE_BUILD_PATH</em> is the <em>Gradle module path</em> of each application service, i.e. `./subscriptions/batch/batch-app` for `batch` (micro)service.
 That is because application service Dockerfile <em>docker/java-service/Dockerfile-build</em> 
 references the gradle module <em>build</em> output, with <em>SpringBoot jar layering order</em>: 
 <em>dependencies</em>, <em>spring-boot-loader</em>, <em>libs-dependencies</em> and <em>application</em>.
@@ -417,3 +403,9 @@ As a result, getting rid of <em>dind</em>:
 * facilitates upgrading Kubernetes version on tooling cluster to a version where Docker is not default runtime, by making sure no privileged <em>pods</em> execute <em>Docker commands</em>.
 * improves Kubernetes cluster <em>security</em>, since dropping <em>privileged</em> mode for containers on tooling cluster worker nodes.
 * facilitates Kubernetes application security, on <em>podman run</em> usage, as containers in <em>Podman</em> do not have root access by default.
+
+## Reference Shelf
+
+I did not reinvent the wheel, there are others which have discovered Podman as a Docker alternative before me:
+* [Building Docker images on GitLab CI: Docker-in-Docker and Podman](https://pythonspeed.com/articles/gitlab-build-docker-image/)
+* [Podman vs Docker: 6 Reasons why I am HAPPY I switched](https://www.smarthomebeginner.com/podman-vs-docker/)

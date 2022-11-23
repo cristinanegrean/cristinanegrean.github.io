@@ -35,27 +35,22 @@ permalink: /about/
         <a href="{{ author.permalink | prepend: site.baseurl }}"><img class="img-responsive p-image" src="{{ '/img/author/' | append: author.avatar | prepend: site.baseurl }}" alt="{{ author.first_name }}" /></a>
         <!-- Name -->
         <h4><a href="{{ author.permalink | prepend: site.baseurl }}">{{ author.first_name }} {{ author.last_name }}</a></h4>
-        <span class="deg">{{ author.title }}</span>
-        {% if author.title2 %}
-        <div class="clearfix"></div>
-        <span class="deg">{{ author.title2 }}</span>
-        {% endif %}
 
         <div class="align-center-text">
             {% if author.email %}
-            <a href="mailto:{{ author.email }}"><i class="fa fa-envelope circle-2"></i></a>
+            <a href="mailto:{{ author.email }}"><em class="fa fa-envelope circle-2"></em></a>
             {% endif %}
             {% if author.twitter %}
-            <a href="https://www.twitter.com/{{ author.twitter }}" target="_blank"><i class="fa fa-twitter circle-2"></i></a>
+            <a href="https://www.twitter.com/{{ author.twitter }}" target="_blank"><em class="fa fa-twitter circle-2"></em></a>
             {% endif %}
             {% if author.github %}
-            <a href="https://www.github.com/{{ author.github }}" target="_blank"><i class="fa fa-github circle-2"></i></a>
+            <a href="https://www.github.com/{{ author.github }}" target="_blank"><em class="fa fa-github circle-2"></em></a>
             {% endif %}
             {% if author.linkedin %}
-            <a href="https://nl.linkedin.com/in/{{ author.linkedin }}" target="_blank"><i class="fa fa-linkedin circle-2"></i></a>
+            <a href="https://nl.linkedin.com/in/{{ author.linkedin }}" target="_blank"><em class="fa fa-linkedin circle-2"></em></a>
             {% endif %}
             {% if author.phone %}
-            <a href="tel:{{ author.phone }}"><i class="fa fa-phone circle-2"></i></a>
+            <a href="tel:{{ author.phone }}"><em class="fa fa-phone circle-2"></em></a>
             {% endif %}
         </div>
     </div>
