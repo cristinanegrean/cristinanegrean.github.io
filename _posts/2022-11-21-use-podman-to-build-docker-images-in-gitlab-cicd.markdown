@@ -247,7 +247,7 @@ aws-vault exec ecr -- aws ecr  get-login-password --region eu-west-1 | podman lo
 ```
 and <em>podman login</em> will create or update file `$HOME/.config/containers/auth.json`, and will then store the username and password from STDIN as a base64 encoded string in "auth" for each authenticated registry listed in "auths". See [here](https://docs.podman.io/en/latest/markdown/podman-login.1.html) <em>podman-login</em> full docs.
 
-Thus <em>Podman</em> is a much better fit than <em>jib</em>, for existing pipelines intensively using scripting with Docker commands.
+Thus <em>Podman</em> is a much better fit than <em>jib</em> for existing pipelines intensively using scripting with Docker commands.
 I definitely recommend <em>jib</em> when starting a Java project from scratch. I've even seen <em>jib</em> successfully in action with [skaffold](https://skaffold.dev/docs/pipeline-stages/builders/jib/) which is a command line tool open sourced by Google, that facilitates continuous development for container based & Kubernetes applications.
 
 ## Unprivileged Docker/OCI Container Image Builds: Implementation using Podman
@@ -314,13 +314,6 @@ function publish_service_ecr {
   podman push "${BRANCH_TAG}"
   podman push "${BUILD_TAG}"
   podman push "${LATEST_TAG}"
-
-  #mark feature branches for easy clean up
-  if [[ "${CI_COMMIT_REF_SLUG}" != "master" ]]; then
-    FEATURE_TAG="${DOCKER_IMAGE_NAME}:branch_${CI_PIPELINE_ID}"
-    podman tag "${BRANCH_TAG}" "${FEATURE_TAG}"
-    podman push "${FEATURE_TAG}"
-  fi
 }
 
 #BUILD
@@ -334,13 +327,14 @@ mkdir -p tmp
 for SERVICE in $SERVICES
 do
   echo "Publishing service: $SERVICE";
-  #Auth to ECR
+  #authenticate to ECR
   auth/auth-to-tooling-ecr.sh
-  #Call publish_service_ecr function with container image build path and image name
+  #call publish_service_ecr function with container image build path and image name input parameters 
+  #redirect stderr and stdout to temporary log file
   $PUBLISH_FUNCTION ../subscriptions/$SERVICE/$SERVICE-app xxxxxxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/subscriptions/$SERVICE-app 2> tmp/publish_service_$SERVICE.log > tmp/publish_service_$SERVICE.log &
 done;
 ```
-[Listing 9 - Snippet from <em>subscriptions/deployment/build.sh</em> script with obfuscated AWS account in ECR repositoryUri's]
+[Listing 9 - Snippet from <em>subscriptions/deployment/build.sh</em> script with obfuscated AWS account in ECR repositoryUri]
 
 where <em>DOCKER_IMAGE_BUILD_PATH</em> is the <em>Gradle module path</em> of each application service, i.e. `./subscriptions/batch/batch-app` for `batch` (micro)service.
 That is because application service Dockerfile <em>docker/java-service/Dockerfile-build</em> 

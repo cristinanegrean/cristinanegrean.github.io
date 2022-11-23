@@ -33,9 +33,6 @@ permalink: /about/
     <div class="blog-author align-center-text">
         <!-- Image -->
         <a href="{{ author.permalink | prepend: site.baseurl }}"><img class="img-responsive p-image" src="{{ '/img/author/' | append: author.avatar | prepend: site.baseurl }}" alt="{{ author.first_name }}" /></a>
-        <!-- Name -->
-        <h4><a href="{{ author.permalink | prepend: site.baseurl }}">{{ author.first_name }} {{ author.last_name }}</a></h4>
-
         <div class="align-center-text">
             {% if author.email %}
             <a href="mailto:{{ author.email }}"><em class="fa fa-envelope circle-2"></em></a>
