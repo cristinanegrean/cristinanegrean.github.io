@@ -5,7 +5,7 @@ layout: default
 <!-- blog One -->
 <div class="row">
     <!-- Mainbar column -->
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
         <div class="blog-masonry">
             {% for post in paginator.posts %}
             <!-- Post Item -->
@@ -28,10 +28,10 @@ layout: default
             </div>
             {% endfor %}
         </div>
-        <div class="row" style="margin: 10px 10px 10px 10px;">
+        <div class="row" style="margin-left: 10px;">
             <!-- Pagination -->
             {% if paginator.total_pages > 1 %}
-            <nav class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <nav class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                 <ul class="pagination">
                     {% if paginator.previous_page %}
                         <li>
@@ -66,6 +66,6 @@ layout: default
         </div>
     </div>
 
-    {% include bottombar.html %}
+    {% include sidebar.html %}
 
 </div>

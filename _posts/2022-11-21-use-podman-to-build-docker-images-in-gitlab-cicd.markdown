@@ -3,7 +3,7 @@ layout: post
 author: Cristina Negrean
 title: "How I got rid of privileged mode Docker-in-Docker in GitLab CI/CD jobs with Podman"
 image: /img/container_builds_with_podman.png
-tags: [Container Image, Docker Image, Container Build Tools, Docker-in-Docker, Docker, Podman, GitLab CI/CD, GitLab runner, Kubernetes Executor, Kubernetes Security, Open Source]
+tags: [Container Image, Docker Image, Container Build Tools, Docker-in-Docker, Docker, Podman, GitLab CI/CD, GitLab runner, Kubernetes, Kubernetes Security, Open Source]
 category: [Cloud Native Development, Docker]
 ---
 ## Background
