@@ -3,7 +3,7 @@ title: Cristina Negrean
 email: negrean.cristina@gmail.com
 description: Software Engineer
 metadata:
-  keywords: Cristina,Tech,Blog,Java,Spring,Microservices,Scala,DevOps
+  keywords: Cristina,Tech,Blog,Java,Spring,Microservices,Cloud Native,DevOps,Kubernetes
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: https://cristina.tech # the base hostname & protocol for your site
 twitter_username: cristinanegrean
