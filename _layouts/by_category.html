@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <header id="post-header">
         <h4 id="post-subtitle">Posts by category</h4>
         <h1 id="post-title">{{ page.category }}</h1>
@@ -36,7 +36,7 @@ layout: default
     </div>
     <!-- Pagination -->
     {% if paginator.total_pages > 1 %}
-    <nav class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+    <nav class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <ul class="pagination center-block">
             {% if paginator.previous_page %}
                 <li>
@@ -70,4 +70,6 @@ layout: default
     <!-- End Pagination -->
 </div>
 
-{% include sidebar.html %}
+{% include bottombar.html %}
+
+

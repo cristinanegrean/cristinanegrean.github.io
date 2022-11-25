@@ -79,12 +79,6 @@
                     <a href="{{ site.baseurl }}/about" class="label label-color typewrite">About</a>
                   </div>
                   <img class="img-responsive hidden-xs" src="{{ site.baseurl }}/img/site/favicon2.svg"/>
-                  <span class="foot-item hidden-xs">
-                      <a href="#" class="typewrite" data-period="2000" data-type='[ "Hello, my name is Cristina.", "I engineer software.", "I am creative.", "I am passionate about technology.", "Welcome to my tech blog!",
-                      "Created for developers, by a developer.", "I care about the craft of software and about making things better.", "Nice to meet you and thanks for reading!"]'>
-                        <span class="wrap"></span>
-                      </a>
-                  </span>
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-0">
                     <div class="logo">
@@ -93,7 +87,29 @@
                               <img class="img-responsive p-image-horiz-min" src="{{ page.image | prepend: site.baseurl }}"/>
                               {% if page.imagecredits %} <span class="foot-item">{{ page.imagecredits }}</span> {% endif %}
                         {% else %}
-                            <img class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/site/bckg.jpg" />
+                             <div style="display: inline" class="hidden-xs">
+                               <div style="display: inline; float: right;">
+                                 <img  class="img-responsive p-image-horiz" src="{{ site.baseurl }}/img/author/cristina-negrean.jpg" alt="{{ author.first_name }}"/>
+                                 <br>
+                                 <div class="widget-content brand-bg">
+                                     <a href="mailto:hello@cristina.tech" class="google-plus"><i class="fa fa-envelope circle-3"></i></a>
+                                     <a target="_blank" href="https://github.com/cristinanegrean" class="github"><i class="fa fa-github circle-3"></i></a>
+                                     <a target="_blank" href="https://nl.linkedin.com/in/cristinanegrean" class="linkedin"><i class="fa fa-linkedin circle-3"></i></a>
+                                     <a target="_blank" href="https://twitter.com/cristinanegrean" class="twitter"><i class="fa fa-twitter circle-3"></i></a>
+                                 </div>
+                               </div>
+                               <div class="col-lg-6 col-md-6 col-sm-3 col-xs-0" style="display: inline; float: left;">
+                                 <br>
+                                 <h5><em class="typewrite">Cristina Negrean</em></h5>
+                                 <h3>Software Engineer | Java | Spring | Cloud Native | Kubernetes</h3>
+                                 <br>
+                                 <span class="foot-item">
+                                    <a href="#" class="typewrite" data-period="2000" data-type='[ "Hello, my name is Cristina.", "I engineer software.", "I am creative.", "I am passionate about technology.", "Welcome to my tech blog!",
+                                    "Created for developers, by a developer.", "I care about the craft of software and about making things better.", "Nice to meet you and thanks for reading!"]'><span class="wrap"></span>
+                                    </a>
+                                 </span>
+                               </div>
+                             </div>
                         {% endif %}
                     </div>
                 </div>
@@ -103,7 +119,6 @@
     <!-- Header two ends -->
 
     <!-- Main content starts -->
-
     <div class="main-block container">
 
         <div class="row tk-acumin-pro">
@@ -111,6 +126,7 @@
         </div>
     </div>
     <!-- Main content ends -->
+
 </div>
 <!-- Footer Starts -->
 <footer class="footer">

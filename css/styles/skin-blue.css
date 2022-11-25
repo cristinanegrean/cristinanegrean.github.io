@@ -411,8 +411,12 @@ blockquote.blockquote-reverse {
 }
 /*************************/
 /* Header two            */
-/* Logo & Navigation bar */
+/* Logo & Navigation bar:*/
 /*************************/
+div.header-2 {
+  background-image: linear-gradient(to right, #c4e3f3 , white, #c4e3f3);
+  background-image: linear-gradient(#c4e3f3, white, #c4e3f3);
+}
 .header-2 .logo h1 a i, .header-2 .navi ul li a {
   color: #609cec;
 }
