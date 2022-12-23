@@ -133,6 +133,10 @@ metadata:
   namespace: gateway-private
 data:
   application.yml: |-
+    logging:
+      level:
+        org.springframework.cloud.kubernetes: TRACE
+        de.codecentric.boot.admin.discovery.ApplicationDiscoveryListener: DEBUG
     spring:
       application:
         name: admin-server
@@ -142,12 +146,6 @@ data:
           ui:
             title: 'Gateway Spring Boot Admin'
             brand: 'Gateway Spring Boot Admin'
-      server:
-        port: 8080
-      logging:
-        level:
-          org.springframework.cloud.kubernetes: TRACE
-          de.codecentric.boot.admin.discovery.ApplicationDiscoveryListener: DEBUG
       cloud:
         kubernetes:
           discovery:
@@ -160,6 +158,9 @@ data:
 ---
 ```
 [Listing 1 - `ConfigMap` object definition]
+
+If the services being discovered are publishing `/actuator/health` endpoint on a diferent port then the default `http` port: 8080, 
+for example on a `probes` port: 8888, adding config `spring.cloud.kubernetes.discovery.primary-port-name=probes` is required.
 
 ```yaml
 ---
@@ -266,7 +267,8 @@ metadata:
 In each of the two namespaces, there is more running than just Spring Boot Java applications, so I needed to define a filter for which services to scrape, and ignore the rest.
 This can be done using property `spring.cloud.kubernetes.discovery.service-labels` (see `Listing 1` above), a map is required here for label name and value.
 
-Notice the last column of the listing below. You can be more creative than me in finding a better Kubernetes service label in your project 🎉
+Notice the last column of the listing below.
+Also note labels are key/value pairs that are attached to objects, such as Pods and Services, and are different from Kubernetes service types.
 
 ```
 NAME                         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE     TYPE
@@ -318,6 +320,7 @@ with few other unmentioned useful features:
 * list `Scheduled Tasks`, `Caches`, `Circuit Breakers`, `DB Connection Pools` details, if your service integrates with any.
 * display application’s `Request Mappings`. While I prefer `Swagger UI` as a `REST API Documentation Tool`, not all Spring Boot Java applications abide by the `REpresentational State Transfer` as an architectural style for distributed hypermedia systems, while they might provide some HTTP based APIs with some form of contract.
 * `Notifications` based on the `Event Journal` (see image below). In `Kubernetes` it is pretty common for services to come and go, however if you have a scenario of a critical stateful deployment with only one replica, and you want to be notified of its lifecycle events, it's possible to integrate `Spring Boot Admin` with monitoring tools like: `Slack`, `PagerDuty`, `OpsGenie`, `Email`.
+* Refreshing service configuration at runtime via `Insights->Environment` tab `Refresh context` link, which does a http request to discovered service management endpoint `/actuator/refresh`. 
 
 <img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/journal_application_status_change_event.png" alt="Applications Status Change Event"/>
 
