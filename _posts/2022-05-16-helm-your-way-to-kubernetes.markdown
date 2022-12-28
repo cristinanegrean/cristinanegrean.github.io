@@ -133,6 +133,9 @@ metadata:
   namespace: gateway-private
 data:
   application.yml: |-
+    server:
+      port: 8080
+      forward-headers-strategy: NATIVE
     logging:
       level:
         org.springframework.cloud.kubernetes: TRACE
@@ -149,6 +152,9 @@ data:
       cloud:
         kubernetes:
           discovery:
+            instances-metadata:
+              spring-boot: "true"
+            primary-port-name: probes
             all-namespaces: true
             service-labels:
               type: gateway-base
@@ -158,9 +164,6 @@ data:
 ---
 ```
 [Listing 1 - `ConfigMap` object definition]
-
-If the services being discovered are publishing `/actuator/health` endpoint on a diferent port then the default `http` port: 8080, 
-for example on a `probes` port: 8888, adding config `spring.cloud.kubernetes.discovery.primary-port-name=probes` is required.
 
 ```yaml
 ---
@@ -262,6 +265,67 @@ metadata:
 ```
 [Listing 4 - `ServiceAccount` object definition]
 
+### Discovery Based on primary-port-name
+
+It's considered a best practice to assign a separate port to the actuator endpoints in Java (micro)services. 
+That is because these endpoints can reveal sensitive metrics and information about your application, so moving these to a different port allows you to easily block access to this information, 
+while keeping the main application port open to an external service or `ingress`.
+
+If the services being discovered are publishing `/actuator/health` endpoint on a different container port than the main application port (here 8080), 
+for example on container port 8888, adding config `spring.cloud.kubernetes.discovery.primary-port-name` (see `Listing 1` above) 
+is required to make services discovery work.
+
+Spring application context snippet for Java services to illustrate management port definition:
+
+```yaml
+management:
+  server:
+    port: 8888
+    base-path: /
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true        
+```
+[Listing 5 - `application.yaml` snippet]
+
+Java service Helm chart template resources snippets showing `http` and `probes` ports definition:
+
+```yaml
+      containers:
+        - name: java-service
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: probes
+              containerPort: 8888
+              protocol: TCP
+```
+[Listing 6 - `helm/java-service/templates/deployment.yaml` snippet]
+
+```yaml
+apiVersion: v1
+kind: Service
+...
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  - name: probes
+    port: 88
+    targetPort: probes
+    protocol: TCP
+```
+[Listing 7 - `helm/java-service/templates/service.yaml` snippet]
+
 ### Discovery Based on Kubernetes Service Label
 
 In each of the two namespaces, there is more running than just Spring Boot Java applications, so I needed to define a filter for which services to scrape, and ignore the rest.
@@ -286,7 +350,7 @@ subscription-process         ClusterIP   X.X.X.X          <none>        80/TCP  
 subscription-sales-process   ClusterIP   X.X.X.X          <none>        80/TCP            557d    gateway-base
 traefik-ingress-private      ClusterIP   X.X.X.X          <none>        80/TCP,8200/TCP   567d    
 ```
-[Listing 5 - `Service` objects within `gateway-private` namespace]
+[Listing 8 - `Service` objects within `gateway-private` namespace]
 
 As you can see in the `Wallboard` below, there are no `spring-boot-admin` or `traefik-ingress-private` services being discovered.
 
@@ -320,9 +384,33 @@ with few other unmentioned useful features:
 * list `Scheduled Tasks`, `Caches`, `Circuit Breakers`, `DB Connection Pools` details, if your service integrates with any.
 * display application’s `Request Mappings`. While I prefer `Swagger UI` as a `REST API Documentation Tool`, not all Spring Boot Java applications abide by the `REpresentational State Transfer` as an architectural style for distributed hypermedia systems, while they might provide some HTTP based APIs with some form of contract.
 * `Notifications` based on the `Event Journal` (see image below). In `Kubernetes` it is pretty common for services to come and go, however if you have a scenario of a critical stateful deployment with only one replica, and you want to be notified of its lifecycle events, it's possible to integrate `Spring Boot Admin` with monitoring tools like: `Slack`, `PagerDuty`, `OpsGenie`, `Email`.
-* Refreshing service configuration at runtime via `Insights->Environment` tab `Refresh context` link, which does a http request to discovered service management endpoint `/actuator/refresh`. 
+* [Reloading Spring Properties files](https://www.baeldung.com/spring-reloading-properties#reloading-cloud) using the Spring Actuator management endpoint `/actuator/refresh` and Spring Cloud Kubernetes (Java service ConfigMap discovery) . Spring properties files are mounted as externalized configuration:
+```yaml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: java-service-config
+            items:
+            - key: application.yaml
+              path: application.yaml
+      containers:
+      - name: java-service
+      volumeMounts:
+      - name: config-volume
+        mountPath: /config
+```
+and Java process is started with `--spring.config.location=/config/application.yaml`:
 
-<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/journal_application_status_change_event.png" alt="Applications Status Change Event"/>
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/SBA_payments_hikari_config_new_value.png" alt="Insights Environment Application Context Refreshed"/>
+
+The Spring application context refresh can be done for all instances of the Java service (Kubernetes pods): 
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/spring_properties_reload.png" alt="Insights Environment Refresh Application Context"/>
+
+or just for a specific instance (blue-green config tweaking with application behavior testing):
+
+<img class="img-responsive" src="{{ site.baseurl }}/img/posts/spring-boot-admin/context_refreshed_single_instance.png" alt="Insights Environment Refresh Application Context"/>
+
 
 `Happy Helming` and feel free to drop me message if you've found another cool use-case for `Spring Boot Admin`!
 
